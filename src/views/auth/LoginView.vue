@@ -62,13 +62,13 @@
             <br>
 
 
-            <div class="w-xs">
+            <!-- <div class="w-xs">
                 <Button class="w-full" variant="outline" type="button" :disabled="isLoading">
                     <Spinner v-if="isLoading" class="mr-2 h-4 w-4" />
                     <FontAwesomeIcon :icon="faGoogle" />
                     Google
                 </Button>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -76,9 +76,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { faGoogle } from "@fortawesome/free-brands-svg-icons"
-import { } from "lucide-vue-next";
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'

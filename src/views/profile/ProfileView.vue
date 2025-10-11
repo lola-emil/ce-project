@@ -62,7 +62,7 @@
             <div>
                 <div class="py-5 border-b">
                     <p class="font-bold">Certifications</p>
-                    <div class="text-muted-foreground">None Listed</div>
+                    <div class="text-muted-foreground">None listed</div>
                 </div>
 
                 <div class="py-5 border-b">
