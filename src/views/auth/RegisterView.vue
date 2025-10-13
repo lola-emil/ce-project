@@ -39,7 +39,7 @@
                 </div>
             </form>
 
-            <br>
+            <!-- <br>
 
             <div class="relative">
                 <div class="absolute inset-0 flex items-center">
@@ -53,7 +53,7 @@
             </div>
 
 
-            <br>
+            <br> -->
 
 
             <!-- <div class="w-xs">

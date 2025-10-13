@@ -44,7 +44,7 @@
                     </small>
                 </div>
             </form>
-
+<!-- 
             <br>
 
             <div class="relative">
@@ -59,7 +59,7 @@
             </div>
 
 
-            <br>
+            <br> -->
 
 
             <!-- <div class="w-xs">

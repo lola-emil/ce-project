@@ -3,6 +3,8 @@ import HomeView from '../views/home/HomeView.vue'
 import LoginView from '../views/auth/LoginView.vue'
 import RegisterView from '../views/auth/RegisterView.vue'
 import AboutView from '../views/about/AboutView.vue'
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -32,27 +34,39 @@ const router = createRouter({
     {
       path: "/profile",
       name: "profile",
-      component: import("../views/profile/ProfileView.vue")
+      component: () => import("../views/profile/ProfileView.vue")
     },
-
 
     {
       path: "/find-workers",
       name: "find-workers",
-      component: import("../views/workers/FindWorkerView.vue")
+      component: () => import("../views/workers/FindWorkerView.vue")
     },
 
     {
       path: "/posted-projects",
       name: "posted-projects",
-      component: import("../views/postings/JobPostingsView.vue")
+      component: () => import("../views/postings/JobPostingsView.vue")
     },
 
 
     {
       path: "/faq",
       name: "faq",
-      component: import("../views/faq/FAQView.vue")
+      component: () => import("../views/faq/FAQView.vue")
+    },
+
+    {
+      path: "/feed",
+      name: "feed",
+      component: () => import("../views/feed/FeedView.vue")
+    },
+
+
+    {
+      path: "/messaging",
+      name: "/messaging",
+      component: () => import("../views/messaging/MessagingView.vue")
     }
 
   ],
