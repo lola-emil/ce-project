@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+@layer utilities {
+
+    .alert,
+    .badge,
+    .btn,
+    .checkbox:checked,
+    .input,
+    .radio:checked::before,
+    .radio [aria-checked]::before,
+    .select,
+    .select:focus,
+    .toggle::after {
+--depth: 0;
+    }
+}

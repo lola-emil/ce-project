@@ -1,75 +1,112 @@
+import SignInView from '@/pages/auth/SignInView.vue'
+import SignUpView from '@/pages/auth/SignUpView.vue';
+import BookingDetailsView from '@/pages/booking/BookingDetailsView.vue';
+import BookingView from '@/pages/booking/BookingView.vue';
+import MyBookingView from '@/pages/booking/MyBookingView.vue';
+import PageNotFound from '@/pages/error/PageNotFound.vue';
+import FindWorkerView from '@/pages/find-worker/FindWorkerView.vue';
+import HomeView from '@/pages/home/HomeView.vue'
+import ProfileSettingsView from '@/pages/profile/ProfileSettingsView.vue';
+import ReviewView from '@/pages/profile/ReviewView.vue';
+import UserProfileView from '@/pages/profile/UserProfileView.vue';
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/home/HomeView.vue'
-import LoginView from '../views/auth/LoginView.vue'
-import RegisterView from '../views/auth/RegisterView.vue'
-import AboutView from '../views/about/AboutView.vue'
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView,
+      path: "/",
+      component: HomeView
     },
 
+    // AUTH
     {
-      path: "/about-us",
-      name: "about-us",
-      component: AboutView
+      path: "/auth/sign-in",
+      component: SignInView
+    },
+    {
+      path: "/auth/sign-up",
+      component: SignUpView
     },
 
+    // BOOKING
     {
-      path: "/signin",
-      name: "signin",
-      component: LoginView
+      path: "/booking",
+      component: () => import("@/pages/booking/BookingView.vue")
     },
     {
-      path: "/signup",
-      name: "signup",
-      component: RegisterView
+      path: "/booking/details/:id",
+      component: () => import("@/pages/booking/BookingDetailsView.vue")
     },
+    {
+      path: "/booking/my",
+      component: () => import("@/pages/booking/MyBookingView.vue")
+    },
+
+    // PROFILE
 
     {
       path: "/profile",
-      name: "profile",
-      component: () => import("../views/profile/ProfileView.vue")
-    },
-
-    {
-      path: "/find-workers",
-      name: "find-workers",
-      component: () => import("../views/workers/FindWorkerView.vue")
-    },
-
-    {
-      path: "/posted-projects",
-      name: "posted-projects",
-      component: () => import("../views/postings/JobPostingsView.vue")
-    },
-
-
-    {
-      path: "/faq",
-      name: "faq",
-      component: () => import("../views/faq/FAQView.vue")
-    },
-
-    {
-      path: "/feed",
-      name: "feed",
-      component: () => import("../views/feed/FeedView.vue")
+      component: () => import("@/pages/profile/UserProfileView.vue"),
+      children: [
+        {
+          path: "settings",
+          component: () => import("@/pages/profile/ProfileSettingsView.vue") // Optional default child
+        },
+        {
+          path: "review",
+          component: () => import("@/pages/profile/UserProfileView.vue")
+        },
+        {
+          path: "review",
+          component: () => import("@/pages/profile/ReviewView.vue")
+        }
+      ]
     },
 
 
+    // FIND-WORKER
     {
-      path: "/messaging",
-      name: "/messaging",
-      component: () => import("../views/messaging/MessagingView.vue")
+      path: "/workers",
+      component: () => import("@/pages/find-worker/FindWorkerView.vue")
+    },
+    {
+      path: "/jobs",
+      component: () => import("@/pages/find/FindJobView.vue")
+    },
+
+    {
+      path: "/dashboard",
+      children: [
+        {
+          path: "worker",
+          component: () => import("@/pages/dashboard/WorkerView.vue")
+        },
+        {
+          path: "client",
+          component: () => import("@/pages/dashboard/ClientView.vue")
+        },
+      ]
+    },
+
+    // DASHBOARD
+    // {
+    //   path: "/dashboard/worker",
+    //   component: () => import("@/pages/dashboard/WorkerView.vue")
+    // },
+
+    // {
+    //   path: "/dashboard/client",
+    //   component: () => import("@/pages/dashboard/ClientView.vue")
+    // },
+
+    // MESSAGING
+    {
+      path: "/messages",
+      component: () => import("@/pages/messages/MessagesView.vue")
     }
 
   ],
-})
+});
 
 export default router
