@@ -85,7 +85,15 @@
                 </div>
             </div>
             <br>
-            <p>Here are top workers near you</p>
+            <div class="flex gap-2">
+                <div><span class="">Jobs near you</span></div>
+                <div class="flex items-center">
+                    <MapPin :size="18" />
+                    <span>
+                        Cebu City
+                    </span>
+                </div>
+            </div>
 
             <div class="mt-3 grid grid-cols-3 gap-5">
                 <div v-for="value in range(3)" class="card border border-base-content/10">
@@ -101,6 +109,9 @@
                                 <p>Php 300/day</p>
                             </div>
 
+                        </div>
+                        <div>
+                            <div class="badge badge-secondary badge-soft">profession</div>
                         </div>
                         <button class="btn btn-info btn-soft">View Profile</button>
                     </div>
@@ -119,5 +130,6 @@
 import Topbar from '../../components/Topbar.vue';
 import { RouterLink } from 'vue-router';
 import { range } from '@/utils/util';
+import { MapPin } from "lucide-vue-next";
 
 </script>
