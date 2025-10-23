@@ -2,7 +2,7 @@
     <Topbar />
     <br>
     <main class="container mx-auto grid grid-cols-4 gap-10">
-        
+
         <div class="col-span-1 flex flex-col gap-5 max-h-[calc(100vh-4rem)] sticky top-0">
             <div class="card mt-10 border border-base-content/10">
                 <div class="card-body">
@@ -14,12 +14,12 @@
                         </div>
                     </div>
                     <div>
-                        <p class="text-center font-bold">Rens S</p>
+                        <p class="text-center font-bold">Pedro D.</p>
                     </div>
                     <small class="text-sm text-base-content/75 text-center">Senior Software Engr.</small>
 
                     <div>
-                        <button class="btn btn-sm btn-soft w-full">View Profile</button>
+                        <button class="btn btn-sm btn-primary w-full">View Profile</button>
                     </div>
                 </div>
             </div>
@@ -46,11 +46,9 @@
                     resources here.</small>
             </div>
 
-
             <!-- Onboarding Guide -->
             <div>
-                <p>Guided onboarding</p>
-                <div class="mt-3 flex flex-col gap-5">
+                <div class="flex flex-col gap-5">
                     <!-- <div class="card border border-base-content/10">
                         <div class="card-body">
                             <p class="text-lg font-bold">Setup your business</p>
@@ -60,13 +58,13 @@
                         </div>
                     </div> -->
 
-                    <div class="card border border-base-content/10">
-                        <div class="card-body">
-                            <p class="text-lg font-bold">Complete your profile</p>
-                            <small class="text-sm text-base-content/75">
-                                Step-by-step guidance to help you showcase the person behind your professional skills.
-                            </small>
-                        </div>
+                    <div class="alert alert-info alert-soft">
+                        <p class="">
+                            <span class="font-bold">
+                                Complete your profile
+                            </span> <br/>
+                            Step-by-step guidance to help you showcase the person behind your professional skills.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -103,7 +101,7 @@
                             </div>
 
                         </div>
-                        <button class="btn btn-soft">View Job</button>
+                        <button class="btn btn-info btn-soft">View Job</button>
                     </div>
                 </div>
             </div>
