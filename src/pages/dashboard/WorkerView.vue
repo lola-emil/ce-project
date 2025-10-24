@@ -59,7 +59,7 @@
                     </div> -->
 
                     <div class="alert alert-info alert-soft">
-                        <p class="">
+                        <p>
                             <span class="font-bold">
                                 Complete your profile
                             </span> <br />
