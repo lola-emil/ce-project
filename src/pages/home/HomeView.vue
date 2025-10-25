@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import Navbar from '@/components/Navbar.vue';
+import Navbar from '@/components/ui/Navbar.vue';
 import type { MenuListItem } from '@/types';
 import { RouterLink } from 'vue-router';
 const menuList: MenuListItem[] = [

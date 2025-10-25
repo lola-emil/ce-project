@@ -1,5 +1,5 @@
 <template>
-    <Topbar />
+    <Navbar />
     <br>
     <main class="container mx-auto grid grid-cols-4 gap-10">
 
@@ -16,7 +16,9 @@
                     <div>
                         <p class="text-center font-bold">Pedro D.</p>
                     </div>
-                    <small class="text-sm text-base-content/75 text-center">Senior Software Engr.</small>
+
+                    <small v-if="auth.userType == 'worker'" class="text-sm text-base-content/75 text-center">Senior
+                        Software Engr.</small>
 
                     <div>
                         <button class="btn btn-sm btn-primary w-full">View Profile</button>
@@ -85,7 +87,7 @@
             </div>
             <br>
             <div class="flex gap-2">
-                <div><span class="">Jobs near you</span></div>
+                <div><span>{{ auth.userType == "worker" ? "Jobs near you" : "Workers near you" }}</span></div>
                 <div class="flex items-center">
                     <MapPin :size="18" />
                     <span>
@@ -94,28 +96,60 @@
                 </div>
             </div>
 
-            <div class="mt-3 grid grid-cols-3 gap-5">
-                <div v-for="value in range(3)" class="card border border-base-content/10">
-                    <div class="card-body p-3">
-                        <div class="h-60 bg-base-300"></div>
+            <!-- JOB LIST -->
+            <div v-if="auth.userType == 'worker'" class="mt-3">
+                <div class=" grid grid-cols-3 gap-5">
+                    <div v-for="value in range(3)" class="card border border-base-content/10">
+                        <div class="card-body p-3">
+                            <div class="h-60 bg-base-300"></div>
 
-                        <div class="flex justify-between">
-                            <div>
-                                <p>Job Name</p>
-                            </div>
-                            <!-- Rate -->
-                            <div>
-                                <p>Php 300/day</p>
-                            </div>
+                            <div class="flex justify-between">
+                                <div>
+                                    <p>Job Name</p>
+                                </div>
+                                <!-- Rate -->
+                                <div>
+                                    <p>Php 300/day</p>
+                                </div>
 
+                            </div>
+                            <button class="btn btn-info btn-soft">View Job</button>
                         </div>
-                        <button class="btn btn-info btn-soft">View Job</button>
                     </div>
+                </div>
+
+                <div class="flex justify-center my-5">
+                    <RouterLink to="/jobs" class="link link-primary text-center">View More</RouterLink>
                 </div>
             </div>
 
-            <div class="flex justify-center my-5">
-                <RouterLink to="/jobs" class="link link-primary text-center">View More</RouterLink>
+            <div v-if="auth.userType == 'client'" class="mt-3">
+                <div class="mt-3 grid grid-cols-3 gap-5">
+                    <div v-for="value in range(3)" class="card border border-base-content/10">
+                        <div class="card-body p-3">
+                            <div class="h-60 bg-base-300"></div>
+
+                            <div class="flex justify-between">
+                                <div>
+                                    <p>Worker name</p>
+                                </div>
+                                <!-- Rate -->
+                                <div>
+                                    <p>Php 300/day</p>
+                                </div>
+
+                            </div>
+                            <div>
+                                <div class="badge badge-secondary badge-soft">profession</div>
+                            </div>
+                            <button class="btn btn-info btn-soft">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center my-5">
+                    <RouterLink to="/workers" class="link link-primary text-center">View More</RouterLink>
+                </div>
             </div>
         </div>
     </main>
@@ -123,9 +157,12 @@
 
 
 <script setup lang="ts">
-import Topbar from '../../components/Topbar.vue';
 import { RouterLink } from 'vue-router';
 import { range } from '@/utils/util';
 import { MapPin } from "lucide-vue-next";
+import Navbar from '@/components/ui/Navbar.vue';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 </script>

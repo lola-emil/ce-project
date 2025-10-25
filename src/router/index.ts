@@ -4,7 +4,7 @@ import BookingDetailsView from '@/pages/booking/BookingDetailsView.vue';
 import BookingView from '@/pages/booking/BookingView.vue';
 import MyBookingView from '@/pages/booking/MyBookingView.vue';
 import PageNotFound from '@/pages/error/PageNotFound.vue';
-import FindWorkerView from '@/pages/find-worker/FindWorkerView.vue';
+import FindWorkerView from '@/pages/workers/FindWorkerView.vue';
 import HomeView from '@/pages/home/HomeView.vue'
 import ProfileSettingsView from '@/pages/profile/ProfileSettingsView.vue';
 import ReviewView from '@/pages/profile/ReviewView.vue';
@@ -68,25 +68,26 @@ const router = createRouter({
     // FIND-WORKER
     {
       path: "/workers",
-      component: () => import("@/pages/find-worker/FindWorkerView.vue")
+      component: () => import("@/pages/workers/FindWorkerView.vue")
     },
     {
       path: "/jobs",
-      component: () => import("@/pages/find/FindJobView.vue")
+      component: () => import("@/pages/jobs/FindJobView.vue")
     },
 
     {
       path: "/dashboard",
-      children: [
-        {
-          path: "worker",
-          component: () => import("@/pages/dashboard/WorkerView.vue")
-        },
-        {
-          path: "client",
-          component: () => import("@/pages/dashboard/ClientView.vue")
-        },
-      ]
+      component: () => import("@/pages/dashboard/DashboardView.vue")
+      // children: [
+      //   {
+      //     path: "worker",
+      //     component: () => import("@/pages/dashboard/WorkerView.vue")
+      //   },
+      //   {
+      //     path: "client",
+      //     component: () => import("@/pages/dashboard/ClientView.vue")
+      //   },
+      // ]
     },
 
     // DASHBOARD

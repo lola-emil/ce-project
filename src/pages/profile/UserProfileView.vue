@@ -1,5 +1,5 @@
 <template>
-    <Topbar />
+    <Navbar />
 
     <main class="container mx-auto">
         <div class="card my-5 bg-base-200">
@@ -44,6 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import Topbar from '@/components/Topbar.vue';
+import Navbar from '@/components/ui/Navbar.vue';
 import { Building2 } from "lucide-vue-next";
 </script>

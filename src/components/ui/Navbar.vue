@@ -24,7 +24,7 @@
             </div>
             <a class="btn btn-ghost text-xl">BuildCare</a>
 
-            <ul class="menu menu-horizontal px-1">
+            <ul v-if="!auth.isLoggedIn" class="menu menu-horizontal px-1">
                 <li v-for="value in menuList">
                     <details v-if="value.children">
                         <summary>{{ value.label }}</summary>
@@ -38,7 +38,33 @@
                 </li>
             </ul>
         </div>
-        <div class="navbar-end gap-5">
+
+        <div v-if="auth.isLoggedIn" class="navbar-end gap-5">
+            <!-- GLOBAL SEARCH -->
+            <input type="text" class="input input-sm w-sm outline-none" placeholder="Search">
+
+            <RouterLink to="/messages" class="btn btn-ghost btn-circle">
+                <MessageCircle :size="20" />
+            </RouterLink>
+
+            <button class="btn btn-ghost btn-circle">
+                <Bell :size="20" />
+            </button>
+
+            <button class="btn btn-ghost btn-circle">
+                <CircleQuestionMark />
+            </button>
+            <button class="btn btn-ghost btn-circle">
+
+                <div class="avatar avatar-placeholder">
+                    <div class="bg-neutral text-neutral-content w-8 rounded-full">
+                        <span class="text-xs">UI</span>
+                    </div>
+                </div>
+            </button>
+        </div>
+
+        <div v-else class="navbar-end gap-5">
             <RouterLink to="/auth/sign-in" class="btn btn-primary btn-soft">Sign In</RouterLink>
             <RouterLink to="/auth/sign-up" class="btn btn-secondary btn-soft">Sign Up</RouterLink>
         </div>
@@ -48,16 +74,20 @@
 <script setup lang="ts">
 import type { MenuListItem } from '@/types';
 import { RouterLink } from 'vue-router';
+import { useAuthStore } from "@/stores/auth";
+import { MessageCircle, Bell, CircleQuestionMark } from "lucide-vue-next";
+import { ref } from 'vue';
 
+const auth = useAuthStore();
 
-const menuList: MenuListItem[] = [
+const menuList = ref<MenuListItem[]>([
     {
-        path: "/find-worker",
+        path: "/workers",
         label: "Find Worker"
     },
 
     {
-        path: "/find-job",
+        path: "/jobs",
         label: "Find Job"
     },
 
@@ -65,10 +95,11 @@ const menuList: MenuListItem[] = [
         path: "/About",
         label: "About"
     },
-
     {
         path: "/faq",
         label: "FAQs"
-    },
-];
+    }
+
+]);
+
 </script>

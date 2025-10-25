@@ -1,5 +1,5 @@
 <template>
-    <Topbar />
+    <Navbar />
 
     <main class="container mx-auto grid grid-cols-4 gap-10">
         <div class="col-span-1">
@@ -120,7 +120,7 @@
 
 
 <script setup lang="ts">
-import Topbar from '@/components/Topbar.vue';
+import Navbar from '@/components/ui/Navbar.vue';
 import { range } from '@/utils/util';
 import { Ellipsis, SendHorizonal, Smile, ImagePlay, Paperclip } from "lucide-vue-next";
 </script>
