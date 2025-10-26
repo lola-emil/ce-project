@@ -1,9 +1,7 @@
 <template>
     <Navbar />
 
-
     <main class="container mx-auto">
-
         <!-- HERO -->
         <section class="min-h-[calc(100vh-4rem)] flex flex-col justify-center items-center gap-5">
             <h1 class="text-5xl font-bold text-center">Build faster. Fix easier. Hire smarter.</h1>

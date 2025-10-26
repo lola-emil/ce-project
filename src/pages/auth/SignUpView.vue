@@ -1,34 +1,32 @@
 <template>
-    <div class="grid grid-cols-2 h-screen">
-        <div class="bg-base-200">
-        </div>
+
+    <div class="grid grid-cols-1 h-screen">
+        <!-- <div class="bg-base-200">
+        </div> -->
 
         <div class="flex flex-col justify-center items-center">
-            <form class="w-xs flex flex-col gap-5">
-                <div>
-                    <p class="text-xl font-semibold">Sign Up</p>
-                    <small class="text-sm text-base-content/75">Enter your email to proceed.</small>
-                </div>
-                <input type="text" class="w-full input" placeholder="Email">
-                <button type="submit" class="btn btn-primary">Sign Up</button>
-                <div>
-                    <p>Don't have an account yet? 
-                        <RouterLink to="/auth/sign-in" class="link link-secondary">Sign In</RouterLink> </p>
-                </div>
-            </form>
+            <SetupAccountType />
+            <!-- <SetupName/> -->
+            <!-- <SetupCredentials/> -->
 
+            <!-- <br>
             <br>
-            <p class="text-sm text-center">OR</p>
             <br>
-
-            <div class="w-xs">
-                <button class="btn btn-secondary btn-soft w-full">Sign In with Google</button>
-            </div>
+            <br>
+            <ul class="steps w-xl">
+                <li class="step step-primary">Set Account Type</li>
+                <li class="step">Name Setup</li>
+                <li class="step">Credentials</li>
+            </ul> -->
         </div>
+
     </div>
+
 </template>
 
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import SetupAccountType from './components/SetupAccountType.vue';
+import SetupCredentials from './components/SetupCredentials.vue';
+import SetupName from './components/SetupName.vue';
 </script>

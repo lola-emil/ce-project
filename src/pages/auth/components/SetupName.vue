@@ -1,0 +1,20 @@
+<template>
+    <form class="w-xs flex flex-col gap-5">
+        <div>
+            <p class="text-xl font-semibold">Enter your name</p>
+            <!-- <small class="text-sm text-base-content/75">Enter your name.</small> -->
+        </div>
+        <input type="text" class="input w-full" placeholder="Firstname">
+        <input type="text" class="input w-full" placeholder="Lastname">
+        <button type="submit" class="btn btn-primary">Next</button>
+        <!-- <div>
+            <p>Don't have an account yet?
+                <RouterLink to="/auth/sign-in" class="link link-primary">Sign In</RouterLink>
+            </p>
+        </div> -->
+    </form>
+</template>
+
+<script setup lang="ts">
+import { RouterLink } from 'vue-router';
+</script>

@@ -7,5 +7,5 @@ export const useAuthStore = defineStore("auth", () => {
     const userType = ref<"client" | "worker">("worker");
 
 
-    return { isLoggedIn, userType }
+    return { isLoggedIn, userType } 
 });
