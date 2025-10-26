@@ -22,9 +22,9 @@
                     <li><a>Item 3</a></li>
                 </ul>
             </div>
-            <a class="btn btn-ghost text-xl">BuildCare</a>
+            <RouterLink to="/" class="btn btn-ghost text-xl">BuildCare</RouterLink>
 
-            <ul v-if="!auth.isLoggedIn" class="menu menu-horizontal px-1">
+            <ul v-if="!user" class="menu menu-horizontal px-1">
                 <li v-for="value in menuList">
                     <details v-if="value.children">
                         <summary>{{ value.label }}</summary>
@@ -39,7 +39,7 @@
             </ul>
         </div>
 
-        <div v-if="auth.isLoggedIn" class="navbar-end gap-5">
+        <div v-if="!!user" class="navbar-end gap-5">
             <!-- GLOBAL SEARCH -->
             <input type="text" class="input input-sm w-sm outline-none" placeholder="Search">
 
@@ -54,19 +54,19 @@
             <button class="btn btn-ghost btn-circle">
                 <CircleQuestionMark />
             </button>
-            <button class="btn btn-ghost btn-circle">
+            <button class="btn btn-ghost btn-circle" @click="logout()">
+                <LogOut :size="20" />
 
-                <div class="avatar avatar-placeholder">
+                <!-- <div class="avatar avatar-placeholder">
                     <div class="bg-neutral text-neutral-content w-8 rounded-full">
                         <span class="text-xs">UI</span>
                     </div>
-                </div>
+                </div> -->
             </button>
         </div>
 
         <div v-else class="navbar-end gap-5">
-            <RouterLink to="/auth/sign-in" class="btn btn-primary btn-soft">Sign In</RouterLink>
-            <RouterLink to="/auth/sign-up" class="btn btn-secondary btn-soft">Sign Up</RouterLink>
+            <RouterLink to="/auth/sign-in" class="btn btn-primary btn-sm">Sign In</RouterLink>
         </div>
     </nav>
 </template>
@@ -75,10 +75,13 @@
 import type { MenuListItem } from '@/types';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from "@/stores/auth";
-import { MessageCircle, Bell, CircleQuestionMark } from "lucide-vue-next";
+import { MessageCircle, Bell, CircleQuestionMark, LogOut } from "lucide-vue-next";
 import { ref } from 'vue';
+import { signOut } from "firebase/auth";
+import { useFirebaseAuth } from 'vuefire';
+import { useCurrentUser } from 'vuefire';
 
-const auth = useAuthStore();
+const auth = useFirebaseAuth();
 
 const menuList = ref<MenuListItem[]>([
     {
@@ -92,7 +95,7 @@ const menuList = ref<MenuListItem[]>([
     },
 
     {
-        path: "/About",
+        path: "/about",
         label: "About"
     },
     {
@@ -101,5 +104,12 @@ const menuList = ref<MenuListItem[]>([
     }
 
 ]);
+
+const user = useCurrentUser();
+
+async function logout() {
+    await signOut(auth!);
+    location.href = "/auth/sign-in";
+}
 
 </script>

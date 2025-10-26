@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-
+import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 export const firebaseApp = initializeApp({
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,4 +12,11 @@ export const firebaseApp = initializeApp({
     measurementId: import.meta.env.VITE_MEASUREMENT_ID
 });
 
+export const auth = getAuth(firebaseApp);
+
 export const db = getFirestore(firebaseApp);
+
+if (import.meta.env.DEV) {
+    connectFirestoreEmulator(db, "127.0.0.1", 8085);
+    connectAuthEmulator(auth, "http://localhost:9099");
+}

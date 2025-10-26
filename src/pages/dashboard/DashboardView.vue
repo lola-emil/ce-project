@@ -14,14 +14,14 @@
                         </div>
                     </div>
                     <div>
-                        <p class="text-center font-bold">Pedro D.</p>
+                        <p class="text-center font-bold">{{ user?.displayName }}</p>
                     </div>
 
                     <small v-if="auth.userType == 'worker'" class="text-sm text-base-content/75 text-center">Senior
                         Software Engr.</small>
 
                     <div>
-                        <button class="btn btn-sm btn-primary w-full">View Profile</button>
+                        <RouterLink to="/profile" class="btn btn-sm btn-primary w-full">View Profile</RouterLink>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
         <div class="col-span-3">
             <div class="py-10">
-                <p class="text-3xl font-semibold">Welcome, Pedro D.</p>
+                <p class="text-3xl font-semibold">Welcome, {{ user?.displayName }}</p>
                 <small class="text-sm text-base-content/75">Find important messages, tips, and links to helpful
                     resources here.</small>
             </div>
@@ -113,7 +113,7 @@
                                 </div>
 
                             </div>
-                            <button class="btn btn-info btn-soft">View Job</button>
+                            <button class="btn btn-primary btn-soft">View Job</button>
                         </div>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                             <div>
                                 <div class="badge badge-secondary badge-soft">profession</div>
                             </div>
-                            <button class="btn btn-info btn-soft">View Profile</button>
+                            <button class="btn btn-primary btn-soft">View Profile</button>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,15 @@ import { range } from '@/utils/util';
 import { MapPin } from "lucide-vue-next";
 import Navbar from '@/components/ui/Navbar.vue';
 import { useAuthStore } from '@/stores/auth';
+import { onMounted } from 'vue';
+import { useCurrentUser } from 'vuefire';
 
 const auth = useAuthStore();
+const user = useCurrentUser();
+
+
+onMounted(() => {
+
+});
 
 </script>

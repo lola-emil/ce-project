@@ -1,8 +1,7 @@
 <template>
-    <Navbar/>
-
+    <Navbar/>    
     <div class="container mx-auto">
-        <p>This is the about page.</p>
+        <p>This is the FAQ page</p>
     </div>
 </template>
 
