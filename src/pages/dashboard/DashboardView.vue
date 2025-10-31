@@ -4,7 +4,10 @@
     <main class="container mx-auto grid grid-cols-4 gap-10">
 
         <div class="col-span-1 flex flex-col gap-5 max-h-[calc(100vh-4rem)] sticky top-0">
-            <div class="card mt-10 border border-base-content/10">
+
+            <RouterLink v-if="auth.userType == 'client'" to="/create-job-posting" class="btn btn-outline btn-primary w-full mt-10">Create job post</RouterLink>
+
+            <div class="card border border-base-content/10">
                 <div class="card-body">
                     <div class="flex justify-center items-center">
                         <div class="avatar avatar-placeholder">

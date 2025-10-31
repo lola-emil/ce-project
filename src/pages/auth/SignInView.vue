@@ -1,4 +1,7 @@
 <template>
+    <div class="fixed top-5 left-5">
+        <RouterLink to="/" class="link">Back to Homepage</RouterLink>
+    </div>
     <div class="grid grid-cols-1 h-screen">
         <!-- <div class="bg-base-200">
         </div> -->
@@ -88,8 +91,8 @@ async function signIn() {
     if (error) {
         console.log(error.message);
         isLoading.value = false;
-        return;
     }
+    return;
 
     isLoading.value = false;
     redirect();

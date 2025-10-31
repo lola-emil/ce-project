@@ -74,7 +74,6 @@
 <script setup lang="ts">
 import type { MenuListItem } from '@/types';
 import { RouterLink } from 'vue-router';
-import { useAuthStore } from "@/stores/auth";
 import { MessageCircle, Bell, CircleQuestionMark, LogOut } from "lucide-vue-next";
 import { ref } from 'vue';
 import { signOut } from "firebase/auth";

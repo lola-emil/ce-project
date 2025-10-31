@@ -10,43 +10,6 @@
             </div>
         </section>
 
-
-        <section class="">
-            <!-- <h1 class="text-center text-3xl font-semibold">Here's how it works.</h1> -->
-            <div class="min-h-[80vh]">
-
-                <div>
-                    <h3>Tired of endless phone calls...?</h3>
-                    <p>Looking for a carpenter, a msaon, a painter - but no one's available?</p>
-                </div>
-
-                <div>
-                    <h3>Don't waste your time searching.</h3>
-                    <p>BuildCare connects yo uwith skilled workers -- instantly</p>
-                </div>
-
-                <div>
-                    <h3>Search. Book. Done.</h3>
-                    <p>Find workers by skill, location, and schedule -- in just a few taps.</p>                    
-                </div>
-
-                <div>
-                    <h3>No middlemen. No guessing</h3>
-                    <p>See ratings, reviews, and transparent pricing before you hire.</p>
-                </div>
-
-                <div>
-                    <h3>Confirm your booking, and you're all set.</h3>
-                    <p>Pay securely through the app -- we'll handle the rest.</p>
-                </div>
-
-                <div>
-                    <h3>Your project gets done -- faster, easier, better.</h3>
-                    <p>From fixing a wall to  renovation a room, BuildCare makes it effortless.</p>
-                </div>
-            </div>
-        </section>
-
         <!-- CTA sa pinaka ubos -->
         <section>
             <div class="card bg-base-200">
