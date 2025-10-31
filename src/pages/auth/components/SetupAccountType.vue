@@ -6,7 +6,7 @@
 
         <label for="client" class="flex items-center gap-5">
             <input type="radio" v-model="accountType" id="client" value="client" class="radio radio-xs">
-            <p>Client</p>
+            <p>Contractor</p>
         </label>
 
         <label for="worker" class="flex items-center gap-5">

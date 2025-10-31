@@ -22,7 +22,7 @@
                     <li><a>Item 3</a></li>
                 </ul>
             </div>
-            <RouterLink to="/" class="btn btn-ghost text-xl">BuildCare</RouterLink>
+            <RouterLink to="/" class="btn btn-ghost text-xl">Prodigify</RouterLink>
 
             <ul v-if="!user" class="menu menu-horizontal px-1">
                 <li v-for="value in menuList">
@@ -67,6 +67,7 @@
 
         <div v-else class="navbar-end gap-5">
             <RouterLink to="/auth/sign-in" class="btn btn-primary btn-sm">Sign In</RouterLink>
+            <RouterLink to="/auth/sign-up" class="btn btn-primary btn-outline btn-sm">Create account</RouterLink>
         </div>
     </nav>
 </template>

@@ -73,12 +73,12 @@ const router = createRouter({
     {
       path: "/workers",
       component: () => import("@/pages/workers/FindWorkerView.vue"),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
     },
     {
       path: "/jobs",
       component: () => import("@/pages/jobs/FindJobView.vue"),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
     },
 
     {
@@ -90,6 +90,12 @@ const router = createRouter({
     {
       path: "/dashboard",
       component: () => import("@/pages/dashboard/DashboardView.vue"),
+      meta: { requiresAuth: true },
+    },
+
+    {
+      path: "/dashboard2",
+      component: () => import("@/pages/dashboard/DashboardView2.vue"),
       meta: { requiresAuth: true },
     },
 

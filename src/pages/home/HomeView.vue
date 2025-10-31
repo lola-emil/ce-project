@@ -6,7 +6,7 @@
         <section class="min-h-[calc(100vh-4rem)] flex flex-col justify-center items-center gap-5">
             <h1 class="text-5xl font-bold text-center">On-Demand Platform for Skilled Construction Workers</h1>
             <div as-child class="btn btn-primary">
-                <RouterLink to="/auth/sign-up">Get Started</RouterLink>
+                <RouterLink to="/auth/sign-up">Create your account now</RouterLink>
             </div>
         </section>
 
@@ -16,11 +16,11 @@
                 <div class="card-body">
                     <div class="flex p-20 flex-col justify-center items-center gap-5">
                         <h1 class="text-3xl font-semibold text-center">
-                            <!-- Start Building Your Future with BuildCare Today. -->
+                            <!-- Start Building Your Future with Prodigify Today. -->
                              Stop searching. Start building.
                         </h1>
                         <div class="btn btn-primary">
-                            <RouterLink to="/auth/sign-up">Find workers</RouterLink>
+                            <RouterLink to="/workers">Find workers</RouterLink>
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
     <br>
     <footer class="p-10 bg-base-300">
         <div class="flex flex-col gap-5 items-center">
-            <h3 class="text-center font-semibold">BuildCare</h3>
+            <h3 class="text-center font-semibold">Prodigify</h3>
 
             <ul class="menu menu-horizontal px-1">
                 <li v-for="value in menuList">
@@ -56,12 +56,12 @@ import type { MenuListItem } from '@/types';
 import { RouterLink } from 'vue-router';
 const menuList: MenuListItem[] = [
     {
-        path: "/find-worker",
+        path: "/workers",
         label: "Find Worker"
     },
 
     {
-        path: "/find-job",
+        path: "/jobs",
         label: "Find Job"
     },
 

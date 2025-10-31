@@ -1,14 +1,16 @@
 <template>
-    <Navbar />
-    <div class="grid grid-cols-10 h-screen">
-        <div class="col-span-3 bg-primary sticky top-0"></div>
+    <!-- <Navbar /> -->
+    <div class="grid grid-cols-10 h-screen overflow-hidden">
+        <div class="col-span-3 bg-primary sticky top-0">
+            <img src="/abstract.jpeg" class="w-full h-full object-cover">
+        </div>
 
-        <div class="col-span-7">
+        <div class="col-span-7 h-screen overflow-y-auto">
             <div class="container mx-auto flex justify-center items-center">
                 <div class="card w-4xl">
                     <div class="card-body">
                         <div class="my-5">
-                            <RouterLink to="/dashboard" class="link">Back to home</RouterLink>
+                            <RouterLink to="/dashboard" class="btn btn-sm btn-secondary">Back to home</RouterLink>
                         </div>
                         <h3 class="text-2xl font-semibold">Create Job Post</h3>
 
@@ -28,7 +30,8 @@
                             <legend class="fieldset-legend">Attach Images</legend>
                             <input type="file" id="choose-images" class="hidden" placeholder="" />
 
-                            <label for="choose-images" class="border border-dashed border-base-content/20 rounded p-5 flex flex-col justify-center items-center hover:bg-base-content/20">
+                            <label for="choose-images"
+                                class="border border-dashed border-base-content/20 rounded p-5 flex flex-col justify-center items-center hover:bg-base-content/20">
                                 <div>
                                     <FileImage />
                                 </div>
