@@ -41,7 +41,7 @@
 
         <div v-if="!!user" class="navbar-end gap-5">
             <!-- GLOBAL SEARCH -->
-            <input type="text" class="input input-sm w-sm outline-none" placeholder="Search">
+            <!-- <input type="text" class="input input-sm w-sm outline-none" placeholder="Search"> -->
 
             <RouterLink to="/messages" class="btn btn-ghost btn-circle">
                 <MessageCircle :size="20" />
