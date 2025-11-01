@@ -209,19 +209,19 @@
                                 <div class="grid grid-cols-2">
                                     <div>
                                         <p>Province</p>
-                                        <p>Cebu</p>
+                                        <p>{{ profile?.province ?? "Not set" }}</p>
                                     </div>
 
                                     <div>
                                         <p>City/Municipality</p>
-                                        <p>Carmen</p>
+                                        <p>{{ profile?.city ?? "Not set" }}</p>
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-2">
                                     <div>
                                         <p>Postal Code</p>
-                                        <p>6005</p>
+                                        <p>{{ profile?.postal_code ?? "Not set" }}</p>
                                     </div>
 
                                     <div>
