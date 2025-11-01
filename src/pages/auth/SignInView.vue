@@ -135,10 +135,10 @@ async function signInWithFacebook() {
 
 function redirect() {
     // location.href = String(route.query.redirect);
-    if (route.query.redirect)
-        router.push(String(route.query.redirect));
-    else
-        router.push("/dashboard");
+    // if (route.query.redirect)
+    //     router.push(String(route.query.redirect));
+    // else
+        router.push("/setup-account");
 }
 
 </script>

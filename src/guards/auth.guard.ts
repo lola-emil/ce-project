@@ -6,7 +6,7 @@ export async function authGuard(to: RouteLocationNormalizedGeneric, _: RouteLoca
 
     const currentUser = await getCurrentUser();
 
-    if ((to.fullPath == "/auth/sign-in" || to.fullPath == "/") && !!currentUser)
+    if ((to.fullPath == "/auth/sign-in" || to.fullPath == "/" || to.fullPath == "/auth/sign-up") && !!currentUser)
         next("/dashboard");
     else if (to.meta.requiresAuth && !currentUser)
         next({

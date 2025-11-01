@@ -18,7 +18,7 @@ export const db = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp)
 
 if (import.meta.env.DEV) {
-    connectFirestoreEmulator(db, "127.0.0.1", 8085);
+    connectFirestoreEmulator(db, "127.0.0.1", 5051);
     connectAuthEmulator(auth, "http://localhost:9099");
     connectStorageEmulator(storage, "127.0.0.1", 9199);
 }

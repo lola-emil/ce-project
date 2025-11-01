@@ -18,26 +18,19 @@
                         </div>
                     </div>
                     <div>
-                        <p class="text-center font-bold">{{ user?.displayName }}</p>
+                        <p class="text-center font-bold">{{ user?.displayName ?? user?.email }}</p>
                     </div>
 
                     <small v-if="auth.userType == 'worker'"
                         class="text-sm text-base-content/75 text-center">Mason</small>
 
                     <div>
-                        <RouterLink to="/profile" class="btn btn-sm btn-primary w-full">View Profile</RouterLink>
+                        <RouterLink :to="'/profile/' + user?.uid" class="btn btn-sm btn-primary w-full">Profile
+                        </RouterLink>
                     </div>
                 </div>
             </div>
-            <!-- <div class="card border border-base-content/10">
-                <div class="card-body">
-                    <p class="font-bold">Recent activity</p>
 
-                    <div>
-                        No activities yet.
-                    </div>
-                </div>
-            </div> -->
             <div class="card bg-base-200 flex-1">
                 <div class="card-body flex items-center justify-center">
                     Mga Ads.
@@ -47,7 +40,7 @@
 
         <div class="col-span-3">
             <div class="py-10">
-                <p class="text-3xl font-semibold">Welcome, {{ user?.displayName }}</p>
+                <p class="text-3xl font-semibold">Welcome, {{ user?.displayName ?? user?.email }}</p>
                 <small class="text-sm text-base-content/75">Find important messages, tips, and links to helpful
                     resources here.</small>
             </div>

@@ -14,11 +14,6 @@
             <p>Worker</p>
         </label>
         <button type="submit" class="btn btn-primary" :disabled="!accountType">Next</button>
-        <div>
-            <p>Don't have an account yet?
-                <RouterLink to="/auth/sign-in" class="link link-primary">Sign In</RouterLink>
-            </p>
-        </div>
     </form>
 </template>
 
@@ -32,6 +27,15 @@ const accountType = ref<"client" | "worker" | null>(null);
 
 async function setAccountType() {
     console.log(accountType.value);
+    next();
 }
+
+async function next() {
+    emit("onNext");
+}
+
+const emit = defineEmits<{
+    onNext: []
+}>()
 
 </script>

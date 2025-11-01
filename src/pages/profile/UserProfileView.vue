@@ -14,18 +14,22 @@
                     </div>
 
                     <div>
-                        <p class="text-center font-bold text-lg">{{ user?.displayName }}</p>
-                        <div class="flex items-center justify-center gap-1">
+                        <p class="text-center font-bold text-lg">{{ user?.displayName ?? user?.email }}</p>
+                        <div v-if="profile?.city" class="flex items-center justify-center gap-1">
                             <MapPin :size="16" />
                             <div>
-                                Cebu City, PH
+                                {{ profile?.city }}, PH
                             </div>
                         </div>
                     </div>
 
+                    <div>
+                        <!-- {{  profile.userType }} -->
+                    </div>
+
                     <button class="btn btn-primary btn-sm">Message</button>
 
-                    <div v-if="auth.userType == 'client'" class="grid grid-cols-3">
+                    <div v-if="profile?.userType == 'client'" class="grid grid-cols-3">
                         <div class="p-3 flex flex-col items-center">
                             <p class="font-bold">12</p>
                             <small>Job Posted</small>
@@ -46,7 +50,7 @@
                 </div>
             </div>
 
-            <div v-if="auth.userType == 'worker'" class="card border border-base-content/10 mt-5">
+            <div v-if="profile?.userType == 'worker'" class="card border border-base-content/10 mt-5">
                 <div class="card-body">
                     <div>
                         <p class="font-bold">Skills & Endorsment</p>
@@ -60,7 +64,7 @@
                 </div>
             </div>
 
-            <div v-if="auth.userType == 'client'" class="card bg-base-200 h-96 w-full mt-5">
+            <div v-if="profile?.userType == 'client'" class="card bg-base-200 h-96 w-full mt-5">
                 <div class="card-body justify-center items-center">
                     <div>
                         <p>Mga ads.</p>
@@ -69,14 +73,12 @@
             </div>
 
 
-
-
         </div>
 
         <div class="col-span-3 px-5">
             <div class="card border border-base-content/10 mt-5">
                 <div class="card-body">
-                    <div v-if="auth.userType == 'worker'" class="grid grid-cols-3 mt-5">
+                    <div v-if="profile?.userType == 'worker'" class="grid grid-cols-3 mt-5">
                         <div class="stat">
                             <div class="stat-figure">
                                 <!-- <div class="radial-progress" style="--value:91;--size:3rem;" role="progressbar">91</div> -->
@@ -111,7 +113,7 @@
                         </div>
                     </div>
 
-                    <div v-if="auth.userType == 'client'" class="grid grid-cols-3 mt-5">
+                    <div v-if="profile?.userType == 'client'" class="grid grid-cols-3 mt-5">
                         <div class="stat">
                             <div class="stat-figure">
                                 <!-- <div class="radial-progress" style="--value:91;--size:3rem;" role="progressbar">91</div> -->
@@ -149,7 +151,8 @@
             </div>
 
             <!-- name of each tab group should be unique -->
-            <div v-if="auth.userType == 'worker'" class="tabs tabs-border mt-5">
+
+            <div class="tabs tabs-border mt-5">
                 <!-- <input type="radio" name="my_tabs_2" class="tab" aria-label="Showcase" />
                 <div class="tab-content  bg-base-100 p-10">Tab content 1</div> -->
 
@@ -164,151 +167,28 @@
                                 <div class="grid grid-cols-2">
                                     <div>
                                         <p>First Name</p>
-                                        <p>John</p>
+                                        <p>{{ profile?.firstname }}</p>
                                     </div>
 
                                     <div>
                                         <p>Last Name</p>
-                                        <p>Rahman</p>
+                                        <p>{{ profile?.lastname }}</p>
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-2">
                                     <div>
                                         <p>Email Address</p>
-                                        <p>John</p>
+                                        <p>{{ user?.email ?? "Not set" }}</p>
                                     </div>
 
                                     <div>
                                         <p>Phone</p>
-                                        <p>(+63) 933 338 4596</p>
+                                        <p>{{ profile?.phone ?? "Not set" }}</p>
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-2">
-                                    <div>
-                                        <p>Bio</p>
-                                        <div class="badge badge-info badge-soft badge-outline">
-                                            <p class="font-bold">Mason</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <div>
-                                <p class="font-bold">Address</p>
-                            </div>
-                            <div class="flex flex-col gap-5">
-                                <div class="grid grid-cols-2">
-                                    <div>
-                                        <p>Province</p>
-                                        <p>Cebu</p>
-                                    </div>
-
-                                    <div>
-                                        <p>City/Municipality</p>
-                                        <p>Carmen</p>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-2">
-                                    <div>
-                                        <p>Postal Code</p>
-                                        <p>6005</p>
-                                    </div>
-
-                                    <div>
-                                        <p>Tax ID</p>
-                                        <p>Not set</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <input type="radio" name="my_tabs_2" class="tab" aria-label="Rating & reviews" />
-                <div class="tab-content bg-base-100">
-
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- <div>
-                                <p class="font-bold">Ratings & Reviews</p>
-                            </div> -->
-
-                            <div class="flex flex-col gap-3 my-3">
-                                <div v-for="value in reviews" class="p-3 bg-base-200 rounded-lg">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex gap-2">
-                                            <div>
-                                                <div class="avatar avatar-placeholder">
-                                                    <div class="bg-neutral text-neutral-content w-8 rounded-full">
-                                                        <span class="text-xs">UI</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <p>{{ value.reviewer }}</p>
-                                                <small>{{ value.rating }} / 5</small>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            {{ value.date }}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        {{ value.comment }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div v-if="auth.userType == 'client'" class="tabs tabs-border mt-5">
-                <!-- <input type="radio" name="my_tabs_2" class="tab" aria-label="Showcase" />
-                <div class="tab-content  bg-base-100 p-10">Tab content 1</div> -->
-
-                <input type="radio" name="my_tabs_2" class="tab" aria-label="About" :checked="true" />
-                <div class="tab-content  bg-base-100">
-                    <div class="card">
-                        <div class="card-body">
-                            <div>
-                                <p class="font-bold">Personal Information</p>
-                            </div>
-                            <div class="flex flex-col gap-5 mt-3">
-                                <div class="grid grid-cols-2">
-                                    <div>
-                                        <p>First Name</p>
-                                        <p>John</p>
-                                    </div>
-
-                                    <div>
-                                        <p>Last Name</p>
-                                        <p>Rahman</p>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-2">
-                                    <div>
-                                        <p>Email Address</p>
-                                        <p>John</p>
-                                    </div>
-
-                                    <div>
-                                        <p>Phone</p>
-                                        <p>(+63) 933 338 4596</p>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-2">
+                                <div v-if="profile?.userType == 'worker'" class="grid grid-cols-2">
                                     <div>
                                         <p>Bio</p>
                                         <div class="badge badge-info badge-soft badge-outline">
@@ -400,12 +280,19 @@
 
 <script setup lang="ts">
 import Navbar from '@/components/ui/Navbar.vue';
-import { useAuthStore } from '@/stores/auth';
 import { CheckCircle, MapPin, FileText } from "lucide-vue-next";
 import { useCurrentUser } from 'vuefire';
+import { useProfileStore } from '@/stores/profile';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import type { ProfileDetails } from '@/types';
+import { getProfileByUID } from '@/services/profile.service';
 
 const user = useCurrentUser();
-const auth = useAuthStore();
+// const profileStore = useProfileStore();
+const route = useRoute();
+
+const profile = ref<ProfileDetails | null>(null);
 
 const reviews = [
     {
@@ -437,7 +324,7 @@ const reviews = [
         rating: 5,
         date: "2025-10-30",
         comment: "Fantastic! Exceeded all my expectations — would definitely buy again."
-    }   
+    }
 ];
 
 const endorsements = [
@@ -452,5 +339,15 @@ const endorsements = [
     "Team Leadership",
     "Project Estimation"
 ];
+
+const fetchProfile = async () => {
+    const id = String(route.params.id);
+    const result = await getProfileByUID(id);
+    profile.value = result;
+}
+
+onMounted(() => {
+    fetchProfile();
+})
 
 </script>

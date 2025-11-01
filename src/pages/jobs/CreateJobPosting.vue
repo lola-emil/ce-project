@@ -99,10 +99,10 @@
 </template>
 
 <script setup lang="ts">
-import Navbar from '@/components/ui/Navbar.vue';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { FileImage } from "lucide-vue-next";
+import { QuillEditor } from "@vueup/vue-quill"
 
 setOptions({
     key: import.meta.env.VITE_GOOGLE_API_KEY,

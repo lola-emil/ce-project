@@ -6,6 +6,7 @@ import AboutView from '@/pages/home/AboutView.vue';
 import FAQView from '@/pages/home/FAQView.vue';
 import { useAuthStore } from '@/stores/auth';
 import { authGuard } from '@/guards/auth.guard';
+import { accountSetupGuard } from '@/guards/account-setup.guard';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,7 +55,7 @@ const router = createRouter({
 
     // PROFILE
     {
-      path: "/profile",
+      path: "/profile/:id",
       component: () => import("@/pages/profile/UserProfileView.vue"),
       meta: { requiresAuth: true },
       children: [
@@ -67,6 +68,13 @@ const router = createRouter({
           component: () => import("@/pages/profile/UserProfileView.vue")
         }
       ],
+    },
+
+    {
+      path: "/setup-account",
+      component: () => import("@/pages/auth/SetupAccountView.vue"),
+      beforeEnter: (to, from, next) => accountSetupGuard(to, from, next),
+      meta: { requiresAuth: true },
     },
 
     // FIND-WORKER

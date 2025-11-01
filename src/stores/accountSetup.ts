@@ -1,15 +1,30 @@
+import type { ProfileDetails } from "@/types";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { reactive } from "vue";
 
-export const accountSetupStore = defineStore("account-setup", () => {
-    const accountType = ref<"client" | "worker" | null>(null);
+export const useAccountSetupStore = defineStore("account-setup", () => {
+    const profileDetails = reactive<ProfileDetails>(
+        {
+            userType: "client",
+            firstname: "",
+            lastname: "",
+            email: "",
+            bio: "",
+            city: "",
+            postal_code: "",
+            phone: "",
+            province: "",
+            tax_id: ""
+        }
+    )
 
-    const firstname = ref<string | null>(null);
-    const lastname = ref<string | null>(null);
+    const clearDetails = () => {
+        Object.keys(profileDetails).forEach((key) => {
+            profileDetails[key as keyof ProfileDetails] = key === 'userType' ? "client" : '';
+        });
+    }
 
-    // credentials
-    const email = ref<string | null>(null);
-    const password = ref<string | null>(null);
+    
 
-    return { accountType, firstname, lastname, email, password }
+    return { profileDetails, clearDetails }
 });

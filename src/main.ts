@@ -7,7 +7,6 @@ import App from './App.vue'
 import router from './router'
 import { VueFire, VueFireAuth } from "vuefire";
 import { firebaseApp } from "./firebase";
-import { QuillEditor } from "@vueup/vue-quill"
 
 const app = createApp(App)
 
@@ -21,7 +20,6 @@ app.use(VueFire, {
     ]
 })
 
-app.component('QuillEditor', QuillEditor)
 
 
 app.mount('#app')
