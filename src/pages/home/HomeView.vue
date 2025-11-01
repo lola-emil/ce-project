@@ -1,78 +1,12 @@
 <template>
-    <Navbar />
-
-    <main class="container mx-auto">
-        <!-- HERO -->
-        <section class="min-h-[calc(100vh-4rem)] flex flex-col justify-center items-center gap-5">
-            <h1 class="text-5xl font-bold text-center">On-Demand Platform for Skilled Construction Workers</h1>
-            <div as-child class="btn btn-primary">
-                <RouterLink to="/auth/sign-up">Create your account now</RouterLink>
-            </div>
-        </section>
-
-        <!-- CTA sa pinaka ubos -->
-        <section>
-            <div class="card bg-base-200">
-                <div class="card-body">
-                    <div class="flex p-20 flex-col justify-center items-center gap-5">
-                        <h1 class="text-3xl font-semibold text-center">
-                            <!-- Start Building Your Future with Prodigify Today. -->
-                             Stop searching. Start building.
-                        </h1>
-                        <div class="btn btn-primary">
-                            <RouterLink to="/workers">Find workers</RouterLink>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    <br>
-    <footer class="p-10 bg-base-300">
-        <div class="flex flex-col gap-5 items-center">
-            <h3 class="text-center font-semibold">Prodigify</h3>
-
-            <ul class="menu menu-horizontal px-1">
-                <li v-for="value in menuList">
-                    <details v-if="value.children">
-                        <summary>{{ value.label }}</summary>
-                        <ul>
-                            <li v-for="child in value.children">
-                                <RouterLink :to="child.path ?? ''">{{ child.label }}</RouterLink>
-                            </li>
-                        </ul>
-                    </details>
-                    <RouterLink :to="value.path ?? ''">{{ value.label }}</RouterLink>
-                </li>
-            </ul>
-        </div>
-
-    </footer>
+    <h1>This is the home view</h1>
+    <Button @click="mode = 'dark'">Click</Button>
 </template>
 
 <script setup lang="ts">
-import Navbar from '@/components/ui/Navbar.vue';
-import type { MenuListItem } from '@/types';
-import { RouterLink } from 'vue-router';
-const menuList: MenuListItem[] = [
-    {
-        path: "/workers",
-        label: "Find Worker"
-    },
+import { Button } from '@/components/ui/button';
+import { useColorMode } from "@vueuse/core";
 
-    {
-        path: "/jobs",
-        label: "Find Job"
-    },
+const mode = useColorMode();
 
-    {
-        path: "/About",
-        label: "About"
-    },
-
-    {
-        path: "/faq",
-        label: "FAQs"
-    },
-];
 </script>

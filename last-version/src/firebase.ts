@@ -1,0 +1,24 @@
+import { initializeApp } from "firebase/app";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { connectStorageEmulator, getStorage } from "firebase/storage";
+
+export const firebaseApp = initializeApp({
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID,
+    measurementId: import.meta.env.VITE_MEASUREMENT_ID
+});
+
+export const auth = getAuth(firebaseApp);
+export const db = getFirestore(firebaseApp);
+export const storage = getStorage(firebaseApp)
+
+if (import.meta.env.DEV) {
+    connectFirestoreEmulator(db, "127.0.0.1", 5051);
+    connectAuthEmulator(auth, "http://localhost:9099");
+    connectStorageEmulator(storage, "127.0.0.1", 9199);
+}
