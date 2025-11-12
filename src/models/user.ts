@@ -1,3 +1,8 @@
+export type UserRole = "admin" | "user" | "client";
+export type ActivityStatus = "online" | "offline";
+export type UserStatus = "active" | "inactive" | "suspended";
+export type AvailabilityStatus = "available" | "unavailable";
+
 export type Address = {
     street: string
     locality: string
@@ -6,13 +11,6 @@ export type Address = {
     country: string;
     addressType: "permanent" | "current"
 };
-
-
-
-export type UserRole = "admin" | "user" | "client";
-export type ActivityStatus = "online" | "offline";
-export type UserStatus = "active" | "inactive" | "suspended";
-export type AvailabilityStatus = "available" | "unavailable";
 
 
 export interface User {
