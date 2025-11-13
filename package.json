@@ -39,7 +39,8 @@
     "vue-echarts": "^8.0.1",
     "vue-router": "^4.5.1",
     "vue-sonner": "^2.0.9",
-    "vuefire": "^3.2.2"
+    "vuefire": "^3.2.2",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.14",
