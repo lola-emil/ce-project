@@ -14,7 +14,7 @@ const hello = () => alert("Hello, World");
 
         <!-- HERO SECTION -->
         <motion.div :initial="{ opacity: 0, y: 20 }" :animate="{ opacity: 1, y: 0 }"
-            :transition="{ duration: 0.6, ease: 'easeOut' }" class="w-full h-96 flex justify-center items-center">
+            :transition="{ duration: 0.6, ease: 'easeOut' }" class="w-full min-h-96 flex justify-center items-center">
             <div class="flex flex-col justify-center items-center w-1/2 gap-5">
 
                 <p class="text-center font-bold text-base-content/35">

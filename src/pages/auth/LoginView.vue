@@ -1,6 +1,24 @@
+<script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+
+import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
+import { Input } from "@/components/ui/input"
+import { motion } from "motion-v"
+
+</script>
+
 <template>
     <div class="h-screen flex flex-col justify-center items-center">
-        <div class="flex flex-col justify-center items-center">
+        <motion.div :initial="{ opacity: 0, y: 20 }" :animate="{ opacity: 1, y: 0 }"
+            :transition="{ duration: 0.6, ease: 'easeOut' }" class="flex flex-col justify-center items-center">
             <Card class="w-[365px]">
                 <CardHeader>
                     <CardTitle>Login to your account</CardTitle>
@@ -38,21 +56,6 @@
                     </form>
                 </CardContent>
             </Card>
-        </div>
+        </motion.div>
     </div>
 </template>
-
-<script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
-
-import { Input } from "@/components/ui/input"
-</script>

@@ -48,14 +48,14 @@ import {
                 <NavigationMenu>
                     <NavigationMenuList>
                         <NavigationMenuItem>
-                            <NavigationMenuLink href="/docs/introduction" :class="navigationMenuTriggerStyle()">
-                                Login
+                            <NavigationMenuLink as-child href="/docs/introduction" :class="navigationMenuTriggerStyle()">
+                                <RouterLink to="/login">Login</RouterLink>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 
                         <NavigationMenuItem>
                             <NavigationMenuLink href="/docs/introduction" :class="navigationMenuTriggerStyle()">
-                                Create an Account
+                                <RouterLink to="/register">Create an Account</RouterLink>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 
