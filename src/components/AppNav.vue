@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import { RouterLink } from 'vue-router';
+import { cn } from "@/lib/utils";
+</script>
+
 <template>
     <header>
         <div class="border-b">
@@ -31,49 +36,3 @@
         </div>
     </header>
 </template>
-
-<script setup lang="ts">
-import { onMounted } from "vue";
-import { RouterLink } from 'vue-router';
-import { cn } from "@/lib/utils";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-vue-next"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-    Item,
-    ItemActions,
-    ItemContent,
-    ItemDescription,
-    ItemMedia,
-    ItemTitle,
-} from "@/components/ui/item"
-
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardContent
-} from "@/components/ui/card";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import LineChart from "@/components/ui/chart-line/LineChart.vue";
-import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
-</script>

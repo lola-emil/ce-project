@@ -1,4 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getAllJobs } from "@/repository/job.repo";
+import { onMounted, ref } from "vue";
+
+const jobs = ref<{ id: string }[]>([])
+
+onMounted(async () => {
+    jobs.value = await getAllJobs();
+})
+</script>
 
 
 <template>
