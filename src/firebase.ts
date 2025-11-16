@@ -1,5 +1,6 @@
 import { initializeApp, type FirebaseOptions } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 
 
 const firebaseConfig: FirebaseOptions = {
@@ -11,8 +12,14 @@ const firebaseConfig: FirebaseOptions = {
   appId: import.meta.env.VITE_APP_ID,
   measurementId: import.meta.env.VITE_MEASUREMENT_ID,
   projectId: import.meta.env.VITE_PROJECT_ID
-  
+
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);
 export const db = getFirestore(firebaseApp);
+export const auth = getAuth(firebaseApp);
+
+if (import.meta.env.DEV || import.meta.env.VITE_USE_EMULATORS === "true") {
+  connectFirestoreEmulator(db, "localhost", 5051);
+  connectAuthEmulator(auth, "http://localhost:9099")
+}

@@ -7,18 +7,18 @@ export const adminRoutes: RouteRecordRaw[] = [
     },
     {
         path: "job-management",
-        component: () => import("@/pages/admin/job-management/JobManagement.vue")
+        component: () => import("@/pages/admin/workforce-job-management/WorkforceJobManagement.vue")
     },
     {
         path: "payment-commission-management",
-        component: () => import("@/pages/admin/payment-comission-management/PaymentComissionManagement.vue")
+        component: () => import("@/pages/admin/payment-commission-management/PaymentCommissionManagement.vue")
     },
     {
         path: "skill-management",
         component: () => import("@/pages/admin/skill-management/SkillManagement.vue")
     },
     {
-        path: "user-management",
+        path: "client-management",
         component: () => import("@/pages/admin/user-management/UserManagementView.vue")
     },
     {
