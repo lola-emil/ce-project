@@ -5,7 +5,7 @@ import { CheckCircle, ClipboardMinus, DollarSign, UserCheck } from 'lucide-vue-n
 
 <template>
 
-    <div class="grid grid-cols-4 gap-5">
+    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5">
         <Card>
             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle class="text-sm font-medium">

@@ -126,7 +126,7 @@ const tableData: TableData[] = [
 
 
   <main class="mt-5">
-    <div class="container mx-auto">
+    <div class="container mx-auto px-5 md:px-0">
       <section>
         <StatSection />
       </section>

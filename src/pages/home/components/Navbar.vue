@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
+import { RouterLink } from 'vue-router';
 import {
     NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuIndicator,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
-    NavigationMenuTrigger,
-    NavigationMenuViewport,
     navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu'
 
@@ -16,39 +12,54 @@ import {
 
 <template>
     <div class="w-full h-[72px]">
-        <div class="container mx-auto flex items-center h-full justify-between">
+        <div class="container mx-auto flex items-center h-full justify-between px-5 md:px-0">
             <div class="flex items-center gap-5">
-                <div class="font-bold">Logo</div>
-                <div>
+                <div class="font-bold">Prodigify</div>
+                <div class="hidden md:block">
                     <NavigationMenu>
                         <NavigationMenuList>
-                            <NavigationMenuItem>
-                                <NavigationMenuLink href="/docs/introduction" :class="navigationMenuTriggerStyle()">
-                                    Home
-                                </NavigationMenuLink>
+                            <NavigationMenuItem as-child>
+                                <RouterLink to="/">
+                                    <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                        Home
+                                    </NavigationMenuLink>
+                                </RouterLink>
                             </NavigationMenuItem>
 
-                            <NavigationMenuItem>
-                                <NavigationMenuLink href="/docs/introduction" :class="navigationMenuTriggerStyle()">
-                                    About
-                                </NavigationMenuLink>
+                            <NavigationMenuItem as-child>
+                                <RouterLink to="/about">
+                                    <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                        About
+                                    </NavigationMenuLink>
+                                </RouterLink>
                             </NavigationMenuItem>
 
-                            <NavigationMenuItem>
-                                <NavigationMenuLink href="/docs/introduction" :class="navigationMenuTriggerStyle()">
-                                    Contact Us
-                                </NavigationMenuLink>
+                            <NavigationMenuItem as-child>
+                                <RouterLink to="/contact">
+                                    <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                        Contact Us
+                                    </NavigationMenuLink>
+                                </RouterLink>
+                            </NavigationMenuItem>
+
+                            <NavigationMenuItem as-child>
+                                <RouterLink to="/contact">
+                                    <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                        FAQs
+                                    </NavigationMenuLink>
+                                </RouterLink>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>
             </div>
 
-            <div>
+            <div class="hidden md:block">
                 <NavigationMenu>
                     <NavigationMenuList>
                         <NavigationMenuItem>
-                            <NavigationMenuLink as-child href="/docs/introduction" :class="navigationMenuTriggerStyle()">
+                            <NavigationMenuLink as-child href="/docs/introduction"
+                                :class="navigationMenuTriggerStyle()">
                                 <RouterLink to="/login">Login</RouterLink>
                             </NavigationMenuLink>
                         </NavigationMenuItem>

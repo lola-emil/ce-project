@@ -9,6 +9,9 @@ import { adminRoutes } from './admin.route';
 // src/router/index.js (or main.js if you prefer)
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css'; // Import the default styles
+import AboutView from '@/pages/home/AboutView.vue';
+import ContactView from '@/pages/home/ContactView.vue';
+import FAQView from '@/pages/home/FAQView.vue';
 
 // ... your router setup ...
 
@@ -27,6 +30,20 @@ const router = createRouter({
     {
       path: "/register",
       component: ReigsterView
+    },
+    {
+      path: "/about",
+      component: AboutView
+    },
+
+    {
+      path: "/contact",
+      component: ContactView
+    },
+
+    {
+      path: "/faq",
+      component: FAQView
     },
 
     {

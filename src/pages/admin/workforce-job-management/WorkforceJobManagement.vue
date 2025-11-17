@@ -116,7 +116,7 @@ const tableData: TableData[] = [
 
 <template>
     <br>
-    <div class="container mx-auto">
+    <div class="container mx-auto px-5 md:px-0">
         <Tabs default-value="clients">
             <TabsList>
                 <TabsTrigger value="clients">

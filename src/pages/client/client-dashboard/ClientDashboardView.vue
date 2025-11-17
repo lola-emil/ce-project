@@ -14,7 +14,7 @@ import {
 </script>
 
 <template>
-    <div class="container mx-auto">
+    <div class="container mx-auto px-5 md:px-0">
         <div class="mt-10">
             <h3 class="text-3xl">Good day, Pedro</h3>
             <p class="text-lg text-muted-foreground">Here’s a quick overview of your latest activity.</p>
