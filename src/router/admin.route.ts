@@ -24,5 +24,9 @@ export const adminRoutes: RouteRecordRaw[] = [
     {
         path: "worker-assignment-console",
         component: () => import("@/pages/admin/worker-assignment-console/WorkerAssignmentConsole.vue")
+    },
+    {
+        path: "add-new-worker",
+        component: () => import("@/pages/admin/workforce-job-management/AddNewWorker.vue")
     }
 ];

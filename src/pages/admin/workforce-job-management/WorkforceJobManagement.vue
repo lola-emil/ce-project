@@ -8,6 +8,8 @@ import {
 import ClientsList from './components/ClientsList.vue'
 import WorkersList from './components/WorkersList.vue'
 import JobsList from './components/JobsList.vue'
+import { useWorker } from './composables/useWorker'
+import { onMounted } from 'vue'
 
 interface TableData {
     id: number
@@ -111,6 +113,7 @@ const tableData: TableData[] = [
         reviewer: "Julia Adams"
     }
 ];
+
 
 </script>
 

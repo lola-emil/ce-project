@@ -2,7 +2,8 @@
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import { Input } from '@/components/ui/input'
-import { ref, h } from 'vue'
+import { ref, h, onMounted } from 'vue'
+import { useWorker } from '../composables/useWorker'
 
 export const schema = z.object({
     id: z.number(),
@@ -276,6 +277,15 @@ const table = useVueTable({
         get rowSelection() { return rowSelection.value },
     },
 })
+
+
+
+const worker = useWorker();
+
+
+onMounted(() => {
+    console.log(worker.getUsers());
+})
 </script>
 
 <template>
@@ -347,9 +357,11 @@ const table = useVueTable({
                             </template>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="outline" size="sm">
-                        <IconPlus />
-                        <span class="hidden lg:inline">Add Section</span>
+                    <Button size="sm" as-child>
+                        <RouterLink to="add-new-worker">
+                            <IconPlus />
+                            <span class="hidden lg:inline">Add Section</span>
+                        </RouterLink>
                     </Button>
                 </div>
             </div>

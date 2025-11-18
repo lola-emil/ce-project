@@ -4,7 +4,6 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
@@ -12,6 +11,9 @@ import {
 import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
 import { Input } from "@/components/ui/input"
 import { motion } from "motion-v"
+import { useLogin } from './composables/auth';
+
+const auth = useLogin();
 
 </script>
 
@@ -27,11 +29,12 @@ import { motion } from "motion-v"
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form>
+                    <form @submit.prevent="auth.loginWithEmailAndPassword()">
                         <FieldGroup>
                             <Field>
                                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                                <Input id="email" type="email" placeholder="m@example.com" required />
+                                <Input id="email" v-model="auth.loginForm.email" type="email" placeholder="m@example.com" required
+                                    :disabled="auth.isLoading.value" />
                             </Field>
                             <Field>
                                 <div className="flex items-center">
@@ -41,11 +44,12 @@ import { motion } from "motion-v"
                                         Forgot your password?
                                     </a>
                                 </div>
-                                <Input id="password" type="password" required />
+                                <Input id="password" v-model="auth.loginForm.password" type="password" required :disabled="auth.isLoading.value" />
                             </Field>
                             <Field>
-                                <Button type="submit">Login</Button>
-                                <Button variant="outline" type="button">
+                                <Button type="submit" :disabled="auth.isLoading.value">Login</Button>
+                                <Button @click="auth.loginWithGoogle()" variant="outline" type="button"
+                                    :disabled="auth.isLoading.value">
                                     Login with Google
                                 </Button>
                                 <FieldDescription className="text-center">

@@ -1,0 +1,21 @@
+Process para sa client registration
+
+1. login with google or email
+2. Setup account
+	- add ang personal info
+	- add ang address
+	- contact info
+	- end
+
+Process para sa worker registration
+
+1. Login ang admin
+2. add new worker
+3. setup
+	- set ang account credential
+	- ang personal info
+	- address
+	- contact info
+	- legal documents (ID, Birth Cert. etc.) for account verification
+	- add optinal documents (Diploma, etc.)
+

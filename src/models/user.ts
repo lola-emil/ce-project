@@ -23,7 +23,6 @@ export interface User {
     lastname: string;
 
     email: string;
-    passwordHash?: string;
 
     address: Address[]
 
