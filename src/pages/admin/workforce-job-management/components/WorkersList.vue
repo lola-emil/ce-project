@@ -360,7 +360,7 @@ onMounted(() => {
                     <Button size="sm" as-child>
                         <RouterLink to="add-new-worker">
                             <IconPlus />
-                            <span class="hidden lg:inline">Add Section</span>
+                            <span class="hidden lg:inline">Add Worker</span>
                         </RouterLink>
                     </Button>
                 </div>
