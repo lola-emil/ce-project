@@ -1,30 +1,3 @@
-<script setup lang="ts">
-import { cn } from '@/utils/util';
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
-import { Button } from './ui/button';
-import { LogOut } from 'lucide-vue-next';
-import { Menu } from 'lucide-vue-next';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-
-interface Route {
-    path: string;
-    title: string;
-};
-
-const props = defineProps<{
-    menuItems: Route[]
-}>();
-
-</script>
-
-
 <template>
     <header>
         <div class="border-b">
@@ -43,8 +16,10 @@ const props = defineProps<{
                 </div>
 
                 <div class="hidden md:block">
-                    <Button size="sm" variant="outline">
-                        <LogOut /> Sign Out
+                    <Button size="sm" variant="outline" as-child>
+                        <RouterLink to="/">
+                            <LogOut /> Sign Out
+                        </RouterLink>
                     </Button>
                 </div>
 
@@ -62,9 +37,11 @@ const props = defineProps<{
                             <DropdownMenuItem v-for="value in props.menuItems" as-child>
                                 <RouterLink :to="value.path">{{ value.title }}</RouterLink>
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator/>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem as-child>
-                                <RouterLink to=""><LogOut/> Sign Out</RouterLink>
+                                <RouterLink to="/">
+                                    <LogOut /> Sign Out
+                                </RouterLink>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -74,3 +51,29 @@ const props = defineProps<{
         </div>
     </header>
 </template>
+
+<script setup lang="ts">
+import { cn } from '@/utils/util';
+import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
+import { Button } from './ui/button';
+import { LogOut } from 'lucide-vue-next';
+import { Menu } from 'lucide-vue-next';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { RouterLink } from 'vue-router';
+
+interface Route {
+    path: string;
+    title: string;
+};
+
+const props = defineProps<{
+    menuItems: Route[]
+}>();
+
+</script>

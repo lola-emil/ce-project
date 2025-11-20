@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft } from 'lucide-vue-next';
+import { ArrowLeft } from 'lucide-vue-next';
 
 </script>
 
 <template>
     <div class="container mx-auto">
         <div class="mt-10">
-            <Button variant="ghost" as-child>
+            <Button variant="link" as-child>
                 <RouterLink to="my-jobs">
-                    <ChevronLeft/> Go back
+                    <ArrowLeft/> Go back
                 </RouterLink>
             </Button>
         </div>

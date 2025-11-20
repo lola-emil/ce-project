@@ -2,10 +2,17 @@
 import LayoutNav from '@/components/LayoutNav.vue';
 import { RouterView } from 'vue-router';
 
-const routes = [{
-    path: "",
-    title: ""
-}];
+const routes = [
+    {
+        path: "dashboard",
+        title: "Overview"
+    },
+
+    {
+        path: "my-assignments",
+        title: "My Jobs"
+    },
+];
 </script>
 
 <template>

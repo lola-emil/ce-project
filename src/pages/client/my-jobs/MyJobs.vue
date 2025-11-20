@@ -41,9 +41,11 @@ const range = (size: number) => new Array(size);
                         <Input placeholder="Search" class="min-w-xs hidden md:block" />
 
                     </div>
-                    <Button>
-                        <Plus />
-                        Create job request
+                    <Button as-child>
+                        <RouterLink to="create-job-request">
+                            <Plus />
+                            Create job request
+                        </RouterLink>
                     </Button>
                 </div>
 

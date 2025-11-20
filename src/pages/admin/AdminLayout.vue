@@ -15,15 +15,15 @@ const routes = [
         title: "Workforce and Jobs"
     },
 
-    {
-        path: "payment-commission-management",
-        title: "Payments"
-    },
-
     // {
-    //     path: "settings",
-    //     title: "Settings"
+    //     path: "payment-commission-management",
+    //     title: "Payments"
     // },
+
+    {
+        path: "settings",
+        title: "Settings"
+    },
 ];
 
 </script>

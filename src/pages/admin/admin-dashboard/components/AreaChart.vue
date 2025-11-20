@@ -33,7 +33,60 @@ const chartData = [
   { month: 6, monthLabel: "June", desktop: 214, mobile: 140 },
 ]
 
-type Data = typeof chartData[number]
+const data = [
+  {
+    day: 1,
+    dayLabel: "Mon",
+    jobsPosted: 34,
+    jobsCompleted: 20,
+    workerApplications: 78
+  },
+  {
+    day: 2,
+    dayLabel: "Tue",
+    jobsPosted: 28,
+    jobsCompleted: 18,
+    workerApplications: 65
+  },
+  {
+    day: 3,
+    dayLabel: "Wed",
+    jobsPosted: 40,
+    jobsCompleted: 25,
+    workerApplications: 90
+  },
+  {
+    day: 4,
+    dayLabel: "Thu",
+    jobsPosted: 35,
+    jobsCompleted: 28,
+    workerApplications: 82
+  },
+  {
+    day: 5,
+    dayLabel: "Fri",
+    jobsPosted: 50,
+    jobsCompleted: 32,
+    workerApplications: 110
+  },
+  {
+    day: 6,
+    dayLabel: "Sat",
+    jobsPosted: 60,
+    jobsCompleted: 40,
+    workerApplications: 140
+  },
+  {
+    day: 7,
+    dayLabel: "Sun",
+    jobsPosted: 25,
+    jobsCompleted: 17,
+    workerApplications: 55
+  }
+]
+
+
+type Data = typeof data[number]
 
 const chartConfig = {
   desktop: {
@@ -77,63 +130,42 @@ const svgDefs = `
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>Area Chart - Gradient</CardTitle>
+      <CardTitle>Weekly Trends</CardTitle>
       <CardDescription>
-        Showing total visitors for the last 6 months
+        Overview of job creation, assignments, and completions over the past 7 days
       </CardDescription>
     </CardHeader>
     <CardContent>
       <ChartContainer :config="chartConfig" class="max-h-[250px]">
-        <VisXYContainer :data="chartData" :svg-defs="svgDefs">
-          <VisArea
-            :x="(d: Data) => d.month"
-            :y="[(d: Data) => d.mobile, (d: Data) => d.desktop]"
-            :color="(d: Data, i: number) => ['url(#fillMobile)', 'url(#fillDesktop)'][i]"
-            :opacity="0.4"
-          />
-          <VisLine
-            :x="(d: Data) => d.month"
-            :y="[(d: Data) => d.mobile, (d: Data) => d.mobile + d.desktop]"
-            :color="(d: Data, i: number) => [chartConfig.mobile.color, chartConfig.desktop.color][i]"
-            :line-width="1"
-          />
-          <VisAxis
-            type="x"
-            :x="(d: Data) => d.month"
-            :tick-line="false"
-            :domain-line="false"
-            :grid-line="false"
-            :num-ticks="6"
-            :tick-format="(d: number, index: number) => {
-              return chartData[index]!.monthLabel.slice(0, 3)
-            }"
-          />
-          <VisAxis
-            type="y"
-            :num-ticks="3"
-            :tick-line="false"
-            :domain-line="false"
-            :tick-format="(d: number, index: number) => ''"
-          />
+        <VisXYContainer :data="data" :svg-defs="svgDefs">
+          <VisArea :x="(d: Data) => d.day" :y="[(d: Data) => d.jobsCompleted, (d: Data) => d.jobsPosted]"
+            :color="(d: Data, i: number) => ['url(#fillMobile)', 'url(#fillDesktop)'][i]" :opacity="0.4" />
+          <VisLine :x="(d: Data) => d.day" :y="[(d: Data) => d.jobsCompleted, (d: Data) => d.jobsCompleted + d.jobsPosted]"
+            :color="(d: Data, i: number) => [chartConfig.mobile.color, chartConfig.desktop.color][i]" :line-width="1" />
+          <VisAxis type="x" :x="(d: Data) => d.day" :tick-line="false" :domain-line="false" :grid-line="false"
+            :num-ticks="6" :tick-format="(d: number, index: number) => {
+              return data[index]!.dayLabel.slice(0, 3)
+            }" />
+          <VisAxis type="y" :num-ticks="3" :tick-line="false" :domain-line="false"
+            :tick-format="(d: number, index: number) => ''" />
           <ChartTooltip />
-          <ChartCrosshair
-            :template="componentToString(chartConfig, ChartTooltipContent, { labelKey: 'monthLabel' })"
-            :color="(d: Data, i: number) => [chartConfig.mobile.color, chartConfig.desktop.color][i % 2]"
-          />
+          <ChartCrosshair :template="componentToString(chartConfig, ChartTooltipContent, { labelKey: 'monthLabel' })"
+            :color="(d: Data, i: number) => [chartConfig.mobile.color, chartConfig.desktop.color][i % 2]" />
         </VisXYContainer>
       </ChartContainer>
     </CardContent>
-    <CardFooter>
+    <!-- <CardFooter>
       <div class="flex w-full items-start gap-2 text-sm">
         <div class="grid gap-2">
           <div class="flex items-center gap-2 leading-none font-medium">
-            Trending up by 5.2% this month <TrendingUp class="h-4 w-4" />
+            Trending up by 5.2% this month
+            <TrendingUp class="h-4 w-4" />
           </div>
           <div class="text-muted-foreground flex items-center gap-2 leading-none">
             January - June 2024
           </div>
         </div>
       </div>
-    </CardFooter>
+    </CardFooter> -->
   </Card>
 </template>

@@ -3,12 +3,15 @@
     <div class="container mx-auto px-5 md:px-0">
         <Tabs default-value="clients">
             <TabsList>
-                <TabsTrigger value="clients">
-                    Clients List
-                </TabsTrigger>
+
                 <TabsTrigger value="workers">
                     Workers List
                 </TabsTrigger>
+
+                <TabsTrigger value="clients">
+                    Clients List
+                </TabsTrigger>
+
 
                 <TabsTrigger value="jobs">
                     Jobs List

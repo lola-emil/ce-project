@@ -21,8 +21,6 @@ import {
   componentToString,
 } from "@/components/ui/chart"
 
-const description = "A simple pie chart"
-
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
@@ -34,27 +32,27 @@ type Data = typeof chartData[number]
 
 const chartConfig = {
   visitors: {
-    label: "Visitors",
+    label: "Status",
     color: undefined,
   },
   chrome: {
-    label: "Chrome",
+    label: "Pending Review",
     color: "var(--chart-1)",
   },
   safari: {
-    label: "Safari",
+    label: "Open for Workers",
     color: "var(--chart-2)",
   },
   firefox: {
-    label: "Firefox",
+    label: "Worker Assigned",
     color: "var(--chart-3)",
   },
   edge: {
-    label: "Edge",
+    label: "In Progress",
     color: "var(--chart-4)",
   },
   other: {
-    label: "Other",
+    label: "Completed",
     color: "var(--chart-5)",
   },
 } satisfies ChartConfig
@@ -63,7 +61,7 @@ const chartConfig = {
 <template>
   <Card class="flex flex-col">
     <CardHeader class="items-center pb-0">
-      <CardTitle>Pie Chart</CardTitle>
+      <CardTitle>Jobs by Status</CardTitle>
       <CardDescription>January - June 2024</CardDescription>
     </CardHeader>
     <CardContent class="flex-1 pb-0">
@@ -93,7 +91,7 @@ const chartConfig = {
         Trending up by 5.2% this month <TrendingUp class="h-4 w-4" />
       </div>
       <div class="leading-none text-muted-foreground">
-        Showing total visitors for the last 6 months
+        Showing total job by status for the last 6 months
       </div>
     </CardFooter>
   </Card>

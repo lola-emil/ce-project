@@ -34,7 +34,7 @@ import { CheckCircle, DollarSign, Star, UserCheck } from 'lucide-vue-next';
                     3
                 </div>
                 <p class="text-xs text-muted-foreground">
-                    +20.1% from last month
+                    <!-- +20.1% from last month -->
                 </p>
             </CardContent>
         </Card>
@@ -51,7 +51,7 @@ import { CheckCircle, DollarSign, Star, UserCheck } from 'lucide-vue-next';
                     45
                 </div>
                 <p class="text-xs text-muted-foreground">
-                    +20.1% from last month
+                    <!-- +20.1% from last month -->
                 </p>
             </CardContent>
         </Card>
@@ -65,7 +65,7 @@ import { CheckCircle, DollarSign, Star, UserCheck } from 'lucide-vue-next';
             </CardHeader>
             <CardContent>
                 <div class="text-2xl font-bold">
-                    4.8/<span class="text-sm">5.0</span>
+                    4.8 <span class="text-sm">/ 5.0</span>
                 </div>
                 <p class="text-xs text-muted-foreground">
                     +20.1% from last month
