@@ -61,19 +61,12 @@
 
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+
 
 import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
-import { Input } from "@/components/ui/input"
-import { motion } from "motion-v"
+import { Input } from "@/components/ui/input";
+import { motion } from "motion-v";
 import { useLogin } from './composables/auth';
-import { ArrowLeft } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
 
 const auth = useLogin();
