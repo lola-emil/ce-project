@@ -57,17 +57,20 @@ import {
             <div class="hidden md:block">
                 <NavigationMenu>
                     <NavigationMenuList>
-                        <NavigationMenuItem>
-                            <NavigationMenuLink as-child href="/docs/introduction"
-                                :class="navigationMenuTriggerStyle()">
-                                <RouterLink to="/login">Login</RouterLink>
-                            </NavigationMenuLink>
+                        <NavigationMenuItem as-child>
+                            <RouterLink to="/login">
+                                <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                    Login
+                                </NavigationMenuLink>
+                            </RouterLink>
                         </NavigationMenuItem>
 
-                        <NavigationMenuItem>
-                            <NavigationMenuLink href="/docs/introduction" :class="navigationMenuTriggerStyle()">
-                                <RouterLink to="/register">Create an Account</RouterLink>
-                            </NavigationMenuLink>
+                        <NavigationMenuItem as-child>
+                            <RouterLink to="/register">
+                                <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                    Create an Account
+                                </NavigationMenuLink>
+                            </RouterLink>
                         </NavigationMenuItem>
 
                     </NavigationMenuList>

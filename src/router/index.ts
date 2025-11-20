@@ -12,6 +12,9 @@ import 'nprogress/nprogress.css'; // Import the default styles
 import AboutView from '@/pages/home/AboutView.vue';
 import ContactView from '@/pages/home/ContactView.vue';
 import FAQView from '@/pages/home/FAQView.vue';
+// import { getCurrentUser } from 'vuefire';
+// import { collection, getDocs, limit, query, where } from 'firebase/firestore';
+// import { db } from '@/firebase';
 
 // ... your router setup ...
 
@@ -21,51 +24,111 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      component: HomeView
+      component: HomeView,
+      meta: {
+        title: "Prodigify",
+        requiresAuth: false,
+      },
     },
     {
       path: "/login",
-      component: LoginView
+      component: LoginView,
+      meta: {
+        title: "Log In",
+      },
     },
     {
       path: "/register",
-      component: ReigsterView
+      component: ReigsterView,
+      meta: {
+        title: "Register",
+      },
     },
     {
       path: "/about",
-      component: AboutView
+      component: AboutView,
+      meta: {
+        title: "About Us",
+      },
     },
 
     {
       path: "/contact",
-      component: ContactView
+      component: ContactView,
+      meta: {
+        title: "Contact",
+      },
     },
 
     {
       path: "/faq",
-      component: FAQView
+      component: FAQView,
+      meta: {
+        title: "FAQs",
+      },
     },
 
     {
       path: "/client",
       component: () => import("@/pages/client/ClientLayout.vue"),
-      children: [...clientRoutes]
+      children: [...clientRoutes],
+      meta: {
+        requiresAuth: true,
+        roles: ["client"]
+      },
     },
     {
       path: "/worker",
       component: () => import("@/pages/worker/WorkerLayout.vue"),
       children: [...workerRoutes],
+      meta: {
+        requiresAuth: true,
+        roles: ["worker"]
+      },
     },
     {
       path: "/admin",
       component: () => import("@/pages/admin/AdminLayout.vue"),
-      children: [...adminRoutes]
+      children: [...adminRoutes],
+      meta: {
+        requiresAuth: true,
+        roles: ["admin"]
+      },
     }
   ],
 });
 
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
+  // const user = await getCurrentUser();
+
+  // // Auth guard
+  // if (to.meta.requiresAuth && user) {
+  //   const q = query(
+  //     collection(db, "users"),
+  //     where("user_uid", "==", user?.uid),
+  //     limit(1)
+  //   );
+
+  //   const userDoc = await getDocs(q);
+  //   const userInfo = userDoc.docs[0]?.data();
+
+  //   if (!(<string[]>to.meta.roles).includes(userInfo?.role)) {
+  //     next("/login");
+  //   }
+  // }
+
+
+  const { title, description } = to.meta;
+  const defaultTitle = "Prodigify";
+  const defaultDescription = 'Unsay Inyo?';
+  // Set ang page title
+  document.title = <string>title ?? defaultTitle;
+
+  const descriptionElement = document.querySelector('head meta[name="description"]')
+  descriptionElement?.setAttribute('content', <string>description || defaultDescription)
+
+
   NProgress.start(); // Start the progress bar on route change
   next();
 });

@@ -35,6 +35,7 @@ export function useWorker() {
 
         email: "",
         password: "",
+        userRole: "worker",
 
         // For the address
         address: {
@@ -43,7 +44,6 @@ export function useWorker() {
             city: "",
             province: "",
             zipcode: "",
-            role: "worker"
         }
     });
 
