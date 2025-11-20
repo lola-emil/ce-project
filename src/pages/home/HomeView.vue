@@ -1,13 +1,3 @@
-<script setup lang="ts">
-import Navbar from './components/Navbar.vue';
-import { Button } from '@/components/ui/button';
-import { motion } from "motion-v";
-import { Badge } from '@/components/ui/badge';
-
-const hello = () => alert("Hello, World");
-
-</script>
-
 <template>
     <Navbar />
 
@@ -36,7 +26,9 @@ const hello = () => alert("Hello, World");
 
 
                 <div>
-                    <Button size="lg" variant="outline" class="font-bold" @click="hello()">Create an Account</Button>
+                    <Button size="lg" variant="outline" class="font-bold">
+                        <RouterLink to="/register">Create an Account</RouterLink>
+                    </Button>
                 </div>
             </div>
         </motion.div>
@@ -48,7 +40,7 @@ const hello = () => alert("Hello, World");
         </motion.div>
 
         <div>
-            
+
         </div>
 
         <br>
@@ -58,6 +50,13 @@ const hello = () => alert("Hello, World");
     </main>
 </template>
 
+<script setup lang="ts">
+import Navbar from './components/Navbar.vue';
+import { Button } from '@/components/ui/button';
+import { motion } from "motion-v";
+import { Badge } from '@/components/ui/badge';
+
+</script>
 
 
 <style scoped>
