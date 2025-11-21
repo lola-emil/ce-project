@@ -4,5 +4,7 @@ import Navbar from './components/Navbar.vue';
 
 <template>
     <Navbar/>
-    <h1>This is the contact page.</h1>
+    <div class="container mx-auto">
+        <h1>Contact page, to be developed pa ni</h1>
+    </div>
 </template>

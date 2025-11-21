@@ -49,7 +49,6 @@ const router = createRouter({
         title: "About Us",
       },
     },
-
     {
       path: "/contact",
       component: ContactView,
@@ -59,7 +58,7 @@ const router = createRouter({
     },
 
     {
-      path: "/faq",
+      path: "/faqs",
       component: FAQView,
       meta: {
         title: "FAQs",

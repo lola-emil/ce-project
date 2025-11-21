@@ -43,7 +43,7 @@ import {
                             </NavigationMenuItem>
 
                             <NavigationMenuItem as-child>
-                                <RouterLink to="/contact">
+                                <RouterLink to="/faqs">
                                     <NavigationMenuLink :class="navigationMenuTriggerStyle()">
                                         FAQs
                                     </NavigationMenuLink>
