@@ -7,10 +7,10 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
+import { setGlobalOptions } from "firebase-functions";
+import { CallableRequest, onCall, onRequest } from "firebase-functions/https";
 import * as logger from "firebase-functions/logger";
-
+import admin, { initializeApp } from "firebase-admin";
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
@@ -24,9 +24,45 @@ import * as logger from "firebase-functions/logger";
 // functions should each use functions.runWith({ maxInstances: 10 }) instead.
 // In the v1 API, each function can only serve one request per container, so
 // this will be the maximum concurrent request count.
-setGlobalOptions({maxInstances: 10});
+setGlobalOptions({ maxInstances: 10 });
 
-export const helloWorld = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
+initializeApp();
+const auth = admin.auth();
+
+
+type SetUserRoleRequest = {
+  uid: string;
+  role: "app" | "client" | "worker" | "admin";
+};
+
+
+export const helloWorld = onRequest((_request, response) => {
+  logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");
 });
+
+// USER ROLE FUNCTIONS
+export const setUserRoleFunction = onCall<SetUserRoleRequest>(
+  async (data: CallableRequest<SetUserRoleRequest>) => {
+
+    const { uid, role } = data.data; // <- note the `.data` here
+
+    if (!["app", "client", "worker", "admin"].includes(role)) {
+      throw new Error("Invalid role");
+    }
+
+    await auth.setCustomUserClaims(uid, { role });
+
+    return { message: `Role ${role} set for user ${uid}` };
+  }
+);
+
+
+export async function setUserRole(uid: string, role: string) {
+  if (!["app", "client", "worker", "admin"].includes(role)) {
+    throw new Error("Invalid role");
+  }
+
+  await auth.setCustomUserClaims(uid, { role });
+  console.log(`Set role ${role} for user ${uid}`);
+}

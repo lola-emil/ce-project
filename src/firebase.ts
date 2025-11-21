@@ -1,6 +1,7 @@
 import { initializeApp, type FirebaseOptions } from "firebase/app";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 
 
 const firebaseConfig: FirebaseOptions = {
@@ -18,8 +19,10 @@ const firebaseConfig: FirebaseOptions = {
 export const firebaseApp = initializeApp(firebaseConfig);
 export const db = getFirestore(firebaseApp);
 export const auth = getAuth(firebaseApp);
+export const functions = getFunctions(firebaseApp);
 
 if (import.meta.env.DEV || import.meta.env.VITE_USE_EMULATORS === "true") {
-  connectFirestoreEmulator(db, "localhost", 5051);
+  connectFirestoreEmulator(db, "localhost", 5051)
   connectAuthEmulator(auth, "http://localhost:9099")
+  connectFunctionsEmulator(functions, "127.0.0.1", 5001)
 }

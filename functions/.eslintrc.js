@@ -29,5 +29,11 @@ module.exports = {
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
     "indent": ["error", 2],
+
+    "no-multiple-empty-lines": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "object-curly-spacing": "off",
+    "eol-last": "off",
+    "max-len": "off",
   },
 };

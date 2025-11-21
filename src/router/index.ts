@@ -4,15 +4,12 @@ import { clientRoutes } from './client.route';
 import { workerRoutes } from './worker.route';
 import { adminRoutes } from './admin.route';
 
-// src/router/index.js (or main.js if you prefer)
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css'; // Import the default styles
 import AboutView from '@/pages/home/AboutView.vue';
 import ContactView from '@/pages/home/ContactView.vue';
 import FAQView from '@/pages/home/FAQView.vue';
-// import { getCurrentUser } from 'vuefire';
-// import { collection, getDocs, limit, query, where } from 'firebase/firestore';
-// import { db } from '@/firebase';
+import FunctionTest from '@/pages/FunctionTest.vue';
 
 // ... your router setup ...
 
@@ -83,6 +80,12 @@ const router = createRouter({
         roles: ["worker"]
       },
     },
+
+    {
+      path: "/function-test",
+      component: FunctionTest
+    },
+
     {
       path: "/admin",
       component: () => import("@/pages/admin/AdminLayout.vue"),

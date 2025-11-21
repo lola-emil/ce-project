@@ -1,10 +1,81 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow all read and write para pang prototype
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+
+    // ---------------------------
+    // USERS COLLECTION
+    // ---------------------------
+    match /users/{userId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId || request.auth.token.role == "admin"
+      );
+      allow write: if request.auth != null && (
+        request.auth.uid == userId || request.auth.token.role == "admin"
+      );
+    }
+
+    // ---------------------------
+    // JOB REQUESTS
+    // ---------------------------
+    match /jobRequests/{jobId} {
+      allow create: if request.auth != null && request.auth.token.role == "client";
+      allow read: if request.auth != null; // Any authenticated user can see jobs
+      allow update: if request.auth != null && (
+        request.auth.uid == resource.data.clientId || request.auth.token.role == "admin"
+      );
+      allow delete: if request.auth != null && request.auth.token.role == "admin";
+    }
+
+    // ---------------------------
+    // JOB ASSIGNMENTS
+    // ---------------------------
+    match /jobAssignments/{assignmentId} {
+      allow create: if request.auth != null && request.auth.token.role == "admin"; // Admin creates assignment
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.workerId ||
+        request.auth.uid == resource.data.clientId ||
+        request.auth.token.role == "admin"
+      );
+      allow update: if request.auth != null && (
+        request.auth.uid == resource.data.workerId ||
+        request.auth.token.role == "admin"
+      ); // Worker updates progress, admin can update everything
+    }
+
+    // ---------------------------
+    // PAYMENTS
+    // ---------------------------
+    match /payments/{paymentId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.clientId ||
+        request.auth.uid == resource.data.workerId ||
+        request.auth.token.role == "admin"
+      );
+      allow write: if request.auth != null && request.auth.token.role == "admin";
+    }
+
+    // ---------------------------
+    // WORKER REVIEWS
+    // ---------------------------
+    match /workerReviews/{reviewId} {
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.reviewerId;
+      allow read: if request.auth != null;
+      allow update, delete: if request.auth != null && request.auth.token.role == "admin";
+    }
+
+    // ---------------------------
+    // HELPER FUNCTIONS (Optional)
+    // ---------------------------
+    function isAdmin() {
+      return request.auth.token.role == "admin";
+    }
+
+    function isWorker() {
+      return request.auth.token.role == "worker";
+    }
+
+    function isClient() {
+      return request.auth.token.role == "client";
     }
   }
 }
