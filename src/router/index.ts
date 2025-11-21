@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/pages/home/HomeView.vue';
+import HomeView from '@/pages/index/HomeView.vue';
 import { clientRoutes } from './client.route';
 import { workerRoutes } from './worker.route';
 import { adminRoutes } from './admin.route';
 
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css'; // Import the default styles
-import AboutView from '@/pages/home/AboutView.vue';
-import ContactView from '@/pages/home/ContactView.vue';
-import FAQView from '@/pages/home/FAQView.vue';
+import AboutView from '@/pages/index/AboutView.vue';
+import ContactView from '@/pages/index/ContactView.vue';
+import FAQView from '@/pages/index/FAQView.vue';
 import FunctionTest from '@/pages/FunctionTest.vue';
 
 // ... your router setup ...
