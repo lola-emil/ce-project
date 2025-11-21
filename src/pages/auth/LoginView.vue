@@ -27,7 +27,7 @@ const error = ref<boolean>(false);
 
 function login() {
     
-    if (!emails.includes(form.email) && form.password != password) {
+    if (!emails.includes(form.email) || form.password != password) {
         error.value = true;
         return;
     }
