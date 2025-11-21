@@ -1,37 +1,3 @@
-<template>
-    <br>
-    <div class="container mx-auto px-5 md:px-0">
-        <Tabs default-value="clients">
-            <TabsList>
-
-                <TabsTrigger value="workers">
-                    Workers List
-                </TabsTrigger>
-
-                <TabsTrigger value="clients">
-                    Clients List
-                </TabsTrigger>
-
-
-                <TabsTrigger value="jobs">
-                    Jobs List
-                </TabsTrigger>
-            </TabsList>
-            <TabsContent value="clients">
-                <ClientsList :data="tableData" />
-            </TabsContent>
-            <TabsContent value="workers">
-                <WorkersList :data="tableData" />
-            </TabsContent>
-
-            <TabsContent value="jobs">
-                <JobsList :data="tableData" />
-            </TabsContent>
-        </Tabs>
-    </div>
-</template>
-
-
 <script setup lang="ts">
 import {
     Tabs,
@@ -148,3 +114,36 @@ const tableData: TableData[] = [
 
 
 </script>
+
+<template>
+    <br>
+    <div class="container mx-auto px-5 md:px-0">
+        <Tabs default-value="workers">
+            <TabsList>
+
+                <TabsTrigger value="workers">
+                    Workers List
+                </TabsTrigger>
+
+                <TabsTrigger value="clients">
+                    Clients List
+                </TabsTrigger>
+
+
+                <TabsTrigger value="jobs">
+                    Jobs List
+                </TabsTrigger>
+            </TabsList>
+            <TabsContent value="clients">
+                <ClientsList :data="tableData" />
+            </TabsContent>
+            <TabsContent value="workers">
+                <WorkersList :data="tableData" />
+            </TabsContent>
+
+            <TabsContent value="jobs">
+                <JobsList :data="tableData" />
+            </TabsContent>
+        </Tabs>
+    </div>
+</template>
