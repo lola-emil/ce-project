@@ -1,3 +1,53 @@
+
+<script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+
+
+import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
+import { Input } from "@/components/ui/input";
+import { motion } from "motion-v";
+import { RouterLink } from 'vue-router';
+import { reactive, ref } from 'vue';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { AlertCircleIcon } from "lucide-vue-next"
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+
+const form = reactive({
+    email: "",
+    password: ""
+})
+
+const emails = ["admin@gmail.com", "client@gmail.com", "worker@gmail.com"];
+const password = "letmein123"
+
+const error = ref<boolean>(false);
+
+function login() {
+    
+    if (!emails.includes(form.email) && form.password != password) {
+        error.value = true;
+        return;
+    }
+
+    switch (form.email) {
+        case "admin@gmail.com":
+            router.push("/admin/dashboard");
+            break;
+        case "client@gmail.com":
+            router.push("/client/dashboard");
+            break;
+        case "worker@gmail.com":
+            router.push("/worker/dashboard");
+            break;
+        default:
+            break;
+    }
+}
+</script>
+
 <template>
     <div class="grid grid-cols-1 lg:grid-cols-2">
 
@@ -13,17 +63,23 @@
                 :transition="{ duration: 0.6, ease: 'easeOut' }">
                 <h3 class="text-xl">Login to your account</h3>
                 <p class="text-muted-foreground">Enter your email below to login to your account</p>
-                <br>
-                <form @submit.prevent="auth.loginWithEmailAndPassword()" class="w-xs">
+                <div>
+                    <br>
+                    <Alert v-if="error" variant="destructive">
+                        <AlertCircleIcon />
+                        <AlertTitle>Invalid credentials</AlertTitle>
+                    </Alert>
+                </div>
+                <form @submit.prevent="login()" class="w-xs">
+
+                    <br>
                     <FieldGroup>
                         <Field>
                             <FieldLabel htmlFor="email">Email</FieldLabel>
-                            <Input id="email" v-model="auth.loginForm.email" type="email" placeholder="m@example.com"
-                                required :disabled="auth.isLoading.value" />
+                            <Input id="email" v-model="form.email" type="email" placeholder="m@example.com" required />
                         </Field>
                         <Field class="flex-col-reverse">
-                            <Input id="password" v-model="auth.loginForm.password" type="password" required
-                                :disabled="auth.isLoading.value" />
+                            <Input id="password" v-model="form.password" type="password" required />
 
                             <div class="flex items-center">
                                 <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -33,9 +89,8 @@
                             </div>
                         </Field>
                         <Field>
-                            <Button type="submit" :disabled="auth.isLoading.value">Login</Button>
-                            <Button @click="auth.loginWithGoogle()" variant="outline" type="button"
-                                :disabled="auth.isLoading.value">
+                            <Button type="submit" >Login</Button>
+                            <Button variant="outline" type="button">
                                 Login with Google
                             </Button>
                             <FieldDescription class="text-center">
@@ -59,16 +114,3 @@
 </template>
 
 
-<script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
-
-
-import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
-import { Input } from "@/components/ui/input";
-import { motion } from "motion-v";
-import { useLogin } from './composables/auth';
-import { RouterLink } from 'vue-router';
-
-const auth = useLogin();
-
-</script>

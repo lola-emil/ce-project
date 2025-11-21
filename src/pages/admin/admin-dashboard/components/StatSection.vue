@@ -12,7 +12,7 @@ import { Briefcase, CheckCircle, DollarSign, UserCheck } from 'lucide-vue-next';
 
 
 <template>
-    <div class="grid lg:grid-cols-2 xl:grid-cols-4 gap-5">
+    <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5">
         <Card>
             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle class="text-sm font-medium">
@@ -73,7 +73,7 @@ import { Briefcase, CheckCircle, DollarSign, UserCheck } from 'lucide-vue-next';
             </CardHeader>
             <CardContent>
                 <div class="text-2xl font-bold">
-                    $45,231.89
+                    ₱45,231.89
                 </div>
                 <p class="text-xs text-muted-foreground">
                     +20.1% from last month
