@@ -10,42 +10,12 @@ import { RouterLink } from 'vue-router';
 import { reactive, ref } from 'vue';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { AlertCircleIcon } from "lucide-vue-next"
-import { useRouter } from "vue-router";
+import { useLogin } from './composables/auth';
 
-const router = useRouter();
-
-
-const form = reactive({
-    email: "",
-    password: ""
-})
-
-const emails = ["admin@gmail.com", "client@gmail.com", "worker@gmail.com"];
-const password = "letmein123"
+const auth = useLogin();
 
 const error = ref<boolean>(false);
 
-function login() {
-    
-    if (!emails.includes(form.email) || form.password != password) {
-        error.value = true;
-        return;
-    }
-
-    switch (form.email) {
-        case "admin@gmail.com":
-            router.push("/admin/dashboard");
-            break;
-        case "client@gmail.com":
-            router.push("/client/dashboard");
-            break;
-        case "worker@gmail.com":
-            router.push("/worker/dashboard");
-            break;
-        default:
-            break;
-    }
-}
 </script>
 
 <template>
@@ -70,16 +40,14 @@ function login() {
                         <AlertTitle>Invalid credentials</AlertTitle>
                     </Alert>
                 </div>
-                <form @submit.prevent="login()" class="w-xs">
-
-                    <br>
+                <form @submit.prevent="auth.loginWithEmailAndPassword" class="w-xs">
                     <FieldGroup>
                         <Field>
                             <FieldLabel htmlFor="email">Email</FieldLabel>
-                            <Input id="email" v-model="form.email" type="email" placeholder="m@example.com" required />
+                            <Input id="email" v-model="auth.loginForm.email" type="email" placeholder="m@example.com" required />
                         </Field>
                         <Field class="flex-col-reverse">
-                            <Input id="password" v-model="form.password" type="password" required />
+                            <Input id="password" v-model="auth.loginForm.password" type="password" required />
 
                             <div class="flex items-center">
                                 <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -90,7 +58,7 @@ function login() {
                         </Field>
                         <Field>
                             <Button type="submit" >Login</Button>
-                            <Button variant="outline" type="button">
+                            <Button variant="outline" type="button" @click="auth.loginWithGoogle()">
                                 Login with Google
                             </Button>
                             <FieldDescription class="text-center">

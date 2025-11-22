@@ -39,6 +39,15 @@ const router = createRouter({
         title: "Register",
       },
     },
+
+    {
+      path: "/setup-account",
+      component: () => import("@/pages/auth/SetupAccount.vue"),
+      meta: {
+        title: "Setup Your Account"
+      }
+    },
+
     {
       path: "/about",
       component: AboutView,
