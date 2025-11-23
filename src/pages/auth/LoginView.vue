@@ -1,9 +1,8 @@
-
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
 
 
-import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
 import { Input } from "@/components/ui/input";
 import { motion } from "motion-v";
 import { RouterLink } from 'vue-router';
@@ -44,11 +43,16 @@ const error = ref<boolean>(false);
                     <FieldGroup>
                         <Field>
                             <FieldLabel htmlFor="email">Email</FieldLabel>
-                            <Input id="email" v-model="auth.loginForm.email" type="email" placeholder="m@example.com" required />
+                            <Input id="email" v-model="auth.loginForm.email" type="email" placeholder="m@example.com"
+                                required />
+
+                            <FieldError>{{ auth.formError.email }}</FieldError>
                         </Field>
                         <Field class="flex-col-reverse">
-                            <Input id="password" v-model="auth.loginForm.password" type="password" required />
-
+                            <div>
+                                <Input id="password" v-model="auth.loginForm.password" type="password" required />
+                                <FieldError class="mt-2">{{ auth.formError.password }}</FieldError>
+                            </div>
                             <div class="flex items-center">
                                 <FieldLabel htmlFor="password">Password</FieldLabel>
                                 <a href="#" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
@@ -57,7 +61,7 @@ const error = ref<boolean>(false);
                             </div>
                         </Field>
                         <Field>
-                            <Button type="submit" >Login</Button>
+                            <Button type="submit">Login</Button>
                             <Button variant="outline" type="button" @click="auth.loginWithGoogle()">
                                 Login with Google
                             </Button>
@@ -80,5 +84,3 @@ const error = ref<boolean>(false);
         </div>
     </div>
 </template>
-
-

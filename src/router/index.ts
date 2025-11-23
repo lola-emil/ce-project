@@ -10,6 +10,9 @@ import AboutView from '@/pages/index/AboutView.vue';
 import ContactView from '@/pages/index/ContactView.vue';
 import FAQView from '@/pages/index/FAQView.vue';
 import FunctionTest from '@/pages/FunctionTest.vue';
+import { getCurrentUser } from 'vuefire';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
 
 // ... your router setup ...
 
@@ -41,10 +44,35 @@ const router = createRouter({
     },
 
     {
+      path: "/success",
+      component: () => import("@/pages/auth/SuccessPage.vue"),
+      meta: {
+        title: "Success"
+      }
+    },
+
+    {
       path: "/setup-account",
       component: () => import("@/pages/auth/SetupAccount.vue"),
       meta: {
         title: "Setup Your Account"
+      },
+      beforeEnter: async (to, from, next) => {
+        const user = await getCurrentUser();
+
+        if (!user) {
+          next("/login");
+          return;
+        }
+
+        const userDetailDocRef = doc(db, "users", user.uid);
+        const userDetailSnap = await getDoc(userDetailDocRef);
+        if (userDetailSnap.exists()) {
+          next("/");
+          return;
+        }
+
+        next();
       }
     },
 

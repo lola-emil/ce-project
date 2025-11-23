@@ -7,30 +7,12 @@ import FieldGroup from '@/components/ui/field/FieldGroup.vue';
 import { useWorker } from './composables/useWorker';
 import z, { ZodError } from 'zod';
 import { FirebaseError } from 'firebase/app';
-import type { User } from '@/models/user';
 import { ref } from 'vue';
 import type { $ZodErrorTree } from 'zod/v4/core';
 
 const worker = useWorker();
 
-const errors = ref<$ZodErrorTree<User>>();
 
-async function submit() {
-    const [data, error] = await worker.create();
-
-    if (error instanceof ZodError) {
-        errors.value = z.treeifyError((error as ZodError<User>))
-        console.log("Validation error: ", errors.value);
-        return;
-    }
-
-    if (error instanceof FirebaseError) {
-        console.log("Firebase error: ", error);
-        return;
-    }
-
-    console.log(data!);
-}
 
 
 </script>
@@ -52,25 +34,25 @@ async function submit() {
         </div>
 
         <div class="mt-5">
-            <form @submit.prevent="submit()">
+            <form>
                 <FieldGroup>
                     <div class="grid lg:grid-cols-3 gap-5">
                         <Field>
                             <FieldLabel htmlFor="firstname">First Name</FieldLabel>
                             <Input id="firstname" v-model="worker.form.firstname" type="text" />
-                            <FieldError>{{ errors?.properties?.firstname?.errors[0] }}</FieldError>
+                            <FieldError></FieldError>
                         </Field>
 
                         <Field>
                             <FieldLabel htmlFor="middlename">Middle Name</FieldLabel>
                             <Input id="middlename" v-model="worker.form.middlename" type="text" />
-                            <FieldError>{{ errors?.properties?.middlename?.errors[0] }}</FieldError>
+                            <FieldError></FieldError>
                         </Field>
 
                         <Field>
                             <FieldLabel htmlFor="lastname">Last Name</FieldLabel>
                             <Input id="lastname" v-model="worker.form.lastname" type="text" />
-                            <FieldError>{{ errors?.properties?.lastname?.errors[0] }}</FieldError>
+                            <FieldError></FieldError>
                         </Field>
                     </div>
                 </FieldGroup>

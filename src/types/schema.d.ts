@@ -40,9 +40,9 @@ export interface User {
     role: "admin" | "worker" | "client"; // Set via custom claims
 
     name?: PersonName;                    // Admin might not need this
-    gender?: Gender;
+    // gender?: Gender;
 
-    contact_info?: ContactInfo;           // Only for worker/client
+    contactInfo?: ContactInfo;           // Only for worker/client
 }
 
 // JOBS SCHEMA

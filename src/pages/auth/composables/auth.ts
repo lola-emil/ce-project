@@ -1,11 +1,16 @@
 import { useFirebaseAuth } from "vuefire";
-import { signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, createUserWithEmailAndPassword, type UserCredential } from "firebase/auth";
+import {
+    signInWithPopup,
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword,
+    type UserCredential
+} from "firebase/auth";
 import { reactive, ref } from "vue";
 import z, { treeifyError, ZodError } from "zod";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "vue-router";
+import { FirebaseError } from "firebase/app";
 
-// TODO: Dapat butangan ug error message para sa login
 export function useLogin() {
     const auth = useFirebaseAuth();
     const authStore = useAuthStore();
@@ -15,6 +20,10 @@ export function useLogin() {
         email: "",
         password: ""
     });
+    const formError = reactive({
+        email: "",
+        password: ""
+    })
 
     const isLoading = ref<boolean>(false);
 
@@ -35,12 +44,20 @@ export function useLogin() {
 
     const loginWithEmailAndPassword = async () => {
         isLoading.value = true;
-        console.log("SHIT");
         try {
             await authStore.loginWithEmailPassword(loginForm.email, loginForm.password);
             router.push("/setup-account");
         } catch (error) {
-            console.error("Error signing in with email and password", error);
+            const firebaseError = error as FirebaseError;
+            console.log(firebaseError.code);
+
+            if (firebaseError.code == "auth/user-not-found") {
+                formError.email = "User not found";
+            }
+
+            if (firebaseError.code == "auth/wrong-password") {
+                formError.password = "Incorrect password"
+            }
         } finally {
             isLoading.value = false;
         }
@@ -58,7 +75,8 @@ export function useLogin() {
         clearForm,
 
         loginForm,
-        isLoading
+        isLoading,
+        formError
     };
 }
 
@@ -120,6 +138,24 @@ export function useRegister() {
             if (error instanceof ZodError)
                 formError.value = z.treeifyError(error as ZodError<RegisterFormError>);
 
+            if (error instanceof FirebaseError) {
+                const fireError = error as FirebaseError;
+
+                if (fireError.code == "auth/email-already-in-use") {
+                    console.log("Email already in use");
+                    formError.value = {
+                        errors: [],
+                        properties: {
+                            email: {
+                                errors: [
+                                    "Email already in use"
+                                ]
+                            }
+                        }
+                    };
+                }
+            }
+
         } finally {
             isLoading.value = false;
         }
@@ -133,6 +169,7 @@ export function useRegister() {
         registrationForm.confirm_password = "";
     }
 
+
     return {
         registerEmailAndPassword,
         clearForm,
@@ -141,4 +178,5 @@ export function useRegister() {
         formError,
         isLoading
     }
+
 }

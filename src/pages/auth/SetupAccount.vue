@@ -1,166 +1,215 @@
 <script setup lang="ts">
-import { Stepper, StepperDescription, StepperItem, StepperSeparator, StepperTitle, StepperTrigger } from '@/components/ui/stepper'
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Check, Circle, Dot } from 'lucide-vue-next';
-import {
-    Field,
-    FieldGroup,
-    FieldLabel,
-    FieldError
-} from "@/components/ui/field"
-import { Separator } from '@/components/ui/separator';
-import { Input } from '@/components/ui/input';
-import { ref } from 'vue';
+import { h, ref } from 'vue'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { toast } from 'vue-sonner'
+import { FieldLabel, Field, FieldGroup, FieldError } from '@/components/ui/field';
+import { useAccountSetup, type AddressForm, type ContactInfoForm, type NameForm } from './composables/accountSetup';
+import z, { treeifyError } from 'zod';
+import { useRouter } from 'vue-router';
 
+const accountSetup = useAccountSetup();
+const router = useRouter();
 
-const stepIndex = ref(2);
+const stepIndex = ref(1)
 const steps = [
     {
         step: 1,
         title: 'Your details',
-        description:
-            'Provide your personal details. We will use this information to create your account',
+        description: 'Provide your full name',
     },
     {
         step: 2,
-        title: 'Contact Information',
-        description: 'Providing your contact details helps us keep you updated on important account activities and ensure smooth communication.',
+        title: 'Contact Info',
+        description: 'Provide your contact info.',
     },
     {
         step: 3,
-        title: 'Done',
-        description:
-            'Account setup finished',
+        title: 'Address',
+        description: 'Provide your complete permanent address.',
     },
 ]
 
 
+const nameError = ref<ReturnType<typeof treeifyError<NameForm>> | undefined>()
+const contactInfoError = ref<ReturnType<typeof treeifyError<ContactInfoForm>> | undefined>()
+const addressError = ref<ReturnType<typeof treeifyError<AddressForm>> | undefined>()
+
+const nextStep = () => {
+
+    switch (stepIndex.value) {
+        case 1:
+            const nameValidationResult = accountSetup.validateName();
+
+            if (!nameValidationResult.success) {
+                const error = nameValidationResult.result as ReturnType<typeof treeifyError<NameForm>>;
+                nameError.value = error;
+                return;
+            }
+
+            break;
+        case 2:
+            const contactInfoValidation = accountSetup.validateContactInfo();
+
+            if (!contactInfoValidation.success) {
+                const error = contactInfoValidation.result as ReturnType<typeof treeifyError<ContactInfoForm>>;
+                contactInfoError.value = error;
+                return;
+            }
+            break;
+        default:
+
+            break;
+    }
+
+    nameError.value = undefined;
+    contactInfoError.value = undefined;
+    addressError.value = undefined;
+
+
+    if (stepIndex.value < steps.length) {
+        stepIndex.value += 1;
+    }
+};
+const prevStep = () => stepIndex.value > 1 ? stepIndex.value -= 1 : stepIndex.value;
+
+async function onSubmit() {
+    const addressValidation = accountSetup.validateAddress();
+    if (!addressValidation.success) {
+        const error = addressValidation.result as ReturnType<typeof treeifyError<AddressForm>>;
+        addressError.value = error;
+        return;
+    }
+
+    try {
+        await accountSetup.setUpAccount();
+
+        // Redirect to success page
+        router.replace("/success")
+        // const options: Intl.DateTimeFormatOptions = {
+        //     weekday: 'long',
+        //     year: 'numeric',
+        //     month: 'long',
+        //     day: '2-digit',
+        //     hour: '2-digit',
+        //     minute: '2-digit',
+        //     hour12: true,
+        // };
+
+        // const formattedDate = new Intl.DateTimeFormat('en-US', options).format(new Date());
+
+        // toast('Event has been created', {
+        //     description: formattedDate,
+        // });
+
+
+    } catch (error) {
+        console.error("Error from setup accout: ", error);
+    }
+}
 </script>
 
 <template>
-    <div class="h-screen grid grid-cols-1 lg:grid-cols-3">
-        <div class="bg-secondary hidden lg:flex flex-col justify-center items-center">
-            <h3 class="text-2xl">Set up your account</h3>
-            <br>
-            <div class="px-10 lg:px-20">
-                <Stepper orientation="vertical" class="mx-auto flex w-full max-w-md flex-col justify-start gap-10">
-                    <StepperItem v-for="step in steps" :key="step.step" v-slot="{ state }"
-                        class="relative flex w-full items-start gap-6" :step="step.step">
-                        <StepperSeparator v-if="step.step !== steps[steps.length - 1]?.step"
-                            class="absolute left-[18px] top-[38px] block h-[105%] w-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-primary" />
-                        <StepperTrigger as-child>
-                            <Button :variant="state === 'completed' || state === 'active' ? 'default' : 'outline'"
-                                size="icon" class="z-10 rounded-full shrink-0"
-                                :class="[state === 'active' && 'ring-2 ring-ring ring-offset-2 ring-offset-background']">
-                                <Check v-if="state === 'completed'" class="size-5" />
-                                <Circle v-if="state === 'active'" />
-                                <Dot v-if="state === 'inactive'" />
-                            </Button>
-                        </StepperTrigger>
-                        <div class="flex flex-col gap-1">
-                            <StepperTitle :class="[state === 'active' && 'text-primary']"
-                                class="text-sm font-semibold transition lg:text-base">
-                                {{ step.title }}
-                            </StepperTitle>
-                            <StepperDescription :class="[state === 'active' && 'text-primary']"
-                                class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm">
-                                {{ step.description }}
-                            </StepperDescription>
-                        </div>
-                    </StepperItem>
-                </Stepper>
-            </div>
-        </div>
-        <div class="col-span-2">
-            <div class="container mx-auto px-5 lg:px-20 mt-20">
-                <div v-if="stepIndex == 1">
-                    <h3 class="text-xl">Your Details</h3>
-                    <br>
-                    <FieldGroup>
-                        <Field>
-                            <FieldLabel htmlFor="firstname">First name</FieldLabel>
-                            <Input id="firstname" type="firstname" />
-                            <FieldError></FieldError>
-                        </Field>
+    
+    <div class="w-full h-screen flex flex-col justify-center items-center">
+        <div class="flex flex-col gap-4 mt-4 w-md">
+            <section v-if="stepIndex === 1">
+                <FieldGroup>
+                    <Field>
+                        <FieldLabel htmlFor="firstname">First Name</FieldLabel>
+                        <Input type="text" id="firstname" v-model="accountSetup.nameForm.firstname" />
+                        <FieldError>{{ nameError?.properties?.firstname?.errors[0] }}</FieldError>
+                    </Field>
 
-                        <Field>
-                            <FieldLabel htmlFor="middlename">Middle name</FieldLabel>
-                            <Input id="middlename" type="middlename" />
-                            <FieldError></FieldError>
-                        </Field>
+                    <Field name="fullName">
+                        <FieldLabel>Middle Name <span class="text-muted-foreground">(Optional)</span></FieldLabel>
+                        <Input type="text" v-model="accountSetup.nameForm.middlename" />
+                        <FieldError>{{ nameError?.properties?.middlename?.errors[0] }}</FieldError>
+                    </Field>
 
-                        <Field>
-                            <FieldLabel htmlFor="lastname">Last name</FieldLabel>
-                            <Input id="lastname" type="lastname" />
-                            <FieldError></FieldError>
-                        </Field>
-                    </FieldGroup>
-                </div>
+                    <Field name="fullName">
+                        <FieldLabel>Last Name</FieldLabel>
+                        <Input type="text" v-model="accountSetup.nameForm.lastname" />
+                        <FieldError>{{ nameError?.properties?.lastname?.errors[0] }}</FieldError>
+                    </Field>
 
-                <div v-if="stepIndex == 2">
-                    <h3 class="text-xl">Contact Information</h3>
-                    <br>
-                    <FieldGroup>
-                        <Field>
-                            <FieldLabel htmlFor="email">Email</FieldLabel>
-                            <Input id="email" type="email" />
-                            <FieldError></FieldError>
-                        </Field>
 
-                        <Field>
-                            <FieldLabel htmlFor="phone_number">Phone Number</FieldLabel>
-                            <Input id="phone_number" type="phone_number" />
-                            <FieldError></FieldError>
-                        </Field>
+                    <Field name="fullName">
+                        <FieldLabel>Suffix <span class="text-muted-foreground">(Optional)</span></FieldLabel>
+                        <Input type="text" placeholder="e.g. Jr., Sr." />
 
-                    </FieldGroup>
-                    <br>
-                    <br>
-                    <div class="flex items-center gap-5">
-                        <p>Address</p>
-                        <Separator />
-                    </div>
-                    <br>
-                    <FieldGroup>
-                        <Field>
-                            <FieldLabel htmlFor="email">Address Line 1</FieldLabel>
-                            <Input id="email" type="email" />
-                            <FieldError></FieldError>
-                        </Field>
+                        <FieldError>{{ nameError?.properties?.suffix?.errors[0] }}</FieldError>
+                    </Field>
+                </FieldGroup>
+            </section>
 
-                        <Field>
-                            <FieldLabel htmlFor="email">Address Line 2</FieldLabel>
-                            <Input id="email" type="email" />
-                            <FieldError></FieldError>
-                        </Field>
+            <section v-if="stepIndex === 2">
+                <FieldGroup>
+                    <Field name="fullName">
+                        <FieldLabel>Phone Number</FieldLabel>
+                        <Input type="text" v-model="accountSetup.contactInfoForm.phoneNumber" />
+                        <FieldError>{{ contactInfoError?.properties?.phoneNumber?.errors[0] }}</FieldError>
+                    </Field>
 
-                        <div class="grid grid-cols-3 gap-5">
-                            <Field>
-                                <FieldLabel htmlFor="phone_number">City</FieldLabel>
-                                <Input id="phone_number" type="phone_number" />
-                                <FieldError></FieldError>
-                            </Field>
+                    <Field name="fullName">
+                        <FieldLabel>Email <span class="text-muted-foreground">(optional)</span></FieldLabel>
+                        <Input type="text" v-model="accountSetup.contactInfoForm.email" />
+                        <FieldError>{{ contactInfoError?.properties?.email?.errors[0] }}</FieldError>
+                    </Field>
 
-                            <Field>
-                                <FieldLabel htmlFor="phone_number">Province</FieldLabel>
-                                <Input id="phone_number" type="phone_number" />
-                                <FieldError></FieldError>
-                            </Field>
+                </FieldGroup>
+            </section>
 
-                            <Field>
-                                <FieldLabel htmlFor="phone_number">Zip Code</FieldLabel>
-                                <Input id="phone_number" type="phone_number" />
-                                <FieldError></FieldError>
-                            </Field>
-                        </div>
+            <section v-if="stepIndex === 3">
+                <FieldGroup>
+                    <Field name="fullName">
+                        <FieldLabel>Address Line 1</FieldLabel>
+                        <Input type="text" v-model="accountSetup.addressForm.addressLine1" />
+                        <FieldError>{{ addressError?.properties?.addressLine1?.errors[0] }}</FieldError>
+                    </Field>
 
-                    </FieldGroup>
+                    <Field name="fullName">
+                        <FieldLabel>Address Line 2 <span class="text-muted-foreground">(optional)</span></FieldLabel>
+                        <Input type="text" v-model="accountSetup.addressForm.addressLine2" />
+                        <FieldError>{{ addressError?.properties?.addressLine2?.errors[0] }}</FieldError>
+                    </Field>
+
+                    <Field name="fullName">
+                        <FieldLabel>City/Municipality </FieldLabel>
+                        <Input type="text" v-model="accountSetup.addressForm.city" />
+                        <FieldError>{{ addressError?.properties?.city?.errors[0] }}</FieldError>
+                    </Field>
+
+                    <Field name="fullName">
+                        <FieldLabel>Province </FieldLabel>
+                        <Input type="text" v-model="accountSetup.addressForm.province" />
+                        <FieldError>{{ addressError?.properties?.province?.errors[0] }}</FieldError>
+                    </Field>
+
+                    <Field name="fullName">
+                        <FieldLabel>Zip Code</FieldLabel>
+                        <Input type="text" v-model="accountSetup.addressForm.zipCode" />
+                        <FieldError>{{ addressError?.properties?.zipCode?.errors[0] }}</FieldError>
+                    </Field>
+
+                </FieldGroup>
+            </section>
+
+
+            <div class="flex items-center justify-between mt-4 w-md">
+                <Button variant="outline" size="sm" @click="prevStep()">
+                    Back
+                </Button>
+                <div class="flex items-center gap-3">
+                    <Button v-if="stepIndex !== 3" type="button" size="sm" @click="nextStep()">
+                        Next
+                    </Button>
+                    <Button v-if="stepIndex === 3" size="sm" @click="onSubmit()">
+                        Submit
+                    </Button>
                 </div>
             </div>
-
-            <div>
-                
-            </div>
         </div>
+
     </div>
 </template>
