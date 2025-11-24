@@ -1,5 +1,7 @@
 import { db } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import type { User } from "@/models/user.model";
+import { useAuthStore } from "@/stores/authStore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { reactive } from "vue";
 import { useCurrentUser } from "vuefire";
 import z, { ZodError } from "zod";
@@ -33,8 +35,8 @@ export type AddressForm = {
 }
 
 export function useAccountSetup() {
-
     const user = useCurrentUser();
+    const authStore = useAuthStore();
 
     const nameForm = reactive({
         firstname: "",
@@ -156,6 +158,12 @@ export function useAccountSetup() {
             };
 
             await setDoc(userDocRef, data);
+
+            const snapshot = await getDoc(userDocRef);
+
+            if (snapshot.exists()) {
+                authStore.setUserData(snapshot.data() as User | null);
+            }
 
             return userId;
         } catch (error) {

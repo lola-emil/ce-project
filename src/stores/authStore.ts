@@ -34,6 +34,27 @@ export const useAuthStore = defineStore("auth", () => {
             : null;
     };
 
+    const setUserData = (newData: UserData | null) => userData.value = newData;
+    
+    const loginWithEmailPassword = async (email: string, password: string) => {
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+            // Fetch ang user profile
+            const userDocRef = doc(db, "users", userCredential.user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            userData.value = userDocSnap.data() as UserData | null;
+
+            console.log("Kanang Kuan", userData.value);
+            alert("");
+        } catch (error) {
+            console.error('Login failed:', error);
+            throw error;
+        }
+    }
+
+
     watch(
         user,
         async () => {
@@ -45,7 +66,12 @@ export const useAuthStore = defineStore("auth", () => {
     return {
         isAuthenticated,
         logOut,
+        loginWithEmailPassword,
+        setUserData,
+
         user,
         userData
     };
+}, {
+    persist: true
 });

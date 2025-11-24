@@ -128,9 +128,6 @@ export function useRegister() {
 
             const data = await createUserWithEmailAndPassword(auth!, validated.email, validated.password)
 
-            // Set ang user sa store
-            authStore.setUser(data.user);
-
             // Redirect sa setup account
             router.push("/setup-account");
             return data;
