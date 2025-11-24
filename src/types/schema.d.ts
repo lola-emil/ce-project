@@ -32,12 +32,14 @@ type ContactInfo = {
     addresses: Address[];
 };
 
+
+export type UserRole = "admin" | "worker" | "client";
 // MGA USERS
 export interface User {
     uid: string;
     email: string;
 
-    role: "admin" | "worker" | "client"; // Set via custom claims
+    role: UserRole; // Set via custom claims
 
     name?: PersonName;                    // Admin might not need this
     // gender?: Gender;
@@ -67,7 +69,7 @@ type JobImage = {
 interface JobRequest {
     id: string;
     clientId: string; // reference sa worker
-    categoryId: string;
+    tags: string[];
 
     title: string;
     description: string;
@@ -98,7 +100,7 @@ type Progress = {
     date: string;
 };
 
-interface JobAssignmentStatus {
+export interface JobAssignment {
     id: string;
     jobId: string;
     workerId: string; // Kinsay gi assignan
@@ -150,4 +152,10 @@ export interface WorkerReview {
     comment?: string;
 
     createdAt: Date;
+}
+
+export interface Activity {
+    id: string;
+    user_uid: string;
+    
 }

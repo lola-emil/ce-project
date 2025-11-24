@@ -1,3 +1,13 @@
+
+<script setup lang="ts">
+import Navbar from './components/Navbar.vue';
+import { Button } from '@/components/ui/button';
+import { motion } from "motion-v";
+import { Badge } from '@/components/ui/badge';
+
+</script>
+
+
 <template>
     <Navbar />
 
@@ -49,14 +59,6 @@
         <br>
     </main>
 </template>
-
-<script setup lang="ts">
-import Navbar from './components/Navbar.vue';
-import { Button } from '@/components/ui/button';
-import { motion } from "motion-v";
-import { Badge } from '@/components/ui/badge';
-
-</script>
 
 
 <style scoped>

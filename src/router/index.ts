@@ -13,6 +13,7 @@ import FunctionTest from '@/pages/FunctionTest.vue';
 import { getCurrentUser } from 'vuefire';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
+import DashbooardView from '@/pages/dashboard/DashbooardView.vue';
 
 // ... your router setup ...
 
@@ -28,6 +29,7 @@ const router = createRouter({
         requiresAuth: false,
       },
     },
+
     {
       path: "/login",
       component: () => import("@/pages/auth/LoginView.vue"),
@@ -131,6 +133,10 @@ const router = createRouter({
         requiresAuth: true,
         roles: ["admin"]
       },
+    },
+    {
+      path: "/dashboard",
+      component: DashbooardView
     }
   ],
 });

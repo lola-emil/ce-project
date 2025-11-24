@@ -2,47 +2,50 @@
 import { auth, db } from "@/firebase";
 import { signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import type { User as UserData } from "@/types/schema";
 import { doc, getDoc } from "firebase/firestore";
+import { useCurrentUser } from "vuefire";
+
 
 
 export const useAuthStore = defineStore("auth", () => {
-    const user = ref<User | null>(null);
-    const userData = ref<UserData | undefined>();
+    const userData = ref<UserData | null>(null);
+    const user = useCurrentUser(); // ref<User | null>
 
-    const isAuthenticated = () => !!user;
+    const isAuthenticated = () => !!user.value;
 
-    // Pwede ma set ang user para sa inig mahuman ang registration
-    const setUser = (userDetail: User | null) => user.value = userDetail;
-
-    const loginWithEmailPassword = async (email: string, password: string) => {
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            setUser(userCredential.user);
-
-            // Fetch ang user profile
-            const userDocRef = doc(db, "users", userCredential.user.uid);
-            const userDocSnap = await getDoc(userDocRef);
-
-            userData.value = userDocSnap.data() as UserData | undefined;
-        } catch (error) {
-            console.error('Login failed:', error);
-            throw error;
-        }
-    }
-    
     const logOut = async () => {
         await signOut(auth);
         user.value = null;
-    }
+    };
+
+    const fetchUserData = async () => {
+        if (!user.value) {
+            userData.value = null;
+            return;
+        }
+
+        const userDocRef = doc(db, "users", user.value.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        userData.value = userDoc.exists()
+            ? (userDoc.data() as UserData)
+            : null;
+    };
+
+    watch(
+        user,
+        async () => {
+            await fetchUserData();
+        },
+        { immediate: true }
+    );
 
     return {
         isAuthenticated,
-        setUser,
         logOut,
-        loginWithEmailPassword,
-
         user,
-    }
+        userData
+    };
 });
