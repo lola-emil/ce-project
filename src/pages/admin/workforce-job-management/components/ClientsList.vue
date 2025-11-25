@@ -2,7 +2,11 @@
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import { Input } from '@/components/ui/input'
-import { ref, h } from 'vue'
+import { ref, h, onMounted, computed, watch } from 'vue'
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
+import { db } from '@/firebase'
+import { useCollection, useDocument } from 'vuefire'
+import { type User as UserData } from '@/types/schema'
 
 export const schema = z.object({
     id: z.number(),
@@ -275,6 +279,38 @@ const table = useVueTable({
         get columnVisibility() { return columnVisibility.value },
         get rowSelection() { return rowSelection.value },
     },
+})
+
+const clientsRef = collection(db, "users");
+const clientsQuery = computed(() =>
+    query(collection(db, "users"), where("role", "==", "client"))
+);
+
+// const clients = useCollection(clientsQuery);
+const clients = useCollection<UserData>(clientsQuery);
+
+
+watch(clients, (val) => {
+  console.log("Clients loaded:", val)
+    console.log(clients.pending.value);
+})
+
+onMounted(async () => {
+
+    console.log(clients.pending.value);
+
+    // const q = query(
+    //     collection(db, "users"),
+    //     where("role", "==", "client")
+    // );
+
+    // const snap = await getDocs(q);
+
+    // console.log("Matched docs count:", snap.size);
+
+    // snap.forEach(doc => {
+    //     console.log(doc.id, doc.data());
+    // });
 })
 </script>
 

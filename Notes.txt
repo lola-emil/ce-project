@@ -1,5 +1,5 @@
 ADMIN
-- can login
+- can login - done
 	- navigate to login page
 	- enter email and password
 	- redirected to admin dashboard on success
@@ -29,11 +29,10 @@ ADMIN
 	- click ang job para mo navigate/modal makita ang job request details
 	- click ang assign worker(s)
 	- mag pili ug worker(s)
-	- done
 
 WORKER
 
-- can register
+- can register - done
 	- navigate to create account
 	- enter credentials
 	- account setup
@@ -42,7 +41,7 @@ WORKER
 	- done
 
 
-- can login
+- can login - done
 	- navigate to login page
 	- enter credentials
 	- redirected to worker's dashboard
@@ -66,7 +65,7 @@ WORKER
 
 CLIENT
 
-- can login (registration is done by admin)
+- can login (registration is done by admin) - done (50%) (wala pa registration gikan sa admin)
 	- navigate to login page
 	- enter credentials
 	- redirected to dashboard

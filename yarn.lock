@@ -2455,9 +2455,9 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.17.1:
     require-from-string "^2.0.2"
 
 alien-signals@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/alien-signals/-/alien-signals-3.1.0.tgz#06ec32567f1724daed24db768b76eecd8884a175"
-  integrity sha512-yufC6VpSy8tK3I0lO67pjumo5JvDQVQyr38+3OHqe6CHl1t2VZekKZ7EKKZSqk0cRmE7U7tfZbpXiKNzuc+ckg==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/alien-signals/-/alien-signals-3.1.1.tgz#90d7dd34be9e321547b03908ddba21b3f765e3f6"
+  integrity sha512-ogkIWbVrLwKtHY6oOAXaYkAxP+cTH7V5FZ5+Tm4NZFd8VDZ6uNMDrfzqctTZ42eTMCSR3ne3otpcxmqSnFfPYA==
 
 ansi-regex@^5.0.1:
   version "5.0.1"
