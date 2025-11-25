@@ -1,0 +1,78 @@
+ADMIN
+- can login
+	- navigate to login page
+	- enter email and password
+	- redirected to admin dashboard on success
+
+
+- create worker(s)
+	- navigate to workers list
+	- click ang add worker
+	- navigate to add worker form
+	- enter ang details (personal info, credentials, contact details, legal documents)
+	- done
+
+- create client(s)
+	- navigate to clients list
+	- click ang add client
+	- navigate to add client form
+	- enter ang details (personal info, credentials, contact details)
+
+
+- can create and view list of:
+	- job requests
+	- job assignments
+
+
+- can assign job to workers
+	- navigate to job requests list
+	- click ang job para mo navigate/modal makita ang job request details
+	- click ang assign worker(s)
+	- mag pili ug worker(s)
+	- done
+
+WORKER
+
+- can register
+	- navigate to create account
+	- enter credentials
+	- account setup
+	- redirected to success page
+	- click ang proceed to dashboard
+	- done
+
+
+- can login
+	- navigate to login page
+	- enter credentials
+	- redirected to worker's dashboard
+	- done
+
+
+- can create job requests
+	- navigate to jobs list (my jobs)
+	- click ang create job request
+	- redirected to job request form
+	- done
+
+- can check their own job request details
+	- navigate to jobs list (my jobs);
+	- click ang view job 
+	- redirected to job details
+	- makita ang details sa job (image, assigned worker, budget, date added, progress)
+
+- can cancel job request - (dapat wala pa maka human ug 50% progress ang worker)
+	TODO: kailangan ko'g suggestions ani
+
+CLIENT
+
+- can login (registration is done by admin)
+	- navigate to login page
+	- enter credentials
+	- redirected to dashboard
+	- done
+	
+- can accept / reject job assigment
+
+
+NOTE: wala pa gibutang ang payment flow
