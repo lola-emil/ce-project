@@ -1,9 +1,11 @@
-
 <script setup lang="ts">
 import Navbar from './components/Navbar.vue';
 import { Button } from '@/components/ui/button';
 import { motion } from "motion-v";
 import { Badge } from '@/components/ui/badge';
+import { useAuthStore } from '@/stores/authStore';
+
+const authStore = useAuthStore();
 
 </script>
 
@@ -36,7 +38,10 @@ import { Badge } from '@/components/ui/badge';
 
 
                 <div>
-                    <Button size="lg" variant="outline" class="font-bold">
+                    <Button  v-if="authStore.user" size="lg" variant="outline" class="font-bold" as-child>
+                        <RouterLink to="/dashboard">Go to Dashboard</RouterLink>
+                    </Button>
+                    <Button v-else size="lg" variant="outline" class="font-bold" as-child>
                         <RouterLink to="/register">Create an Account</RouterLink>
                     </Button>
                 </div>

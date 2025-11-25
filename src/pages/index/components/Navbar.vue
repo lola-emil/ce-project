@@ -7,6 +7,9 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu'
+import { useAuthStore } from '@/stores/authStore';
+
+const authStore = useAuthStore();
 
 </script>
 
@@ -56,7 +59,23 @@ import {
 
             <div class="hidden md:block">
                 <NavigationMenu>
-                    <NavigationMenuList>
+                    <NavigationMenuList v-if="authStore.user">
+                        <NavigationMenuItem as-child>
+                            <RouterLink to="/dashboard">
+                                <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                    Go to Dashboard
+                                </NavigationMenuLink>
+                            </RouterLink>
+                        </NavigationMenuItem>
+
+                        <NavigationMenuItem @click="authStore.logout()">
+                                <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                    Logout
+                                </NavigationMenuLink>
+                        </NavigationMenuItem>
+                    </NavigationMenuList>
+
+                    <NavigationMenuList v-else>
                         <NavigationMenuItem as-child>
                             <RouterLink to="/login">
                                 <NavigationMenuLink :class="navigationMenuTriggerStyle()">
@@ -72,8 +91,8 @@ import {
                                 </NavigationMenuLink>
                             </RouterLink>
                         </NavigationMenuItem>
-
                     </NavigationMenuList>
+                    
                 </NavigationMenu>
             </div>
         </div>

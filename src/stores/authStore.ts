@@ -5,20 +5,18 @@ import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import type { User as UserData } from "@/types/schema";
 import { doc, getDoc } from "firebase/firestore";
-import { useCurrentUser } from "vuefire";
+import { useCurrentUser, useFirebaseAuth } from "vuefire";
+import { useRouter } from "vue-router";
 
 
 
 export const useAuthStore = defineStore("auth", () => {
-    const userData = ref<UserData | null>(null);
     const user = useCurrentUser(); // ref<User | null>
+    const firebaseAuth = useFirebaseAuth();
+    const userData = ref<UserData | null>(null);
+    const router = useRouter();
 
     const isAuthenticated = () => !!user.value;
-
-    const logOut = async () => {
-        await signOut(auth);
-        user.value = null;
-    };
 
     const fetchUserData = async () => {
         if (!user.value) {
@@ -35,7 +33,7 @@ export const useAuthStore = defineStore("auth", () => {
     };
 
     const setUserData = (newData: UserData | null) => userData.value = newData;
-    
+
     const loginWithEmailPassword = async (email: string, password: string) => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -47,11 +45,16 @@ export const useAuthStore = defineStore("auth", () => {
             userData.value = userDocSnap.data() as UserData | null;
 
             console.log("Kanang Kuan", userData.value);
-            alert("");
         } catch (error) {
             console.error('Login failed:', error);
             throw error;
         }
+    }
+
+    const logout = async () => {
+        await firebaseAuth?.signOut();
+        user.value = null;
+        router.push("/login");
     }
 
 
@@ -65,9 +68,9 @@ export const useAuthStore = defineStore("auth", () => {
 
     return {
         isAuthenticated,
-        logOut,
         loginWithEmailPassword,
         setUserData,
+        logout,
 
         user,
         userData

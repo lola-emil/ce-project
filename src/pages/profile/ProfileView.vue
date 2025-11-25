@@ -1,4 +1,7 @@
-
 <script setup lang="ts"></script>
 
-<template></template>
+<template>
+    <div>
+        This is for the profile view.
+    </div>
+</template>

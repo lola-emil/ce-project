@@ -2,8 +2,6 @@
 import { useUserDataStore } from '@/stores/userDataStore';
 import { type UserRole } from '@/models/user.model';
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { getCurrentUser } from 'vuefire';
-import { map } from 'zod';
 import { useAuthStore } from '@/stores/authStore';
 
 const mapOfDashboardPages: Record<UserRole | "default", any> = {

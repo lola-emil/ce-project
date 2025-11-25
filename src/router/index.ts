@@ -14,8 +14,7 @@ import { getCurrentUser } from 'vuefire';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import DashbooardView from '@/pages/dashboard/DashbooardView.vue';
-
-// ... your router setup ...
+import { useAuthStore } from '@/stores/authStore';
 
 
 const router = createRouter({
@@ -70,7 +69,7 @@ const router = createRouter({
         const userDetailDocRef = doc(db, "users", user.uid);
         const userDetailSnap = await getDoc(userDetailDocRef);
         if (userDetailSnap.exists()) {
-          next("/");
+          next("/dashboard");
           return;
         }
 
@@ -136,7 +135,29 @@ const router = createRouter({
     },
     {
       path: "/dashboard",
-      component: DashbooardView
+      component: DashbooardView,
+      meta: {
+        requiresAuth: true
+      },
+      beforeEnter: (to, from, next) => {
+        const auth = useAuthStore();
+
+        switch (auth.userData?.role) {
+          case "client":
+            next("/client/dashboard")
+            break;
+          case "admin":
+            next("/admin/dashboard")
+            break;
+          case "worker":
+            next("/worker/dashboard")
+            break;
+          default:
+            next();
+            break;
+        }
+
+      }
     }
   ],
 });

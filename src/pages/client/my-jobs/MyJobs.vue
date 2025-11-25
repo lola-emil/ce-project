@@ -6,8 +6,19 @@ import { IconLayoutColumns, IconChevronDown } from '@tabler/icons-vue';
 import { Plus } from 'lucide-vue-next';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { collection, query, where } from 'firebase/firestore';
+import { db } from '@/firebase';
+import type { JobRequest } from '@/types/schema';
+import { useCollection } from 'vuefire';
+import { useAuthStore } from '@/stores/authStore';
+import { RouterLink } from 'vue-router';
 
-const range = (size: number) => new Array(size);
+const authStore = useAuthStore();
+
+const jobRequestsRef = collection(db, "job_requests");
+const jobRequestQuery = query(jobRequestsRef, where("clientId", "==", authStore.user?.uid))
+
+const jobRequests = useCollection<JobRequest[]>(jobRequestQuery);
 </script>
 
 <template>
@@ -55,19 +66,22 @@ const range = (size: number) => new Array(size);
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <RouterLink v-for="value in range(5)" to="job-details">
+                <div v-if="jobRequests.pending">
+                    Kanang, nag loading pa
+                </div>
+                <RouterLink v-for="value in jobRequests" :to="'job-details/' + value.id">
                     <Card class="gap-2">
                         <CardHeader>
-                            <CardTitle class="text-sm">Bathroom Tile Repair</CardTitle>
+                            <CardTitle class="text-sm">{{ value.title }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div>
-                                <p class="text-muted-foreground text-sm">Status: <Badge variant="outline">Awaiting Order
+                                <p class="text-muted-foreground text-sm">Status: <Badge variant="outline">{{ value.status }}
                                     </Badge>
                                 </p>
-                                <p class="text-muted-foreground text-sm">Date: <span>Jan 12, 2026</span></p>
+                                <p class="text-muted-foreground text-sm">Date: <span>{{ value.createdAt.toDate().toLocaleString() }}</span></p>
                                 <p class="text-muted-foreground text-sm">Budget: <span
-                                        class="text-primary">₱3,000</span>
+                                        class="text-primary">₱{{ value.budget }}</span>
                                 </p>
                             </div>
                         </CardContent>

@@ -111,7 +111,11 @@ async function onSubmit() {
 
 <template>
     
-    <div class="w-full h-screen flex flex-col justify-center items-center">
+    <div class="w-full h-screen flex flex-col items-center">
+        <div class="w-md mt-40">
+            <h3 class="text-3xl">Accout Set Up</h3>
+            
+        </div>
         <div class="flex flex-col gap-4 mt-4 w-md">
             <section v-if="stepIndex === 1">
                 <FieldGroup>

@@ -17,7 +17,7 @@ export type JobImage = {
     url: string;
 }
 
-interface JobRequest {
+export interface JobRequest {
     id: string;
     clientId: string; // reference sa worker
     tags: string[];

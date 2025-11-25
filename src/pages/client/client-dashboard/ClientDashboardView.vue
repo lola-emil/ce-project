@@ -1,7 +1,41 @@
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import StatSection from './components/StatSection.vue'
+import {
+    Item,
+    ItemActions,
+    ItemContent,
+    ItemDescription,
+    ItemTitle,
+} from '@/components/ui/item'
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { useAuthStore } from '@/stores/authStore'
+
+const authStore = useAuthStore();
+
+const recentActivities = [
+    {
+        title: "Masonry Repair Job",
+        description: "Worker Assigned"
+    },
+
+    {
+        title: "Roof Leak Fix",
+        description: "Worker Assigned"
+    },
+
+    {
+        title: "Gate Welding",
+        description: "Completed"
+    },
+]
+</script>
+
 <template>
     <div class="container mx-auto px-5 md:px-0">
         <div class="mt-10">
-            <h3 class="text-3xl">Good day, Pedro</h3>
+            <h3 class="text-3xl">Good day, {{ authStore.userData?.name?.firstname }}</h3>
             <p class="text-lg text-muted-foreground">Here’s a quick overview of your latest activity.</p>
         </div>
 
@@ -57,35 +91,3 @@
     <br>
     <br>
 </template>
-
-
-<script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import StatSection from './components/StatSection.vue'
-import {
-    Item,
-    ItemActions,
-    ItemContent,
-    ItemDescription,
-    ItemTitle,
-} from '@/components/ui/item'
-import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-
-const recentActivities = [
-    {
-        title: "Masonry Repair Job",
-        description: "Worker Assigned"
-    },
-
-    {
-        title: "Roof Leak Fix",
-        description: "Worker Assigned"
-    },
-
-    {
-        title: "Gate Welding",
-        description: "Completed"
-    },
-]
-</script>

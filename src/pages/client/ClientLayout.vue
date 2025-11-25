@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import { cn } from '@/utils/util';
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
 import LayoutNav from '@/components/LayoutNav.vue';
 
 const routes = [

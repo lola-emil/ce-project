@@ -21,7 +21,7 @@ const auth = useRegister();
         <div class="fixed top-5 left-5">
             <Button variant="link" as-child>
                 <RouterLink to="/">
-                    Back to home
+                    Go to home
                 </RouterLink>
             </Button>
         </div>

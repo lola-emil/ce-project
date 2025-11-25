@@ -1,3 +1,33 @@
+
+<script setup lang="ts">
+import { cn } from '@/utils/util';
+import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
+import { Button } from './ui/button';
+import { LogOut } from 'lucide-vue-next';
+import { Menu } from 'lucide-vue-next';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { RouterLink } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
+
+interface Route {
+    path: string;
+    title: string;
+};
+
+const props = defineProps<{
+    menuItems: Route[]
+}>();
+
+const authStore = useAuthStore();
+
+</script>
+
 <template>
     <header>
         <div class="border-b">
@@ -16,10 +46,8 @@
                 </div>
 
                 <div class="hidden md:block">
-                    <Button size="sm" variant="outline" as-child>
-                        <RouterLink to="/">
+                    <Button size="sm" variant="outline" @click="authStore.logout()">
                             <LogOut /> Sign Out
-                        </RouterLink>
                     </Button>
                 </div>
 
@@ -38,10 +66,8 @@
                                 <RouterLink :to="value.path">{{ value.title }}</RouterLink>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem as-child>
-                                <RouterLink to="/">
+                            <DropdownMenuItem @click="authStore.logout()">
                                     <LogOut /> Sign Out
-                                </RouterLink>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -51,29 +77,3 @@
         </div>
     </header>
 </template>
-
-<script setup lang="ts">
-import { cn } from '@/utils/util';
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
-import { Button } from './ui/button';
-import { LogOut } from 'lucide-vue-next';
-import { Menu } from 'lucide-vue-next';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { RouterLink } from 'vue-router';
-
-interface Route {
-    path: string;
-    title: string;
-};
-
-const props = defineProps<{
-    menuItems: Route[]
-}>();
-
-</script>

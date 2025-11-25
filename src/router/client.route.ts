@@ -10,7 +10,7 @@ export const clientRoutes: RouteRecordRaw[] = [
         component: () => import("@/pages/client/create-job-request/CreateJobRequest.vue")
     },
     {
-        path: "job-details",
+        path: "job-details/:id",
         component: () => import("@/pages/client/job-details/JobDetails.vue")
     },
     {

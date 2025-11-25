@@ -17,7 +17,7 @@ service cloud.firestore {
     // ---------------------------
     // JOB REQUESTS
     // ---------------------------
-    match /jobRequests/{jobId} {
+    match /job_requests/{jobId} {
       allow create: if request.auth != null && request.auth.token.role == "client";
       allow read: if request.auth != null; // Any authenticated user can see jobs
       allow update: if request.auth != null && (
@@ -29,7 +29,7 @@ service cloud.firestore {
     // ---------------------------
     // JOB ASSIGNMENTS
     // ---------------------------
-    match /jobAssignments/{assignmentId} {
+    match /job_assignments/{assignmentId} {
       allow create: if request.auth != null && request.auth.token.role == "admin"; // Admin creates assignment
       allow read: if request.auth != null && (
         request.auth.uid == resource.data.workerId ||
@@ -57,7 +57,7 @@ service cloud.firestore {
     // ---------------------------
     // WORKER REVIEWS
     // ---------------------------
-    match /workerReviews/{reviewId} {
+    match /worker_reviews/{reviewId} {
       allow create: if request.auth != null && request.auth.uid == request.resource.data.reviewerId;
       allow read: if request.auth != null;
       allow update, delete: if request.auth != null && request.auth.token.role == "admin";
@@ -66,16 +66,16 @@ service cloud.firestore {
     // ---------------------------
     // HELPER FUNCTIONS (Optional)
     // ---------------------------
-    function isAdmin() {
-      return request.auth.token.role == "admin";
-    }
+    // function isAdmin() {
+    //   return request.auth.token.role == "admin";
+    // }
 
-    function isWorker() {
-      return request.auth.token.role == "worker";
-    }
+    // function isWorker() {
+    //   return request.auth.token.role == "worker";
+    // }
 
-    function isClient() {
-      return request.auth.token.role == "client";
-    }
+    // function isClient() {
+    //   return request.auth.token.role == "client";
+    // }
   }
 }

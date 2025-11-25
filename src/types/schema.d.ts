@@ -57,8 +57,10 @@ type JobStatus =
 
 type JobLocation = {
     address: string;
-    lat: number;
-    lng: number;
+    geo: {
+        lat: number;
+        lng: number;
+    };
     notes?: string;               // e.g. "Near City Hall, blue gate"
 }
 
@@ -82,7 +84,7 @@ interface JobRequest {
 
 
     createdAt: Date;
-    updatedAt: Date;
+    updatedAt?: Date;
 }
 
 
@@ -157,5 +159,5 @@ export interface WorkerReview {
 export interface Activity {
     id: string;
     user_uid: string;
-    
+
 }
