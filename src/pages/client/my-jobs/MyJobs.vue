@@ -66,10 +66,7 @@ const jobRequests = useCollection<JobRequest[]>(jobRequestQuery);
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <div v-if="jobRequests.pending">
-                    Kanang, nag loading pa
-                </div>
-                <RouterLink v-for="value in jobRequests" :to="'job-details/' + value.id">
+                <RouterLink v-for="value in jobRequests as any" :to="'job-details/' + value.id">
                     <Card class="gap-2">
                         <CardHeader>
                             <CardTitle class="text-sm">{{ value.title }}</CardTitle>

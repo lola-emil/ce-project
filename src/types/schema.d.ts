@@ -1,3 +1,5 @@
+import type { Timestamp } from "firebase/firestore";
+
 type PersonName = {
     firstname: string;
     middlename?: string;
@@ -83,7 +85,7 @@ interface JobRequest {
     jobImage?: JobImage[]
 
 
-    createdAt: Date;
+    createdAt: Timestamp;
     updatedAt?: Date;
 }
 
