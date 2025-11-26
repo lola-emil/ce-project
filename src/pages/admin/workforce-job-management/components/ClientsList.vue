@@ -3,10 +3,10 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import { Input } from '@/components/ui/input'
 import { ref, h, onMounted, computed, watch } from 'vue'
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
+import { collection, query, where } from 'firebase/firestore'
 import { db } from '@/firebase'
-import { useCollection, useDocument } from 'vuefire'
-import { type User as UserData } from '@/types/schema'
+import { useCollection } from 'vuefire'
+import { type User as UserData } from '@/models/user.model'
 
 export const schema = z.object({
     id: z.number(),

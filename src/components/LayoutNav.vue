@@ -47,7 +47,7 @@ const authStore = useAuthStore();
 
                 <div class="hidden md:block">
                     <Button size="sm" variant="outline" @click="authStore.logout()">
-                            <LogOut /> Sign Out
+                            <LogOut /> Log Out
                     </Button>
                 </div>
 
@@ -67,7 +67,7 @@ const authStore = useAuthStore();
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem @click="authStore.logout()">
-                                    <LogOut /> Sign Out
+                                    <LogOut /> Log Out
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

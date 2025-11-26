@@ -1,7 +1,7 @@
 import { db } from "@/firebase";
 import type { User } from "@/models/user.model";
 import { useAuthStore } from "@/stores/authStore";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { reactive } from "vue";
 import { useCurrentUser } from "vuefire";
 import z, { ZodError } from "zod";
@@ -154,7 +154,9 @@ export function useAccountSetup() {
                     {
                         ...addressForm
                     }
-                ]
+                ],
+
+                createdAt: serverTimestamp(),
             };
 
             await setDoc(userDocRef, data);

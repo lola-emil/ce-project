@@ -11,9 +11,14 @@ const routes = [
     },
 
     {
-        path: "job-management",
-        title: "Workforce and Jobs"
+        path: "user-management",
+        title: "User Management"
     },
+
+    // {
+    //     path: "job-management",
+    //     title: "Workforce and Jobs"
+    // },
 
     // {
     //     path: "payment-commission-management",

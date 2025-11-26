@@ -10,6 +10,10 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import("@/pages/admin/workforce-job-management/WorkforceJobManagement.vue")
     },
     {
+        path: "user-management",
+        component: () => import("@/pages/admin/user-management/UserManagementView.vue")
+    },
+    {
         path: "payment-commission-management",
         component: () => import("@/pages/admin/payment-commission-management/PaymentCommissionManagement.vue")
     },
