@@ -3,7 +3,7 @@ import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import { Input } from '@/components/ui/input'
 import { ref, h, onMounted } from 'vue'
-import { useWorker } from '../composables/useWorker'
+import { useWorker } from '../../user-management/composables/useWorker'
 
 export const schema = z.object({
     id: z.number(),

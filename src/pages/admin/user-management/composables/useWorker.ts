@@ -3,23 +3,68 @@ import { collection, addDoc, DocumentReference, type DocumentData } from "fireba
 import { db } from "@/firebase";
 import { reactive } from "vue";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import z from "zod";
+import z, { ZodError } from "zod";
+import type { FirebaseError } from "firebase/app";
+
+
+export type WorkerForm = {
+    name: {
+        firstname: string,
+        middlename?: string,
+        lastname: string,
+    }
+
+
+    email: string,
+    password: string,
+    role: "worker",
+
+    // For the address
+    address: {
+        addressLine1: string,
+        addressLine2: string,
+        city: string,
+        province: string,
+        zipcode: string,
+    }
+}
+
+export type WorkerFormError = {
+    firstname: string[],
+    middlename?: string[],
+    lastname: string[],
+
+
+    email: string[],
+    password: string[],
+    // role: "worker",
+
+    // For the address
+    address: {
+        addressLine1: string[],
+        addressLine2: string[],
+        city: string[],
+        province: string[],
+        zipcode: string[],
+    }
+}
 
 const userSchema = z.object({
-    firstname: z.string().min(1, "First name is required"),
-    middlename: z.string().optional().or(z.literal("")),
-    lastname: z.string().min(1, "Last name is required"),
-
+    name: z.object({
+        firstname: z.string().min(1, "First name is required"),
+        middlename: z.string().optional().or(z.literal("")),
+        lastname: z.string().min(1, "Last name is required"),
+    }),
     email: z.email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
+    role: z.enum(["worker"]), // fixed role
 
     address: z.object({
-        street: z.string().min(1, "Street is required"),
-        barangay: z.string().min(1, "Barangay is required"),
+        addressLine1: z.string().min(1, "Street is required"),
+        addressLine2: z.string().optional(),
         city: z.string().min(1, "City is required"),
         province: z.string().min(1, "Province is required"),
         zipcode: z.string().min(1, "Zipcode is required"),
-        role: z.enum(["worker"]), // fixed role
     }),
 });
 
@@ -28,28 +73,30 @@ export function useWorker() {
     const auth = useFirebaseAuth();
 
     const form = reactive({
-        firstname: "",
-        middlename: "",
-        lastname: "",
+        name: {
+            firstname: "",
+            middlename: "",
+            lastname: "",
 
+        },
 
         email: "",
         password: "",
-        userRole: "worker",
+        role: "worker",
 
         // For the address
         address: {
-            street: "",
-            barangay: "",
+            addressLine1: "",
+            addressLine2: "",
             city: "",
             province: "",
             zipcode: "",
         }
     });
 
-    const create = async (): Promise<[DocumentReference<DocumentData, DocumentData> | null, any]> => {
-        try {
 
+    const create = async (): Promise<[DocumentReference<DocumentData, DocumentData> | null, ZodError | FirebaseError | null]> => {
+        try {
             const validated = z.parse(userSchema, form);
 
             // Create ang account
@@ -63,7 +110,8 @@ export function useWorker() {
 
             return [docRef, null];
         } catch (error) {
-            return [null, error];
+            console.error(error);
+            return [null, error as FirebaseError | ZodError];
         }
     }
 

@@ -110,8 +110,7 @@ export function useRegister() {
 
 
     const isLoading = ref<boolean>(false);
-    const auth = useFirebaseAuth();
-    const authStore = useAuthStore();
+    const firebaseAuth = useFirebaseAuth();
     const router = useRouter();
 
 
@@ -127,7 +126,7 @@ export function useRegister() {
             isLoading.value = true;
             const validated = registerSchema.parse(registrationForm);
 
-            const data = await createUserWithEmailAndPassword(auth!, validated.email, validated.password)
+            const data = await createUserWithEmailAndPassword(firebaseAuth!, validated.email, validated.password)
 
             // Redirect sa setup account
             router.push("/setup-account");

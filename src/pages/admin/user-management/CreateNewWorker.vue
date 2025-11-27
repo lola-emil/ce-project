@@ -4,13 +4,36 @@ import { ArrowLeft } from 'lucide-vue-next';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import FieldGroup from '@/components/ui/field/FieldGroup.vue';
-import { useWorker } from './composables/useWorker';
-import z, { ZodError } from 'zod';
-import { FirebaseError } from 'firebase/app';
+import { useWorker, type WorkerFormError } from './composables/useWorker';
 import { ref } from 'vue';
-import type { $ZodErrorTree } from 'zod/v4/core';
+import z, { ZodError, treeifyError } from 'zod';
+import { FirebaseError } from 'firebase/app';
+import { useRouter } from 'vue-router';
 
 const worker = useWorker();
+const router = useRouter();
+
+const formError = ref<ReturnType<typeof treeifyError<WorkerFormError>> | undefined>(undefined);
+
+async function submit() {
+    const [_, error] = await worker.create();
+
+    if (error) {
+        if (error instanceof ZodError) {
+            formError.value = z.treeifyError(error as ZodError<WorkerFormError>)
+            console.log("Validation error", formError.value);
+            return;
+        }
+
+        if (error instanceof FirebaseError) {
+            alert("Unidentified error");
+            return;
+        }
+
+    }
+
+    router.push("/admin/user-management");
+}
 
 
 </script>
@@ -20,7 +43,7 @@ const worker = useWorker();
     <div class="container mx-auto px-5 md:px-0">
         <div class="mt-5">
             <Button size="sm" variant="link" as-child>
-                <RouterLink to="job-management">
+                <RouterLink to="user-management">
                     <ArrowLeft /> Go back
                 </RouterLink>
             </Button>
@@ -31,26 +54,26 @@ const worker = useWorker();
             <p class="text-muted-foreground">Mao ang page para mag add ug bago nga worker</p>
         </div>
 
-        <div class="mt-5">
-            <form>
+        <div class="mt-5 grid grid-cols-3">
+            <div class="col-span-2">
                 <FieldGroup>
-                    <div class="grid lg:grid-cols-3 gap-5">
-                        <Field>
-                            <FieldLabel htmlFor="firstname">First Name</FieldLabel>
-                            <Input id="firstname" v-model="worker.form.firstname" type="text" />
-                            <FieldError></FieldError>
+                    <div class="flex flex-col gap-5">
+                        <Field :data-invalid="formError?.properties?.firstname">
+                            <FieldLabel htmlFor="firstnam`e">First Name</FieldLabel>
+                            <Input id="firstname" v-model="worker.form.name.firstname" type="text" />
+                            <FieldError :errors="formError?.properties?.firstname?.errors"/>
                         </Field>
 
-                        <Field>
+                        <Field :data-invalid="formError?.properties?.middlename">
                             <FieldLabel htmlFor="middlename">Middle Name</FieldLabel>
-                            <Input id="middlename" v-model="worker.form.middlename" type="text" />
-                            <FieldError></FieldError>
+                            <Input id="middlename" v-model="worker.form.name.middlename" type="text" />
+                            <FieldError :errors="formError?.properties?.middlename?.errors"/>
                         </Field>
 
-                        <Field>
+                        <Field :data-invalid="formError?.properties?.lastname">
                             <FieldLabel htmlFor="lastname">Last Name</FieldLabel>
-                            <Input id="lastname" v-model="worker.form.lastname" type="text" />
-                            <FieldError></FieldError>
+                            <Input id="lastname" v-model="worker.form.name.lastname" type="text" />
+                            <FieldError :errors="formError?.properties?.lastname?.errors"/>
                         </Field>
                     </div>
                 </FieldGroup>
@@ -58,15 +81,15 @@ const worker = useWorker();
                 <br>
                 <FieldGroup>
                     <FieldLabel>Setup Address</FieldLabel>
-                    <div class="grid lg:grid-cols-3 gap-5">
-                        <Field>
-                            <FieldLabel htmlFor="street">Street</FieldLabel>
-                            <Input id="street" v-model="worker.form.address.street" />
+                    <div class="grid lg:grid-cols-2 gap-5">
+                        <Field class="col-span-2">
+                            <FieldLabel htmlFor="street">Address Line 1</FieldLabel>
+                            <Input id="street" v-model="worker.form.address.addressLine1" />
                         </Field>
 
-                        <Field>
-                            <FieldLabel htmlFor="barangay">Barangay</FieldLabel>
-                            <Input id="barangay" v-model="worker.form.address.barangay" />
+                        <Field class="col-span-2">
+                            <FieldLabel htmlFor="barangay">Address Line 2</FieldLabel>
+                            <Input id="barangay" v-model="worker.form.address.addressLine2" />
                         </Field>
 
                         <Field>
@@ -99,11 +122,11 @@ const worker = useWorker();
                     </Field>
                 </FieldGroup>
                 <br>
-                <Button>Submit</Button>
+                <Button @click="submit()">Submit</Button>
                 <br>
                 <br>
                 <br>
-            </form>
+            </div>
         </div>
     </div>
 

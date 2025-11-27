@@ -47,6 +47,15 @@ export interface User {
     // gender?: Gender;
 
     contactInfo?: ContactInfo;           // Only for worker/client
+
+    legalDocs: LegalDocs[];
+}
+
+export type LegalDocs = {
+    type: string;
+    description: string;
+    url?: string;
+    tags?: string[]
 }
 
 // JOBS SCHEMA

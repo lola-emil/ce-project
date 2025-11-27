@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import type { User } from "@/models/user.model";
+import type { User } from "@/types/schema";
 import { useAuthStore } from "@/stores/authStore";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { reactive } from "vue";

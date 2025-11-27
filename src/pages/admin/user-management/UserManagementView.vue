@@ -209,9 +209,16 @@ watch(users, newVal => {
                         </template> -->
                         </DropdownMenuContent>
                     </DropdownMenu>
+                    <Button variant="outline" size="sm" as-child>
+                        <RouterLink to="/admin/create-new-worker">
+                            <IconPlus />
+                            <span class="hidden lg:inline">Add worker</span>
+                        </RouterLink>
+                    </Button>
+
                     <Button variant="outline" size="sm">
                         <IconPlus />
-                        <span class="hidden lg:inline">Add User</span>
+                        <span class="hidden lg:inline">Add client</span>
                     </Button>
                 </div>
 
