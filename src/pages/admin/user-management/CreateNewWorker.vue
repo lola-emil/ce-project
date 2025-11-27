@@ -104,7 +104,7 @@ async function submit() {
 
                         <Field>
                             <FieldLabel htmlFor="zipcode">Zip Code</FieldLabel>
-                            <Input id="zipcode" v-model="worker.form.address.zipcode" />
+                            <Input id="zipcode" v-model="worker.form.address.zipCode" />
                         </Field>
                     </div>
                 </FieldGroup>

@@ -1,5 +1,5 @@
 import { useCollection, useFirebaseAuth } from "vuefire";
-import { collection, addDoc, DocumentReference, type DocumentData } from "firebase/firestore";
+import { collection, addDoc, DocumentReference, type DocumentData, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { reactive } from "vue";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -64,7 +64,7 @@ const userSchema = z.object({
         addressLine2: z.string().optional(),
         city: z.string().min(1, "City is required"),
         province: z.string().min(1, "Province is required"),
-        zipcode: z.string().min(1, "Zipcode is required"),
+        zipCode: z.string().min(1, "Zipcode is required"),
     }),
 });
 
@@ -90,7 +90,7 @@ export function useWorker() {
             addressLine2: "",
             city: "",
             province: "",
-            zipcode: "",
+            zipCode: "",
         }
     });
 
@@ -103,12 +103,25 @@ export function useWorker() {
             const user = await createUserWithEmailAndPassword(auth!, validated.email, validated.password);
             console.log("User created with ID", user.user.uid);
 
-
+            const data = {
+                uid: user.user.uid,
+                role: form.role,
+                name: form.name,
+                address: [
+                    {
+                        ...form.address
+                    }
+                ],
+                email: form.email,
+                createdAt: serverTimestamp()
+            };
             // Add ang personal info
-            const docRef = await addDoc(collection(db, "users"), { user_uid: user.user.uid, ...validated });
-            console.log("Document written with ID:", docRef.id);
+            const userDocRef = doc(db, "users", user.user.uid);
+            await setDoc(userDocRef, data);
 
-            return [docRef, null];
+            console.log("Document written with ID:", userDocRef.id);
+
+            return [userDocRef, null];
         } catch (error) {
             console.error(error);
             return [null, error as FirebaseError | ZodError];

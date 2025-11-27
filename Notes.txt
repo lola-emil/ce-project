@@ -5,7 +5,7 @@ ADMIN
 	- redirected to admin dashboard on success
 
 
-- create worker(s)
+- create worker(s) - done (60%)
 	- navigate to workers list
 	- click ang add worker
 	- navigate to add worker form
