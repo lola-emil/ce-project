@@ -5,7 +5,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import FieldGroup from '@/components/ui/field/FieldGroup.vue';
 import { useWorker, type WorkerFormError } from './composables/useWorker';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import z, { ZodError, treeifyError } from 'zod';
 import { FirebaseError } from 'firebase/app';
 import { useRouter } from 'vue-router';
@@ -22,6 +22,7 @@ async function submit() {
         if (error instanceof ZodError) {
             formError.value = z.treeifyError(error as ZodError<WorkerFormError>)
             console.log("Validation error", formError.value);
+            console.log(formError.value?.properties?.name?.properties?.firstname?.errors);
             return;
         }
 
@@ -29,11 +30,12 @@ async function submit() {
             alert("Unidentified error");
             return;
         }
-
     }
+
 
     router.push("/admin/user-management");
 }
+
 
 
 </script>
@@ -58,22 +60,22 @@ async function submit() {
             <div class="col-span-2">
                 <FieldGroup>
                     <div class="flex flex-col gap-5">
-                        <Field :data-invalid="formError?.properties?.firstname">
-                            <FieldLabel htmlFor="firstnam`e">First Name</FieldLabel>
+                        <Field :data-invalid="formError?.properties?.name?.properties?.firstname">
+                            <FieldLabel htmlFor="firstname">First Name</FieldLabel>
                             <Input id="firstname" v-model="worker.form.name.firstname" type="text" />
-                            <FieldError :errors="formError?.properties?.firstname?.errors"/>
+                            <FieldError :errors="formError?.properties?.name?.properties?.firstname?.errors" />
                         </Field>
 
-                        <Field :data-invalid="formError?.properties?.middlename">
+                        <Field :data-invalid="formError?.properties?.name?.properties?.middlename">
                             <FieldLabel htmlFor="middlename">Middle Name</FieldLabel>
                             <Input id="middlename" v-model="worker.form.name.middlename" type="text" />
-                            <FieldError :errors="formError?.properties?.middlename?.errors"/>
+                            <FieldError :errors="formError?.properties?.name?.properties?.middlename?.errors" />
                         </Field>
 
-                        <Field :data-invalid="formError?.properties?.lastname">
+                        <Field :data-invalid="formError?.properties?.name?.properties?.lastname">
                             <FieldLabel htmlFor="lastname">Last Name</FieldLabel>
                             <Input id="lastname" v-model="worker.form.name.lastname" type="text" />
-                            <FieldError :errors="formError?.properties?.lastname?.errors"/>
+                            <FieldError :errors="formError?.properties?.name?.properties?.lastname?.errors" />
                         </Field>
                     </div>
                 </FieldGroup>
@@ -82,29 +84,37 @@ async function submit() {
                 <FieldGroup>
                     <FieldLabel>Setup Address</FieldLabel>
                     <div class="grid lg:grid-cols-2 gap-5">
-                        <Field class="col-span-2">
+                        <Field class="col-span-2"
+                            :data-invalid="formError?.properties?.address?.properties?.addressLine1?.errors">
                             <FieldLabel htmlFor="street">Address Line 1</FieldLabel>
                             <Input id="street" v-model="worker.form.address.addressLine1" />
+                            <FieldError :errors="formError?.properties?.address?.properties?.addressLine1?.errors" />
                         </Field>
 
-                        <Field class="col-span-2">
+                        <Field class="col-span-2"
+                            :data-invalid="formError?.properties?.address?.properties?.addressLine2?.errors">
                             <FieldLabel htmlFor="barangay">Address Line 2</FieldLabel>
                             <Input id="barangay" v-model="worker.form.address.addressLine2" />
+                            <FieldError :errors="formError?.properties?.address?.properties?.addressLine2?.errors" />
                         </Field>
 
-                        <Field>
+                        <Field class="col-span-2"
+                            :data-invalid="formError?.properties?.address?.properties?.city?.errors">
                             <FieldLabel htmlFor="city">City/Municipality</FieldLabel>
                             <Input id="city" v-model="worker.form.address.city" />
+                            <FieldError :errors="formError?.properties?.address?.properties?.city?.errors" />
                         </Field>
 
-                        <Field>
+                        <Field :data-invalid="formError?.properties?.address?.properties?.province?.errors">
                             <FieldLabel htmlFor="province">Province</FieldLabel>
                             <Input id="province" v-model="worker.form.address.province" />
+                            <FieldError :errors="formError?.properties?.address?.properties?.province?.errors" />
                         </Field>
 
-                        <Field>
+                        <Field :data-invalid="formError?.properties?.address?.properties?.zipCode?.errors">
                             <FieldLabel htmlFor="zipcode">Zip Code</FieldLabel>
                             <Input id="zipcode" v-model="worker.form.address.zipCode" />
+                            <FieldError :errors="formError?.properties?.address?.properties?.zipCode?.errors" />
                         </Field>
                     </div>
                 </FieldGroup>

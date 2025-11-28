@@ -30,9 +30,11 @@ export type WorkerForm = {
 }
 
 export type WorkerFormError = {
-    firstname: string[],
-    middlename?: string[],
-    lastname: string[],
+    name: {
+        firstname: string[],
+        middlename?: string[],
+        lastname: string[],
+    }
 
 
     email: string[],
@@ -45,7 +47,7 @@ export type WorkerFormError = {
         addressLine2: string[],
         city: string[],
         province: string[],
-        zipcode: string[],
+        zipCode: string[],
     }
 }
 
