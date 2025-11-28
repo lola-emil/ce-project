@@ -30,6 +30,15 @@ const router = createRouter({
     },
 
     {
+      path: "/forgot-password",
+      component: import("@/pages/auth/ForgotPasswordView.vue"),
+      meta: {
+        title: "Forgot Password",
+        requiresAuth: false,
+      },
+    },
+
+    {
       path: "/login",
       component: () => import("@/pages/auth/LoginView.vue"),
       meta: {
@@ -38,7 +47,7 @@ const router = createRouter({
     },
     {
       path: "/register",
-      component: () => import("@/pages/auth/ReigsterView.vue"),
+      component: () => import("@/pages/auth/RegisterView.vue"),
       meta: {
         title: "Register",
       },

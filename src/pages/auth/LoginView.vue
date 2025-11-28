@@ -55,9 +55,9 @@ const error = ref<boolean>(false);
                             </div>
                             <div class="flex items-center">
                                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                                <a href="#" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                                <RouterLink to="/forgot-password" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
                                     Forgot your password?
-                                </a>
+                                </RouterLink>
                             </div>
                         </Field>
                         <Field>

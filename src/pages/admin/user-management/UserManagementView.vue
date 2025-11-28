@@ -76,6 +76,7 @@ const columns: ColumnDef<UserTableData>[] = [
         enableHiding: false,
     },
 ];
+
 const tableData = ref<UserTableData[]>([]);
 
 
