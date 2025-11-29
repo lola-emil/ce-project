@@ -12,6 +12,7 @@ import type { JobRequest } from '@/types/schema';
 import { useCollection } from 'vuefire';
 import { useAuthStore } from '@/stores/authStore';
 import { RouterLink } from 'vue-router';
+import { watch } from 'vue';
 
 const authStore = useAuthStore();
 
@@ -19,6 +20,10 @@ const jobRequestsRef = collection(db, "job_requests");
 const jobRequestQuery = query(jobRequestsRef, where("clientId", "==", authStore.user?.uid))
 
 const jobRequests = useCollection<JobRequest[]>(jobRequestQuery);
+
+watch(jobRequests, () => {
+    console.log("Update Job", jobRequests.data.value);
+})
 </script>
 
 <template>

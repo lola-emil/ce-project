@@ -68,10 +68,8 @@ type JobStatus =
 
 type JobLocation = {
     address: string;
-    geo: {
-        lat: number;
-        lng: number;
-    };
+    lat: number;
+    lng: number;
     notes?: string;               // e.g. "Near City Hall, blue gate"
 }
 

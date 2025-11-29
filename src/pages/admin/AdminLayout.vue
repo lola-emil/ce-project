@@ -6,12 +6,12 @@ import LayoutNav from '@/components/LayoutNav.vue';
 
 const routes = [
     {
-        path: "dashboard",
+        path: "/admin/dashboard",
         title: "Overview"
     },
 
     {
-        path: "user-management",
+        path: "/admin/user-management",
         title: "User Management"
     },
 
@@ -26,7 +26,7 @@ const routes = [
     // },
 
     {
-        path: "settings",
+        path: "/admin/settings",
         title: "Settings"
     },
 ];

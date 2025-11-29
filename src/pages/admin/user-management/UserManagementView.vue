@@ -37,6 +37,8 @@ import { IconChevronLeft, IconChevronsLeft, IconChevronRight, IconChevronsRight 
 import { collection, query, where } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useCollection } from "vuefire";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { RouterLink } from "vue-router";
 
 interface UserTableData {
     id: string; // UID sa user
@@ -53,7 +55,11 @@ const rowSelection = ref({})
 
 
 const columns: ColumnDef<UserTableData>[] = [
-    { id: "select", header: ({ table }) => h(Checkbox, { 'modelValue': table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'), 'onUpdate:modelValue': value => table.toggleAllPageRowsSelected(!!value), 'aria-label': 'Select all', }), cell: ({ row }) => h(Checkbox, { 'modelValue': row.getIsSelected(), 'onUpdate:modelValue': value => row.toggleSelected(!!value), 'aria-label': 'Select row', }), enableSorting: false, enableHiding: false, },
+    {
+        id: "select",
+        header: ({ table }) => h(Checkbox, { 'modelValue': table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'), 'onUpdate:modelValue': value => table.toggleAllPageRowsSelected(!!value), 'aria-label': 'Select all', }),
+        cell: ({ row }) => h(Checkbox, { 'modelValue': row.getIsSelected(), 'onUpdate:modelValue': value => row.toggleSelected(!!value), 'aria-label': 'Select row', }), enableSorting: false, enableHiding: false,
+    },
     {
         id: "name",
         accessorKey: "name",
@@ -75,6 +81,18 @@ const columns: ColumnDef<UserTableData>[] = [
             h('span', {}, row.original.role)),
         enableHiding: false,
     },
+
+    {
+        id: "action",
+        meta: {
+            align: "right"
+        },
+        cell: ({ row }) => h(ButtonGroup, {}, [
+            h(Button, { variant: "link", class: "align-right", asChild: true }, [
+                h(RouterLink, { to: "edit-user/" + row.original.id }, "Edit")
+            ])
+        ])
+    }
 ];
 
 const tableData = ref<UserTableData[]>([]);
@@ -217,10 +235,10 @@ watch(users, newVal => {
                         </RouterLink>
                     </Button>
 
-                    <Button variant="outline" size="sm">
+                    <!-- <Button variant="outline" size="sm">
                         <IconPlus />
                         <span class="hidden lg:inline">Add client</span>
-                    </Button>
+                    </Button> -->
                 </div>
 
             </div>

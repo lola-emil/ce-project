@@ -18,7 +18,7 @@ service cloud.firestore {
     // JOB REQUESTS
     // ---------------------------
     match /job_requests/{jobId} {
-      allow create: if request.auth != null && request.auth.token.role == "client";
+      allow create: if request.auth != null;
       allow read: if request.auth != null; // Any authenticated user can see jobs
       allow update: if request.auth != null && (
         request.auth.uid == resource.data.clientId || request.auth.token.role == "admin"

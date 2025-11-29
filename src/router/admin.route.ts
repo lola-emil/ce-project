@@ -14,6 +14,10 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import("@/pages/admin/user-management/UserManagementView.vue")
     },
     {
+        path: "edit-user/:id",
+        component: () => import("@/pages/admin/user-management/EditUserView.vue")
+    },
+    {
         path: "payment-commission-management",
         component: () => import("@/pages/admin/payment-commission-management/PaymentCommissionManagement.vue")
     },
