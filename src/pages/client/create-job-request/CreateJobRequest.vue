@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Images, X } from 'lucide-vue-next';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { Field, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,11 +12,22 @@ import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebas
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db, storage } from '@/firebase';
 import { useCurrentUser } from 'vuefire';
+import { Spinner } from '@/components/ui/spinner';
+import { toast } from 'vue-sonner'
 
 interface ImageItem {
     file: File;
     url: string;
 }
+
+const user = useCurrentUser();
+const router = useRouter();
+
+
+// Loading states
+const isSavingData = ref(false);
+const isUploadingImages = ref(false);
+
 
 const title = ref("");
 const description = ref("");
@@ -27,7 +38,7 @@ const address = ref<Suggestion | undefined>()
 const images = ref<ImageItem[]>([]);
 
 
-const user = useCurrentUser();
+
 
 const onFileChange = (event: Event) => {
     const target = event.target as HTMLInputElement;
@@ -87,22 +98,41 @@ const uploadImages = async () => {
 }
 
 async function submit() {
-    const body: any = {
-        title: title.value,
-        description: description.value,
-        budget: budget.value,
-        location: address.value,
-        images: [],
-        status: "Pending",
-        clientId: user.value?.uid,
-        createdAt: serverTimestamp()
-    };
-    await uploadImages();
-    body.images = uploadedImages.value;
+    try {
+        const body: any = {
+            title: title.value,
+            description: description.value,
+            budget: budget.value,
+            location: address.value,
+            images: [],
+            status: "Pending",
+            clientId: user.value?.uid,
+            createdAt: serverTimestamp()
+        };
 
-    console.log(body);
-    const jobRequestRef = await addDoc(collection(db, "job_requests"), body);
-    console.log("Document written with ID:", jobRequestRef.id)
+        isUploadingImages.value = true;
+        
+        await uploadImages();
+
+        isUploadingImages.value = false;
+
+        body.images = uploadedImages.value;
+
+        isSavingData.value = true;
+
+        const jobRequestRef = await addDoc(collection(db, "job_requests"), body);
+
+        isSavingData.value = false;
+
+        console.log("Document written with ID:", jobRequestRef.id)
+        router.push("/client/my-jobs");
+    }
+    catch (error) {
+        toast('Unexpected error occured');
+    } finally {
+        isUploadingImages.value = false;
+        isSavingData.value = false;
+    }
 }
 
 </script>
@@ -170,24 +200,29 @@ async function submit() {
 
                         <Field>
                             <FieldLabel>Title</FieldLabel>
-                            <Input v-model="title" />
+                            <Input v-model="title" :disabled="isSavingData || isUploadingImages" />
                         </Field>
 
                         <Field>
                             <FieldLabel>Description</FieldLabel>
-                            <Textarea v-model="description" />
+                            <Textarea v-model="description" :disabled="isSavingData || isUploadingImages" />
                         </Field>
 
 
                         <Field>
                             <FieldLabel>Budget</FieldLabel>
-                            <Input type="number" v-model="budget" />
+                            <Input type="number" v-model="budget" :disabled="isSavingData || isUploadingImages" />
                         </Field>
 
 
-                        <Button>
+                        <Button :disabled="isSavingData || isUploadingImages">
                             Submit
                         </Button>
+                        <div class="flex gap-3 items-center text-sm">
+                            <Spinner v-if="isSavingData || isUploadingImages" />
+                            <span v-if="isSavingData">Saving Data</span>
+                            <span v-if="isUploadingImages">Uploading images</span>
+                        </div>
                     </form>
                 </div>
                 <!-- </CardContent>

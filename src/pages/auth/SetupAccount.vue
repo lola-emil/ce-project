@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { h, ref } from 'vue'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { toast } from 'vue-sonner'
+import { ref, watch } from 'vue';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { FieldLabel, Field, FieldGroup, FieldError } from '@/components/ui/field';
 import { useAccountSetup, type AddressForm, type ContactInfoForm, type NameForm } from './composables/accountSetup';
-import z, { treeifyError } from 'zod';
+import { treeifyError } from 'zod';
 import { useRouter } from 'vue-router';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { useCurrentUser } from 'vuefire';
 
 const accountSetup = useAccountSetup();
 const router = useRouter();
+
+const user = useCurrentUser();
+
 
 const stepIndex = ref(1)
 const steps = [
@@ -30,6 +35,13 @@ const steps = [
     },
 ]
 
+const useRegisteredEmail = ref(false);
+
+watch(useRegisteredEmail, checked => {
+    if (checked) {
+        accountSetup.contactInfoForm.email = user.value?.email ?? "";
+    }
+})
 
 const nameError = ref<ReturnType<typeof treeifyError<NameForm>> | undefined>()
 const contactInfoError = ref<ReturnType<typeof treeifyError<ContactInfoForm>> | undefined>()
@@ -110,18 +122,18 @@ async function onSubmit() {
 </script>
 
 <template>
-    
+
     <div class="w-full h-screen flex flex-col items-center">
         <div class="w-md mt-40">
             <h3 class="text-3xl">Accout Set Up</h3>
-            
+
         </div>
         <div class="flex flex-col gap-4 mt-4 w-md">
             <section v-if="stepIndex === 1">
                 <FieldGroup>
                     <Field>
                         <FieldLabel htmlFor="firstname">First Name</FieldLabel>
-                        <Input type="text" id="firstname" v-model="accountSetup.nameForm.firstname" />
+                        <Input type="text" id="firstname" v-model="accountSetup.nameForm.firstname"/>
                         <FieldError>{{ nameError?.properties?.firstname?.errors[0] }}</FieldError>
                     </Field>
 
@@ -156,8 +168,12 @@ async function onSubmit() {
                     </Field>
 
                     <Field name="fullName">
-                        <FieldLabel>Email <span class="text-muted-foreground">(optional)</span></FieldLabel>
-                        <Input type="text" v-model="accountSetup.contactInfoForm.email" />
+                        <FieldLabel>Email</FieldLabel>
+                        <Input type="text" v-model="accountSetup.contactInfoForm.email" :disabled="useRegisteredEmail"/>
+                        <div class="w-full flex gap-3">
+                            <Switch id="airplane-mode" v-model="useRegisteredEmail"/>
+                            <Label for="airplane-mode">Use registered email</Label>
+                        </div>
                         <FieldError>{{ contactInfoError?.properties?.email?.errors[0] }}</FieldError>
                     </Field>
 

@@ -10,6 +10,7 @@ import { reactive, ref } from 'vue';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { AlertCircleIcon } from "lucide-vue-next"
 import { useLogin } from './composables/auth';
+import { Spinner } from '@/components/ui/spinner';
 
 const auth = useLogin();
 
@@ -44,13 +45,14 @@ const error = ref<boolean>(false);
                         <Field>
                             <FieldLabel htmlFor="email">Email</FieldLabel>
                             <Input id="email" v-model="auth.loginForm.email" type="email" placeholder="m@example.com"
-                                required />
+                                required :disabled="auth.isLoading.value"/>
 
                             <FieldError>{{ auth.formError.email }}</FieldError>
                         </Field>
                         <Field class="flex-col-reverse">
                             <div>
-                                <Input id="password" v-model="auth.loginForm.password" type="password" required />
+                                <Input id="password" v-model="auth.loginForm.password" type="password" required 
+                                :disabled="auth.isLoading.value"/>
                                 <FieldError class="mt-2">{{ auth.formError.password }}</FieldError>
                             </div>
                             <div class="flex items-center">
@@ -61,8 +63,10 @@ const error = ref<boolean>(false);
                             </div>
                         </Field>
                         <Field>
-                            <Button type="submit">Login</Button>
-                            <Button variant="outline" type="button" @click="auth.loginWithGoogle()">
+                            <Button type="submit" :disabled="auth.isLoading.value">
+                                <Spinner v-if="auth.isLoading.value"/>
+                                Login</Button>
+                            <Button variant="outline" type="button" @click="auth.loginWithGoogle()" :disabled="auth.isLoading.value">
                                 Login with Google
                             </Button>
                             <FieldDescription class="text-center">

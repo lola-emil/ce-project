@@ -5,14 +5,11 @@ import type {
 // import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { VisArea, VisAxis, VisLine, VisXYContainer } from "@unovis/vue"
 
-import { TrendingUp } from "lucide-vue-next"
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardDescription, CardHeader,
+  CardTitle
 } from "@/components/ui/card"
 import {
   ChartContainer,
@@ -22,16 +19,6 @@ import {
   componentToString,
 } from "@/components/ui/chart"
 
-const description = "An area chart with axes"
-
-const chartData = [
-  { month: 1, monthLabel: "January", desktop: 186, mobile: 80 },
-  { month: 2, monthLabel: "February", desktop: 305, mobile: 200 },
-  { month: 3, monthLabel: "March", desktop: 237, mobile: 120 },
-  { month: 4, monthLabel: "April", desktop: 73, mobile: 190 },
-  { month: 5, monthLabel: "May", desktop: 209, mobile: 130 },
-  { month: 6, monthLabel: "June", desktop: 214, mobile: 140 },
-]
 
 const data = [
   {

@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRegister } from "./composables/auth"
 import { motion } from "motion-v"
+import Spinner from "@/components/ui/spinner/Spinner.vue"
 
 const auth = useRegister();
 
@@ -67,7 +68,9 @@ const auth = useRegister();
                         </Field>
                         <FieldGroup>
                             <Field>
-                                <Button type="submit" :disabled="auth.isLoading.value">Create Account</Button>
+                                <Button type="submit" :disabled="auth.isLoading.value">
+                                    <Spinner v-if="auth.isLoading.value"/>
+                                    Create Account</Button>
                                 <FieldDescription class="px-6 text-center">
                                     Already have an account? <RouterLink to="/login"
                                         class="ml-auto inline-block text-sm underline-offset-4 hover:underline">Sign in
