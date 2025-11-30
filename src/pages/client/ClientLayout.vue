@@ -4,17 +4,17 @@ import LayoutNav from '@/components/LayoutNav.vue';
 
 const routes = [
     {
-        path: "dashboard",
+        path: "/client/dashboard",
         title: "Overview"
     },
 
     {
-        path: "my-jobs",
+        path: "/client/my-jobs",
         title: "My Jobs"
     },
 
     {
-        path: "payments",
+        path: "/client/payments",
         title: "Payments"
     },
 ]

@@ -67,7 +67,7 @@ type JobStatus =
     | "cancelled";
 
 type JobLocation = {
-    address: string;
+    description: string;
     lat: number;
     lng: number;
     notes?: string;               // e.g. "Near City Hall, blue gate"
@@ -89,7 +89,7 @@ interface JobRequest {
     budget: number;
     status: JobStatus;
 
-    jobImage?: JobImage[]
+    images?: string[]
 
 
     createdAt: Timestamp;

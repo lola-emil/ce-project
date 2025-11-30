@@ -25,8 +25,5 @@ export const workerRoutes: RouteRecordRaw[] = [
         path: "profile",
         component: () => import("@/pages/worker/profile/Profile.vue")
     },
-    {
-        path: "settings",
-        component: () => import("@/pages/worker/settings/Settings.vue")
-    }
+
 ];

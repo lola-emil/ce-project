@@ -70,7 +70,7 @@ watch(jobRequests, () => {
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 <RouterLink v-for="value in jobRequests as any" :to="'job-details/' + value.id">
                     <Card class="gap-2">
                         <CardHeader>
@@ -88,7 +88,6 @@ watch(jobRequests, () => {
                             </div>
                         </CardContent>
                     </Card>
-
                 </RouterLink>
             </div>
         </div>

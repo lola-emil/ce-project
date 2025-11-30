@@ -18,14 +18,6 @@ export const adminRoutes: RouteRecordRaw[] = [
         component: () => import("@/pages/admin/user-management/EditUserView.vue")
     },
     {
-        path: "payment-commission-management",
-        component: () => import("@/pages/admin/payment-commission-management/PaymentCommissionManagement.vue")
-    },
-    {
-        path: "skill-management",
-        component: () => import("@/pages/admin/skill-management/SkillManagement.vue")
-    },
-    {
         path: "client-management",
         component: () => import("@/pages/admin/user-management/UserManagementView.vue")
     },
@@ -36,5 +28,9 @@ export const adminRoutes: RouteRecordRaw[] = [
     {
         path: "create-new-worker",
         component: () => import("@/pages/admin/user-management/CreateNewWorker.vue")
+    },
+    {
+        path: "job-details/:id",
+        component: () => import("@/pages/admin/job-details/JobDetails.vue")
     }
 ];

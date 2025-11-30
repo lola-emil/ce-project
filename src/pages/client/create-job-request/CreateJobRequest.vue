@@ -93,7 +93,7 @@ async function submit() {
         budget: budget.value,
         location: address.value,
         images: [],
-        pending: "Pending",
+        status: "Pending",
         clientId: user.value?.uid,
         createdAt: serverTimestamp()
     };

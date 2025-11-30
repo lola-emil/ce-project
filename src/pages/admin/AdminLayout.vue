@@ -15,10 +15,11 @@ const routes = [
         title: "User Management"
     },
 
-    // {
-    //     path: "job-management",
-    //     title: "Workforce and Jobs"
-    // },
+
+    {
+        path: "/admin/worker-assignment-console",
+        title: "Worker Assignment"
+    },
 
     // {
     //     path: "payment-commission-management",

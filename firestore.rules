@@ -30,16 +30,18 @@ service cloud.firestore {
     // JOB ASSIGNMENTS
     // ---------------------------
     match /job_assignments/{assignmentId} {
-      allow create: if request.auth != null && request.auth.token.role == "admin"; // Admin creates assignment
-      allow read: if request.auth != null && (
-        request.auth.uid == resource.data.workerId ||
-        request.auth.uid == resource.data.clientId ||
-        request.auth.token.role == "admin"
-      );
-      allow update: if request.auth != null && (
-        request.auth.uid == resource.data.workerId ||
-        request.auth.token.role == "admin"
-      ); // Worker updates progress, admin can update everything
+      allow create: if request.auth != null; // && request.auth.token.role == "admin"; // Admin creates assignment
+      allow read: if request.auth != null;
+      // && (
+      //   request.auth.uid == resource.data.workerId ||
+      //   request.auth.uid == resource.data.clientId ||
+      //   request.auth.token.role == "admin"
+      // );
+      allow update: if request.auth != null;
+      // && (
+      //   request.auth.uid == resource.data.workerId ||
+      //   request.auth.token.role == "admin"
+      // ); // Worker updates progress, admin can update everything
     }
 
     // ---------------------------
