@@ -1,0 +1,47 @@
+- [x] Finish the homepage design
+- [ ] about page
+- [ ] contact us page
+- [ ] FAQs
+- [x] Loading state sa Login page
+- [x] Loading state sa Registration page
+- [ ] profile page para sa mga users
+- [x] Checkbox para sa "use your own email" (account setup nga page)
+- [ ] Forgot password nga feature
+	
+### ADMIN POV
+- [ ] Dynamic data sa admin dashboard
+- [ ] Search user feature sa user management
+- [ ] Filter user feature sa user management
+- [ ] Empty state sa user management page
+- [ ] Edit detail sa mga users (sa profile page dapit)
+- [ ] Empty state sa worker management
+- [ ] Progress info sa job details
+- [ ] Search feature implementation sa job management
+- [ ] Filter feature sa job management
+
+
+### Client POV
+- [ ] Dynamic data sa client dashboard
+	- [ ] Recent job requests
+	- [ ] Recent activities
+- [ ] Empty state para sa "My Jobs nga page"
+- [ ] Validation errors para sa create job
+- [ ] Loading state para sa create job
+- [ ] Payment method management
+	- [ ] Add new card debit/credit
+	- [ ] Update card
+	- [ ] Delete card
+- [ ] Mag add ug payment method para sa create job request
+
+
+### WORKER POV
+- [ ] Dynamic data sa client dashboard
+	- [ ] Earnings overview (Pila iyang earning this month)
+	- [ ] Active jobs pila ka job iyang gi handle
+	- [ ] Completed jobs pila iyang overall completed jobs
+	- [ ] Rating
+	- [ ] Pending assigned jobs
+	- [ ] Recent Activities
+- [ ] List sa iyang mga assigned jobs
+- [ ] Job details nga page
+- [ ] Sa job details didto siya mag butang sa iyang progress
