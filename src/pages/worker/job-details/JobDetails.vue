@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
+import { db, storage } from '@/firebase';
 import { useDocument } from 'vuefire';
 import {
     Carousel,
@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { getDownloadURL, ref as storageRef, uploadBytesResumable, } from "firebase/storage";
 
 const auth = useAuthStore();
 
@@ -88,8 +89,51 @@ async function addProgress() {
         const data = assignment.data() as JobAssignment;
         const currentProgress = data.progress;
 
-        // Upload ang image
         // TODO: complete this shit. Kuwang ani kay i append siya sa firestore
+
+
+        // Upload ang image
+        let uploadImage: string | undefined;
+
+        if (progressImage.value) {
+            const fileRef = storageRef(storage, `uploads/${Date.now()}_${progressImage.value?.name}`)
+            const uploadTask = uploadBytesResumable(fileRef, progressImage.value);
+            await new Promise<void>((resolve, reject) => {
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
+                        // Optional: track progress here
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log(`Upload is ${progress}% done`);
+                    },
+                    (error) => {
+                        console.error("Upload failed", error);
+                        reject(error);
+                    },
+                    async () => {
+                        // Upload completed successfully
+                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                        uploadImage = downloadURL
+                        resolve();
+                    }
+                );
+            });
+        }
+
+        // Save ang progress
+        currentProgress.push({
+            imgUrl: uploadImage,
+            note: note.value,
+            date: (new Date()).toLocaleDateString()
+        });
+
+        // append ang progress sa firestore
+        await updateDoc(assignmentDoc, {
+            progress: currentProgress
+        });
+
+        toast('Success');
+        location.reload();
     }
 }
 
@@ -229,7 +273,7 @@ onMounted(async () => {
                             </div>
                             <div class="grid gap-3">
                                 <Label for="username-1">Note</Label>
-                                <Textarea></Textarea>
+                                <Textarea v-model="note"></Textarea>
                             </div>
                         </div>
                         <DialogFooter>

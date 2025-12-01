@@ -106,9 +106,9 @@ type JobAssignmentStatus =
     | "failed";
 
 type Progress = {
-    imgUrl: string;
+    imgUrl?: string;
     note: string;
-    date: string;
+    date: serverTimestamp;
 };
 
 export interface JobAssignment {
