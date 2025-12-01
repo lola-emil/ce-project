@@ -4,12 +4,12 @@ import { RouterView } from 'vue-router';
 
 const routes = [
     {
-        path: "dashboard",
+        path: "/worker/dashboard",
         title: "Overview"
     },
 
     {
-        path: "my-assignments",
+        path: "/worker/my-assignments",
         title: "My Jobs"
     },
 ];

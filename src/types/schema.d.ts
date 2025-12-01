@@ -106,8 +106,8 @@ type JobAssignmentStatus =
     | "failed";
 
 type Progress = {
-    title: string;
-    comment: string;
+    imgUrl: string;
+    note: string;
     date: string;
 };
 

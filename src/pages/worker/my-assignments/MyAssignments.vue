@@ -3,11 +3,37 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { IconLayoutColumns, IconChevronDown } from '@tabler/icons-vue';
-import { Plus } from 'lucide-vue-next';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { collection, doc, getDoc, query, where } from 'firebase/firestore';
+import { db } from '@/firebase';
+import { useCollection } from 'vuefire';
+import { useAuthStore } from '@/stores/authStore';
+import { onMounted, ref, watch } from 'vue';
+import type { JobAssignment, JobRequest } from '@/types/schema';
 
-const range = (size: number) => new Array(size);
+
+const authStore = useAuthStore();
+
+const jobAssignmentRef = query(collection(db, "job_assignments"), where("workerId", "==", authStore.user?.uid));
+const jobAssignments = useCollection<JobAssignment>(jobAssignmentRef);
+const jobs = ref<JobRequest[]>([])
+
+watch(jobAssignments, () => {
+    console.log(authStore.user?.uid);
+    console.log("What the fuck", jobAssignments.value);
+
+    jobAssignments.value.forEach(async val => {
+        const jobRef = doc(db, "job_requests", val.jobId);
+        const jobSnap = await getDoc(jobRef)
+
+        if (jobSnap.exists()) {
+            jobs.value.push({ id: jobSnap.id, ...jobSnap.data() } as JobRequest);
+            console.log(jobSnap.data());
+        }
+    })
+});
+
 </script>
 
 <template>
@@ -50,22 +76,27 @@ const range = (size: number) => new Array(size);
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <RouterLink to="job-details">
+                <RouterLink v-for="value in jobs" :to="'/worker/job-details/' + value.id">
                     <Card class="gap-2">
                         <CardHeader>
-                            <CardTitle class="text-sm">Tile Repair (Small Area)</CardTitle>
+                            <CardTitle class="text-sm">{{ value.title }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div>
                                 <p class="text-muted-foreground text-sm">Status: <Badge variant="outline">Awaiting Order
                                     </Badge>
                                 </p>
-                                <p class="text-muted-foreground text-sm">Date: <span>Jan 12, 2026</span></p>
-                                <p class="text-muted-foreground text-sm">Budget: <span
-                                        class="text-primary">₱1,200</span>
+                                <p class="text-muted-foreground text-sm">Date: <span>{{
+                                    new Intl.DateTimeFormat('en-US', {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric"
+                                    }).format(value?.createdAt.toDate()) }}</span></p>
+                                <p class="text-muted-foreground text-sm">Budget: <span class="text-primary">₱{{
+                                        value.budget }}</span>
                                 </p>
-                                <p class="text-muted-foreground text-sm">Location: Danao City, Cebu <span
-                                        class="text-primary">(1.2km)</span>
+                                <p class="text-muted-foreground text-sm">Location: {{ value.location?.description }}
+                                    <!-- <span class="text-primary">(1.2km)</span> -->
                                 </p>
                             </div>
                         </CardContent>

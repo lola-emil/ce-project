@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Images, X } from 'lucide-vue-next';
 import { RouterLink, useRouter } from 'vue-router';
-import { Field, FieldLabel } from '@/components/ui/field';
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import AddressSelection from './components/AddressSelection.vue';
@@ -14,6 +14,7 @@ import { db, storage } from '@/firebase';
 import { useCurrentUser } from 'vuefire';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'vue-sonner'
+import { treeifyError, z, ZodError } from "zod";
 
 interface ImageItem {
     file: File;
@@ -37,7 +38,15 @@ const uploadedImages = ref<string[]>([])
 const address = ref<Suggestion | undefined>()
 const images = ref<ImageItem[]>([]);
 
+type JobFormError = {
+    title: string[],
+    description: string[],
+    budget: string[],
+    location: string[],
+    images: string[]
+};
 
+const formError = ref<ReturnType<typeof treeifyError<JobFormError>> | undefined>();
 
 
 const onFileChange = (event: Event) => {
@@ -98,6 +107,38 @@ const uploadImages = async () => {
 }
 
 async function submit() {
+    const projectSchema = z.object({
+        title: z
+            .string()
+            .min(1, "Title is required")
+            .max(200, "Title must be less than 200 characters"),
+
+        description: z
+            .string()
+            .min(1, "Description is required")
+            .max(5000, "Description is too long"),
+
+        budget: z
+            .number()
+            .positive("Budget must be a positive number"),
+
+
+        clientId: z.string(),
+        createdAt: z.any().optional(),
+        status: z.enum(["Pending"]),
+
+        // location: z
+        //     .string()
+        //     .min(1, "Location is required")
+        //     .max(300, "Location is too long"),
+
+        images: z
+            .array(z.url("Image must be a valid URL"))
+            .optional(),
+    });
+
+    // type ProjectInput = z.infer<typeof projectSchema>;
+
     try {
         const body: any = {
             title: title.value,
@@ -110,17 +151,20 @@ async function submit() {
             createdAt: serverTimestamp()
         };
 
+        const validated = projectSchema.parse(body);
+
+
         isUploadingImages.value = true;
-        
+
         await uploadImages();
 
         isUploadingImages.value = false;
 
-        body.images = uploadedImages.value;
+        validated.images = uploadedImages.value;
 
         isSavingData.value = true;
 
-        const jobRequestRef = await addDoc(collection(db, "job_requests"), body);
+        const jobRequestRef = await addDoc(collection(db, "job_requests"), validated);
 
         isSavingData.value = false;
 
@@ -128,6 +172,12 @@ async function submit() {
         router.push("/client/my-jobs");
     }
     catch (error) {
+        if (error instanceof ZodError) {
+            console.error("Validation error", z.treeifyError(error as ZodError<JobFormError>));
+            formError.value = z.treeifyError(error as ZodError<JobFormError>);
+            return;
+        }
+
         toast('Unexpected error occured');
     } finally {
         isUploadingImages.value = false;
@@ -188,6 +238,7 @@ async function submit() {
                             <input id="images" type="file" multiple accept="image/*" class="hidden"
                                 @change="onFileChange">
 
+                            <FieldError :errors="formError?.properties?.images?.errors" />
                         </Field>
 
 
@@ -196,22 +247,26 @@ async function submit() {
                             <!-- <Input id="name-1" name="name" default-value="Pedro Duarte" /> -->
                             <AddressSelection v-model="address" />
 
+                            <FieldError :errors="formError?.properties?.location?.errors" />
                         </Field>
 
                         <Field>
                             <FieldLabel>Title</FieldLabel>
                             <Input v-model="title" :disabled="isSavingData || isUploadingImages" />
+                            <FieldError :errors="formError?.properties?.title?.errors" />
                         </Field>
 
                         <Field>
                             <FieldLabel>Description</FieldLabel>
                             <Textarea v-model="description" :disabled="isSavingData || isUploadingImages" />
+                            <FieldError :errors="formError?.properties?.description?.errors" />
                         </Field>
 
 
                         <Field>
                             <FieldLabel>Budget</FieldLabel>
                             <Input type="number" v-model="budget" :disabled="isSavingData || isUploadingImages" />
+                            <FieldError :errors="formError?.properties?.budget?.errors" />
                         </Field>
 
 

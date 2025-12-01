@@ -25,13 +25,14 @@
 	- [ ] Recent job requests
 	- [ ] Recent activities
 - [ ] Empty state para sa "My Jobs nga page"
-- [ ] Validation errors para sa create job
+- [x] Validation errors para sa create job
 - [ ] Loading state para sa create job
 - [ ] Payment method management
 	- [ ] Add new card debit/credit
 	- [ ] Update card
 	- [ ] Delete card
 - [ ] Mag add ug payment method para sa create job request
+- [ ] progress info sa job details (client)
 
 
 ### WORKER POV
@@ -42,6 +43,7 @@
 	- [ ] Rating
 	- [ ] Pending assigned jobs
 	- [ ] Recent Activities
-- [ ] List sa iyang mga assigned jobs
-- [ ] Job details nga page
+- [x] List sa iyang mga assigned jobs
+- [x] Job details nga page
 - [ ] Sa job details didto siya mag butang sa iyang progress
+- [ ] View progress detail

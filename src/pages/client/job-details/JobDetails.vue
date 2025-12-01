@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { doc } from 'firebase/firestore';
 import { db } from '@/firebase';
@@ -24,6 +24,10 @@ const jobRef = doc(db, "job_requests", jobId);
 const {
     data: job,
 } = useDocument<JobRequest>(jobRef);
+
+watch(job, () => {
+    console.log(job.value);
+})
 
 </script>
 

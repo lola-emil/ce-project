@@ -10,7 +10,7 @@ export const workerRoutes: RouteRecordRaw[] = [
         component: () => import("@/pages/worker/earnings-page/Earnings.vue")
     },
     {
-        path: "job-details",
+        path: "job-details/:id",
         component: () => import("@/pages/worker/job-details/JobDetails.vue")
     },
     {
