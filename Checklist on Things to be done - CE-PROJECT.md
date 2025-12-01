@@ -45,5 +45,6 @@
 	- [ ] Recent Activities
 - [x] List sa iyang mga assigned jobs
 - [x] Job details nga page
-- [ ] Sa job details didto siya mag butang sa iyang progress
+- [x] Sa job details didto siya mag butang sa iyang progress
 - [ ] View progress detail
+- [ ] Mark as complete ang job
