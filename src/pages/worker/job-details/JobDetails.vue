@@ -60,8 +60,25 @@ async function acceptJobRequest() {
         status: "accepted"
     });
 
-    toast('Yeah');
+
     location.reload();
+}
+
+async function markAsComplete() {
+    if (!jobAssignment.value) {
+        toast("Job detail did not load properly");
+        return;
+    };
+
+    await addProgress();    
+
+    const assignmentDoc = doc(db, "job_assignments", jobAssignment.value.id);
+
+    await updateDoc(assignmentDoc, {
+        status: "completed"
+    });
+
+    // location.reload();
 }
 
 
@@ -118,6 +135,16 @@ async function addProgress() {
             });
         }
 
+
+        let additionalUpdate: any = {}
+        if (currentProgress.length == 0) {
+            additionalUpdate.status = "in-progress";
+
+            await updateDoc(jobRef, {
+                status: 'in-progress'
+            })
+        }
+
         // Save ang progress
         currentProgress.push({
             imgUrl: uploadImage,
@@ -125,14 +152,21 @@ async function addProgress() {
             date: (new Date()).toLocaleDateString()
         });
 
+
         // append ang progress sa firestore
         await updateDoc(assignmentDoc, {
-            progress: currentProgress
+            progress: currentProgress,
+            ...additionalUpdate
         });
 
         toast('Success');
-        location.reload();
+        // location.reload();
     }
+}
+
+async function onAddProgress() {
+    await addProgress();
+    location.reload();
 }
 
 const onSelectImage = (event: Event) => {
@@ -200,8 +234,45 @@ onMounted(async () => {
                 <p class="text-muted-foreground mt-5">{{ job?.description }}</p>
 
                 <p>Status: <span class="text-primary">{{ jobAssignment?.status }}</span></p>
-                <div v-if="jobAssignment?.status == 'requested'">
+
+                <div v-if="jobAssignment?.status == 'requested'" class="mt-3">
                     <Button @click="acceptJobRequest()">Accept Job Request</Button>
+                </div>
+
+                <div v-if="jobAssignment?.status == 'in-progress'" class="mt-3">
+                    <Dialog>
+                        <DialogTrigger as-child>
+                            <Button size="sm">Mark as Complete</Button>
+                        </DialogTrigger>
+                        <DialogContent class="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Mark as complete</DialogTitle>
+                                <DialogDescription>
+
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div class="grid gap-4">
+                                <div class="grid gap-3">
+                                    <Label for="name-1">Select Completion Photo</Label>
+                                    <Input type="file" @change="onSelectImage" />
+                                </div>
+                                <div class="grid gap-3">
+                                    <Label for="username-1">Note</Label>
+                                    <Textarea v-model="note"></Textarea>
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <DialogClose as-child>
+                                    <Button variant="outline">
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <Button @click="markAsComplete()">
+                                    Save changes
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
                 <div class="mt-5 grid grid-cols-2 gap-5">
                     <Card>
@@ -280,7 +351,7 @@ onMounted(async () => {
                                     Cancel
                                 </Button>
                             </DialogClose>
-                            <Button @click="addProgress()">
+                            <Button @click="onAddProgress()">
                                 Save changes
                             </Button>
                         </DialogFooter>

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-vue-next';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { useCollection, useDocument } from 'vuefire';
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-vue-next'
@@ -84,13 +84,16 @@ async function assignJobToUser() {
 
     await addDoc(collection(db, "job_assignments"), body);
 
-    location.reload();
+
+    const shit = await updateDoc(jobRef, {
+        status: "assigned"
+    });
+
+    
+    console.log(shit);
+    // location.reload();
 }
 
-
-watch(users.data, () => {
-    console.log(users.data.value);
-})
 
 
 // Para kuha sa assigned worker
