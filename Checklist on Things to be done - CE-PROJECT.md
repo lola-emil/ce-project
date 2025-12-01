@@ -15,9 +15,10 @@
 - [ ] Empty state sa user management page
 - [ ] Edit detail sa mga users (sa profile page dapit)
 - [ ] Empty state sa worker management
-- [ ] Progress info sa job details
+- [x] Progress info sa job details
 - [ ] Search feature implementation sa job management
 - [ ] Filter feature sa job management
+- [ ] Account activation through email para sa worker	
 
 
 ### Client POV
@@ -32,8 +33,8 @@
 	- [ ] Update card
 	- [ ] Delete card
 - [ ] Mag add ug payment method para sa create job request
-- [ ] progress info sa job details (client)
-
+- [x] progress info sa job details (client)
+- [ ] Delete Job
 
 ### WORKER POV
 - [ ] Dynamic data sa client dashboard

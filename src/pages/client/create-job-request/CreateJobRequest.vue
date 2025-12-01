@@ -127,10 +127,7 @@ async function submit() {
         createdAt: z.any().optional(),
         status: z.enum(["Pending"]),
 
-        // location: z
-        //     .string()
-        //     .min(1, "Location is required")
-        //     .max(300, "Location is too long"),
+        location: z.any(),
 
         images: z
             .array(z.url("Image must be a valid URL"))

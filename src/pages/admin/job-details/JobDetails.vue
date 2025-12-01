@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-vue-next';
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { db } from '@/firebase';
@@ -122,6 +122,7 @@ watch(job, async () => {
     }
 });
 
+
 </script>
 
 <template>
@@ -163,7 +164,7 @@ watch(job, async () => {
                 <div class="mt-5">
                     <p>Status: <span class="text-primary">{{ job?.status }}</span></p>
                     <div v-if="assignedWorker">
-                        Assigned worker: 
+                        Assigned worker:
                         <RouterLink :to="'/profile/' + assignedWorker.uid">
                             <span class="text-primary underline">
                                 {{ `${assignedWorker.name?.firstname} ${assignedWorker.name?.lastname}` }}
@@ -278,6 +279,31 @@ watch(job, async () => {
                 </div>
             </div>
 
+        </div>
+
+
+        <div class="mt-5">
+            <div class="flex items-center gap-3">
+                <h3 class="text-xl">Progress</h3>
+            </div>
+            <br>
+            <div class="flex flex-col gap-3">
+                <Card v-for="value in jobAssignment?.progress">
+                    <CardContent>
+                        <p>
+                            {{ value.note }}
+                        </p>
+                        <p>
+                            {{ value.date }}
+                        </p>
+
+                        <div class="text-primary underline cursor-pointer">
+                            View Details
+                        </div>
+                    </CardContent>
+                </Card>
+
+            </div>
         </div>
     </div>
 </template>

@@ -54,8 +54,6 @@ async function acceptJobRequest() {
         return;
     };
 
-    alert("Bullshit" + jobAssignment.value.id);
-
     const assignmentDoc = doc(db, "job_assignments", jobAssignment.value.id);
 
     await updateDoc(assignmentDoc, {
@@ -253,8 +251,8 @@ onMounted(async () => {
         <Separator class="mt-5" />
         <div class="mt-5">
             <div class="flex items-center gap-3">
-                <h3 class="text-xl">Job Progress</h3>
-                <Dialog>
+                <h3 class="text-xl">Progress</h3>
+                <Dialog v-if="jobAssignment?.status != 'requested'">
                     <DialogTrigger as-child>
                         <Button>Add Progress</Button>
 
@@ -289,9 +287,28 @@ onMounted(async () => {
                     </DialogContent>
                 </Dialog>
             </div>
-            <div>
+            <br>
+            <div class="flex flex-col gap-3">
+                <Card v-for="value in jobAssignment?.progress">
+                    <CardContent>
+                        <p>
+                            {{ value.note }}
+                        </p>
+                        <p>
+                            {{ value.date }}
+                        </p>
+
+                        <div class="text-primary underline cursor-pointer">
+                            View Details
+                        </div>
+                    </CardContent>
+                </Card>
 
             </div>
         </div>
     </div>
+
+    <br>
+    <br>
+    <br>
 </template>
