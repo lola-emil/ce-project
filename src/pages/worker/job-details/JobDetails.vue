@@ -323,7 +323,7 @@ onMounted(async () => {
         <div class="mt-5">
             <div class="flex items-center gap-3">
                 <h3 class="text-xl">Progress</h3>
-                <Dialog v-if="jobAssignment?.status != 'requested'">
+                <Dialog v-if="jobAssignment?.status != 'requested' && jobAssignment?.status != 'completed'">
                     <DialogTrigger as-child>
                         <Button>Add Progress</Button>
 

@@ -48,4 +48,4 @@
 - [x] Job details nga page
 - [x] Sa job details didto siya mag butang sa iyang progress
 - [ ] View progress detail
-- [ ] Mark as complete ang job
+- [x] Mark as complete ang job
