@@ -1,5 +1,37 @@
+<script setup lang="ts">
+import StatSection from './components/StatSection.vue';
+import {
+    Item,
+    ItemActions,
+    ItemContent,
+    ItemDescription,
+    ItemTitle,
+} from '@/components/ui/item'
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/stores/authStore';
+
+const recentActivities = [
+    {
+        title: "Masonry Repair Job",
+        description: "Assigned to you"
+    },
+
+    {
+        title: "Gate Welding",
+        description: "Completed - yesterday"
+    },
+]
+const authStore = useAuthStore();
+</script>
+
+
 <template>
     <div class="container mx-auto px-5 md:px-0">
+        <div class="mt-10">
+            <h3 class="text-3xl">Good day, {{ authStore.userData?.name?.firstname }}</h3>
+            <p class="text-lg text-muted-foreground">Here’s a quick overview of your latest activity.</p>
+        </div>
         <div class="mt-10">
             <StatSection />
         </div>
@@ -16,7 +48,8 @@
                             <p class="text-muted-foreground text-sm">Date: <span>Jan 12, 2026</span></p>
                             <p class="text-muted-foreground text-sm">Budget: <span class="text-primary">₱1,200</span>
                             </p>
-                            <p class="text-muted-foreground text-sm">Location: Danao City, Cebu <span class="text-primary">(1.2km)</span>
+                            <p class="text-muted-foreground text-sm">Location: Danao City, Cebu <span
+                                    class="text-primary">(1.2km)</span>
                             </p>
 
                         </div>
@@ -53,33 +86,8 @@
         </div>
     </div>
 
-    
+
     <br>
     <br>
     <br>
 </template>
-
-<script setup lang="ts">
-import StatSection from './components/StatSection.vue';
-import {
-    Item,
-    ItemActions,
-    ItemContent,
-    ItemDescription,
-    ItemTitle,
-} from '@/components/ui/item'
-import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button';
-
-const recentActivities = [
-    {
-        title: "Masonry Repair Job",
-        description: "Assigned to you"
-    },
-
-    {
-        title: "Gate Welding",
-        description: "Completed - yesterday"
-    },
-]
-</script>
