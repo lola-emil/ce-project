@@ -125,7 +125,7 @@ async function submit() {
 
         clientId: z.string(),
         createdAt: z.any().optional(),
-        status: z.enum(["Pending"]),
+        status: z.enum(["pending"]),
 
         location: z.any(),
 
@@ -143,7 +143,7 @@ async function submit() {
             budget: budget.value,
             location: address.value,
             images: [],
-            status: "Pending",
+            status: "pending",
             clientId: user.value?.uid,
             createdAt: serverTimestamp()
         };

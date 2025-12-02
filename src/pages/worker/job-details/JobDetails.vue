@@ -70,15 +70,20 @@ async function markAsComplete() {
         return;
     };
 
-    await addProgress();    
+    await addProgress("completion");    
 
     const assignmentDoc = doc(db, "job_assignments", jobAssignment.value.id);
 
     await updateDoc(assignmentDoc, {
-        status: "completed"
+        status: "pending approval"
     });
 
-    // location.reload();
+    await updateDoc(jobRef, {
+        status: "marked as complete"
+    });
+
+
+    location.reload();
 }
 
 
@@ -91,7 +96,7 @@ interface ImageItem {
 const progressImage = ref<File>();
 const note = ref("");
 
-async function addProgress() {
+async function addProgress(type: "progress" | "completion" = "progress") {
     if (!jobAssignment.value) {
         toast("Job detail did not load properly");
         return;
@@ -149,7 +154,8 @@ async function addProgress() {
         currentProgress.push({
             imgUrl: uploadImage,
             note: note.value,
-            date: (new Date()).toLocaleDateString()
+            date: (new Date()).toLocaleDateString(),
+            type
         });
 
 
@@ -239,7 +245,7 @@ onMounted(async () => {
                     <Button @click="acceptJobRequest()">Accept Job Request</Button>
                 </div>
 
-                <div v-if="jobAssignment?.status == 'in-progress'" class="mt-3">
+                <div v-if="jobAssignment?.status == 'in-progress' || jobAssignment?.status == 'rework'" class="mt-3">
                     <Dialog>
                         <DialogTrigger as-child>
                             <Button size="sm">Mark as Complete</Button>
@@ -323,7 +329,7 @@ onMounted(async () => {
         <div class="mt-5">
             <div class="flex items-center gap-3">
                 <h3 class="text-xl">Progress</h3>
-                <Dialog v-if="jobAssignment?.status != 'requested' && jobAssignment?.status != 'completed'">
+                <Dialog v-if="jobAssignment?.status != 'requested' && jobAssignment?.status != 'completed' && jobAssignment?.status != 'pending approval'">
                     <DialogTrigger as-child>
                         <Button>Add Progress</Button>
 

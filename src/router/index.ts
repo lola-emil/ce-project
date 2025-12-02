@@ -16,7 +16,6 @@ import { db } from '@/firebase';
 import DashbooardView from '@/pages/dashboard/DashbooardView.vue';
 import { useAuthStore } from '@/stores/authStore';
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -59,6 +58,11 @@ const router = createRouter({
       meta: {
         title: "Success"
       }
+    },
+
+    {
+      path: "/profile/:id",
+      component: () => import("@/pages/profile/ProfileView.vue")
     },
 
     {

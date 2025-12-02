@@ -16,7 +16,7 @@ type Address = {
     addressLine2?: string;       // Secondary address line (optional)
     city: string;                 // City or locality
     suburb?: string;              // Suburb or neighborhood (optional)
-    stateProvince: string;       // State, province, or region
+    province: string;       // State, province, or region
     zipCode: string;          // Postal or ZIP code
     country: string;              // Full country name
     country_code: string;         // 2-letter ISO country code
@@ -31,7 +31,6 @@ type ContactInfo = {
     email?: string;
     phone_number: string;
     phone_number_is_verified: boolean;
-    addresses: Address[];
 };
 
 
@@ -46,6 +45,7 @@ export interface User {
     name?: PersonName;                    // Admin might not need this
     // gender?: Gender;
 
+    address: Address[];
     contactInfo?: ContactInfo;           // Only for worker/client
 
     legalDocs: LegalDocs[];
@@ -64,6 +64,7 @@ type JobStatus =
     | "assigned"     // worker matched or accepted
     | "in-progress"  // job currently being done
     | "completed"    // job finished successfully
+    | "marked as complete"
     | "cancelled";
 
 type JobLocation = {
@@ -103,12 +104,15 @@ type JobAssignmentStatus =
     | "declined"      // worker declined
     | "in-progress"
     | "completed"
-    | "failed";
+    | "failed"
+    | "pending approval"
+    | "rework";
 
 type Progress = {
     imgUrl?: string;
     note: string;
     date: serverTimestamp;
+    type: "progress" | "completion" | "rework"
 };
 
 export interface JobAssignment {

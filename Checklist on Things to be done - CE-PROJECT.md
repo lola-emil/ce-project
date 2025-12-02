@@ -34,7 +34,10 @@
 	- [ ] Delete card
 - [ ] Mag add ug payment method para sa create job request
 - [x] progress info sa job details (client)
-- [ ] Delete Job
+- [x] Delete Job
+- [x] kailangan maka reject ug marked as completed nga job
+- [x] Maka approve ug marked as completed nga job
+- [ ] Dapat inig ma completed ang job, ma addan ang earnings sa user
 
 ### WORKER POV
 - [ ] Dynamic data sa client dashboard
@@ -47,5 +50,5 @@
 - [x] List sa iyang mga assigned jobs
 - [x] Job details nga page
 - [x] Sa job details didto siya mag butang sa iyang progress
-- [ ] View progress detail
+- [x] View progress detail
 - [x] Mark as complete ang job

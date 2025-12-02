@@ -1,13 +1,14 @@
+
 // JOBS SCHEMA
 export type JobStatus =
     | "pending"      // waiting for worker assignment
     | "assigned"     // worker matched or accepted
-    | "in_progress"  // job currently being done
+    | "in-progress"  // job currently being done
     | "completed"    // job finished successfully
     | "cancelled";
 
 export type JobLocation = {
-    address: string;
+    description: string;
     lat: number;
     lng: number;
     notes?: string;               // e.g. "Near City Hall, blue gate"
@@ -29,11 +30,11 @@ export interface JobRequest {
     budget: number;
     status: JobStatus;
 
-    jobImage?: JobImage[]
+    images?: string[]
 
 
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: any;
+    updatedAt?: Date;
 }
 
 
@@ -41,14 +42,14 @@ export type JobAssignmentStatus =
     | "requested"     // worker received assignment request
     | "accepted"      // worker accepted job
     | "declined"      // worker declined
-    | "in_progress"
+    | "in-progress"
     | "completed"
     | "failed";
 
 export type Progress = {
-    title: string;
-    comment: string;
-    date: string;
+    imgUrl?: string;
+    note: string;
+    date: any;
 };
 
 export interface JobAssignment {

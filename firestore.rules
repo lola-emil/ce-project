@@ -24,7 +24,8 @@ service cloud.firestore {
       // && (
       //   request.auth.uid == resource.data.clientId || request.auth.token.role == "admin"
       // );
-      allow delete: if request.auth != null && request.auth.token.role == "admin";
+      allow delete: if request.auth != null;
+      // && request.auth.token.role == "admin";
     }
 
     // ---------------------------
