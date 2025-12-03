@@ -174,3 +174,21 @@ export interface Activity {
     user_uid: string;
 
 }
+
+export type Actions = 
+| "create-job"
+| "cancel-job"
+| "accept-job"
+| "add-progress"
+| "mark-complete-job"
+| "approve-job-completion"
+| "assigned-job"
+;
+
+export interface ActivityLog {
+    id: string;
+    for_user: string;
+    action_type: Actions;
+    date_created: string;
+    data: any
+}

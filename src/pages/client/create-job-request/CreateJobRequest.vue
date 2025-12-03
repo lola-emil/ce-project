@@ -175,6 +175,7 @@ async function submit() {
             return;
         }
 
+        console.error(error);
         toast('Unexpected error occured');
     } finally {
         isUploadingImages.value = false;
