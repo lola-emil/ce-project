@@ -9,7 +9,7 @@
 - [ ] Forgot password nga feature
 	
 ### ADMIN POV
-- [ ] Dynamic data sa admin dashboard
+- [x] Dynamic data sa admin dashboard
 - [ ] Search user feature sa user management
 - [ ] Filter user feature sa user management
 - [ ] Empty state sa user management page
@@ -22,9 +22,9 @@
 
 
 ### Client POV
-- [ ] Dynamic data sa client dashboard
-	- [ ] Recent job requests
-	- [ ] Recent activities
+- [x] Dynamic data sa client dashboard
+	- [x] Recent job requests
+	- [x] Recent activities
 - [ ] Empty state para sa "My Jobs nga page"
 - [x] Validation errors para sa create job
 - [ ] Loading state para sa create job

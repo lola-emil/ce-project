@@ -33,7 +33,9 @@ const authStore = useAuthStore();
         <div class="border-b">
             <div class="flex container mx-auto h-16 items-center justify-between px-5 md:px-0">
                 <div :class="cn('flex items-center space-x-4 lg:space-x-6', $attrs.class ?? '')">
-                    <div class="font-bold">Prodigify</div>
+                    <div class="font-bold">
+                        <img src="/logo.png" alt="Logo" class="h-6">
+                    </div>
                     <NavigationMenu class="hidden md:block">
                         <NavigationMenuList>
                             <NavigationMenuItem v-for="value in props.menuItems" as-child>

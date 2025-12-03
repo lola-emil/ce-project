@@ -2,9 +2,10 @@
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
 import { Input } from '@/components/ui/input'
-import DraggableRow from './DraggableRow.vue'
 import DragHandle from './DragHandle.vue'
-import { ref, h } from 'vue'
+import { ref, h, onMounted } from 'vue'
+import type { ActivityLog } from '@/types/schema'
+import type { Timestamp } from 'firebase/firestore'
 
 export const schema = z.object({
   id: z.number(),
@@ -84,131 +85,42 @@ import {
 } from '@/components/ui/tabs'
 
 const props = defineProps<{
-  data: TableData[]
+  data: ActivityLog[]
 }>()
 
-interface TableData {
-  id: number
-  header: string
-  type: string
-  status: string
-  target: string
-  limit: string
-  reviewer: string
-}
+
 
 const sorting = ref<SortingState>([])
 const columnFilters = ref<ColumnFiltersState>([])
 const columnVisibility = ref<VisibilityState>({})
 const rowSelection = ref({})
 
-const columns: ColumnDef<TableData>[] = [
+const columns: ColumnDef<ActivityLog>[] = [
   {
-    id: 'drag',
-    header: () => null,
-    cell: ({ row }) => h(DragHandle),
-  },
-  {
-    id: 'select',
-    header: ({ table }) => h(Checkbox, {
-      'modelValue': table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'),
-      'onUpdate:modelValue': value => table.toggleAllPageRowsSelected(!!value),
-      'aria-label': 'Select all',
-    }),
-    cell: ({ row }) => h(Checkbox, {
-      'modelValue': row.getIsSelected(),
-      'onUpdate:modelValue': value => row.toggleSelected(!!value),
-      'aria-label': 'Select row',
-    }),
-    enableSorting: false,
+    accessorKey: 'for_user',
+    header: 'User ID',
+    cell: ({ row }) => h('div', String(row.getValue('for_user'))), 
     enableHiding: false,
   },
   {
-    accessorKey: 'header',
-    header: 'Header',
-    cell: ({ row }) => h('div', String(row.getValue('header'))),
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'type',
-    header: 'Section Type',
+    accessorKey: 'action_type',
+    header: 'Action Type',
     cell: ({ row }) => h(Badge, {
       variant: 'outline',
       class: 'text-muted-foreground px-1.5',
-    }, () => String(row.getValue('type'))),
+    }, () => String(row.getValue('action_type'))), 
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'date_created',
+    header: 'Date Created',
     cell: ({ row }) => {
-      return h(Badge, { variant: 'outline', class: 'text-muted-foreground px-1.5' }, () => [
-        row.original.status === 'Done'
-          ? h(IconCircleCheckFilled, { class: 'fill-green-500 dark:fill-green-400' })
-          : h(IconLoader),
-        h('span', {}, row.original.status),
-      ])
-    },
-  },
-  {
-    accessorKey: 'target',
-    header: () => h('div', { class: 'w-full text-right' }, ['Target']),
-    cell: ({ row }) => h('form', {
-      onSubmit: (e) => {
-        e.preventDefault()
-        toast.promise(new Promise(resolve => setTimeout(resolve, 1000)), {
-          loading: `Saving ${row.original.header}`,
-          success: 'Done',
-          error: 'Error',
-        })
-      },
-    }, [
-      h(Label, { for: `${row.original.id}-target`, class: 'sr-only' }, 'Target'),
-      h(Input, { class: 'hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent', defaultValue: row.original.target, id: `${row.original.id}-target`,
-      }),
-    ]),
-  },
-  {
-    accessorKey: 'limit',
-    header: () => h('div', { class: 'w-full text-right' }, ['Limit']),
-    cell: ({ row }) => h('form', {
-      onSubmit: (e) => {
-        e.preventDefault()
-        toast.promise(new Promise(resolve => setTimeout(resolve, 1000)), {
-          loading: `Saving ${row.original.header}`,
-          success: 'Done',
-          error: 'Error',
-        })
-      },
-    }, [
-      h(Label, { for: `${row.original.id}-limit`, class: 'sr-only' }, 'Limit'),
-      h(Input, { class: 'hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent', defaultValue: row.original.target, id: `${row.original.id}-limit`,
-      }),
-    ]),
-  },
-  {
-    accessorKey: 'reviewer',
-    header: 'Reviewer',
-    cell: ({ row }) => {
-      const reviewer = row.getValue('reviewer') as string
-      const isAssigned = reviewer !== 'Assign reviewer'
-
-      if (isAssigned) {
-        return h('span', {}, reviewer)
-      }
-
-      return h(Select, {}, {
-        default: () => [
-          h(SelectTrigger, { class: 'w-full' }, {
-            default: () => h(SelectValue, { placeholder: 'Assign reviewer' }),
-          }),
-          h(SelectContent, {}, {
-            default: () => [
-              h(SelectItem, { value: 'eddie' }, () => 'Eddie Lake'),
-              h(SelectItem, { value: 'jamik' }, () => 'Jamik Tashpulatov'),
-            ],
-          }),
-        ],
-      })
+      const timestamp = row.getValue('date_created') as Timestamp;
+      // Convert Firestore timestamp to readable date
+      const date = new Date(timestamp.seconds * 1000);
+      return h(Badge, {
+        variant: 'outline',
+        class: 'text-muted-foreground px-1.5',
+      }, () => date.toLocaleString());
     },
   },
   {
@@ -229,8 +141,6 @@ const columns: ColumnDef<TableData>[] = [
         h(DropdownMenuContent, { align: 'end' }, {
           default: () => [
             h(DropdownMenuItem, {}, () => 'Edit'),
-            h(DropdownMenuItem, {}, () => 'Make a copy'),
-            h(DropdownMenuItem, {}, () => 'Favorite'),
             h(DropdownMenuSeparator, {}),
             h(DropdownMenuItem, { variant: 'destructive' }, () => 'Delete'),
           ],
@@ -238,7 +148,7 @@ const columns: ColumnDef<TableData>[] = [
       ],
     }),
   },
-]
+];
 
 const table = useVueTable({
   get data() {
@@ -276,23 +186,20 @@ const table = useVueTable({
     get rowSelection() { return rowSelection.value },
   },
 })
+
+onMounted(() => {
+  console.log("Rows:", table.getRowModel().rows)
+})
 </script>
 
 <template>
-  <Tabs
-    default-value="outline"
-    class="w-full flex-col justify-start gap-6"
-  >
+  <Tabs default-value="outline" class="w-full flex-col justify-start gap-6">
     <div class="flex items-center justify-between px-4 lg:px-6">
       <Label for="view-selector" class="sr-only">
         View
       </Label>
       <Select default-value="outline">
-        <SelectTrigger
-          id="view-selector"
-          class="flex w-fit @4xl/main:hidden"
-          size="sm"
-        >
+        <SelectTrigger id="view-selector" class="flex w-fit @4xl/main:hidden" size="sm">
           <SelectValue placeholder="Select a view" />
         </SelectTrigger>
         <SelectContent>
@@ -310,7 +217,8 @@ const table = useVueTable({
           </SelectItem>
         </SelectContent>
       </Select>
-      <TabsList class="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
+      <TabsList
+        class="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
         <TabsTrigger value="outline">
           Outline
         </TabsTrigger>
@@ -339,15 +247,13 @@ const table = useVueTable({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" class="w-56">
-            <template v-for="column in table.getAllColumns().filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())" :key="column.id">
-              <DropdownMenuCheckboxItem
-                class="capitalize"
-                :model-value="column.getIsVisible()"
-                @update:model-value="(value) => {
+            <template
+              v-for="column in table.getAllColumns().filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())"
+              :key="column.id">
+              <DropdownMenuCheckboxItem class="capitalize" :model-value="column.getIsVisible()" @update:model-value="(value) => {
 
-                  column.toggleVisibility(!!value)
-                }"
-              >
+                column.toggleVisibility(!!value)
+              }">
                 {{ column.id }}
               </DropdownMenuCheckboxItem>
             </template>
@@ -359,29 +265,31 @@ const table = useVueTable({
         </Button>
       </div>
     </div>
-    <TabsContent
-      value="outline"
-      class="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
-    >
+    <TabsContent value="outline" class="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
       <div class="overflow-hidden rounded-lg border">
         <DragDropProvider :modifiers="[RestrictToVerticalAxis]">
           <Table>
             <TableHeader class="bg-muted sticky top-0 z-10">
               <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
                 <TableHead v-for="header in headerGroup.headers" :key="header.id" :col-span="header.colSpan">
-                  <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header" :props="header.getContext()" />
+                  <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header"
+                    :props="header.getContext()" />
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody class="**:data-[slot=table-cell]:first:w-8">
               <template v-if="table.getRowModel().rows.length">
-                <DraggableRow v-for="row in table.getRowModel().rows" :key="row.id" :row="row" :index="row.index" />
+
+                <TableRow v-for="row in table.getRowModel().rows"
+                  class="relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:opacity-80">
+                  <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+                    <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+                  </TableCell>
+                </TableRow>
+
               </template>
               <TableRow v-else>
-                <TableCell
-                  :col-span="columns.length"
-                  class="h-24 text-center"
-                >
+                <TableCell :col-span="columns.length" class="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -407,12 +315,9 @@ const table = useVueTable({
             <Label for="rows-per-page" class="text-sm font-medium">
               Rows per page
             </Label>
-            <Select
-              :model-value="table.getState().pagination.pageSize"
-              @update:model-value="(value) => {
-                table.setPageSize(Number(value))
-              }"
-            >
+            <Select :model-value="table.getState().pagination.pageSize" @update:model-value="(value) => {
+              table.setPageSize(Number(value))
+            }">
               <SelectTrigger id="rows-per-page" size="sm" class="w-20">
                 <SelectValue :placeholder="`${table.getState().pagination.pageSize}`" />
               </SelectTrigger>
@@ -428,42 +333,23 @@ const table = useVueTable({
             {{ table.getPageCount() }}
           </div>
           <div class="ml-auto flex items-center gap-2 lg:ml-0">
-            <Button
-              variant="outline"
-              class="hidden h-8 w-8 p-0 lg:flex"
-              :disabled="!table.getCanPreviousPage()"
-              @click="table.setPageIndex(0)"
-            >
+            <Button variant="outline" class="hidden h-8 w-8 p-0 lg:flex" :disabled="!table.getCanPreviousPage()"
+              @click="table.setPageIndex(0)">
               <span class="sr-only">Go to first page</span>
               <IconChevronsLeft />
             </Button>
-            <Button
-              variant="outline"
-              class="size-8"
-              size="icon"
-              :disabled="!table.getCanPreviousPage()"
-              @click="table.previousPage()"
-            >
+            <Button variant="outline" class="size-8" size="icon" :disabled="!table.getCanPreviousPage()"
+              @click="table.previousPage()">
               <span class="sr-only">Go to previous page</span>
               <IconChevronLeft />
             </Button>
-            <Button
-              variant="outline"
-              class="size-8"
-              size="icon"
-              :disabled="!table.getCanNextPage()"
-              @click="table.nextPage()"
-            >
+            <Button variant="outline" class="size-8" size="icon" :disabled="!table.getCanNextPage()"
+              @click="table.nextPage()">
               <span class="sr-only">Go to next page</span>
               <IconChevronRight />
             </Button>
-            <Button
-              variant="outline"
-              class="hidden size-8 lg:flex"
-              size="icon"
-              :disabled="!table.getCanNextPage()"
-              @click="table.setPageIndex(table.getPageCount() - 1)"
-            >
+            <Button variant="outline" class="hidden size-8 lg:flex" size="icon" :disabled="!table.getCanNextPage()"
+              @click="table.setPageIndex(table.getPageCount() - 1)">
               <span class="sr-only">Go to last page</span>
               <IconChevronsRight />
             </Button>
@@ -471,19 +357,13 @@ const table = useVueTable({
         </div>
       </div>
     </TabsContent>
-    <TabsContent
-      value="past-performance"
-      class="flex flex-col px-4 lg:px-6"
-    >
+    <TabsContent value="past-performance" class="flex flex-col px-4 lg:px-6">
       <div class="aspect-video w-full flex-1 rounded-lg border border-dashed" />
     </TabsContent>
     <TabsContent value="key-personnel" class="flex flex-col px-4 lg:px-6">
       <div class="aspect-video w-full flex-1 rounded-lg border border-dashed" />
     </TabsContent>
-    <TabsContent
-      value="focus-documents"
-      class="flex flex-col px-4 lg:px-6"
-    >
+    <TabsContent value="focus-documents" class="flex flex-col px-4 lg:px-6">
       <div class="aspect-video w-full flex-1 rounded-lg border border-dashed" />
     </TabsContent>
   </Tabs>

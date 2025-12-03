@@ -1,45 +1,78 @@
 
 import { setGlobalOptions } from "firebase-functions";
-import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/firestore";
+import { onDocumentCreated, onDocumentUpdated, QueryDocumentSnapshot } from "firebase-functions/firestore";
 import { initializeApp } from "firebase-admin/app";
 import admin from "firebase-admin";
-import { db } from "./firestore";
-import { addActivityLog } from "./utils";
+import { getFirestore } from "firebase-admin/firestore";
+
 
 setGlobalOptions({ maxInstances: 10 });
 
 initializeApp();
+const db = getFirestore();
+type Actions =
+  | "create-job"
+  | "cancel-job"
+  | "accept-job"
+  | "add-progress"
+  | "mark-complete-job"
+  | "approve-job-completion"
+  | "assigned-job"
+  ;
 
+async function addActivityLog(data: QueryDocumentSnapshot, actionType: Actions, collection: string) {
+  const logEntry = {
+    for_user: data.data().clientId,
+    action_type: actionType,
+    date_created: admin.firestore.FieldValue.serverTimestamp(),
+    data: {
+      collection: collection,
+      id: data.id,
+    },
+  };
+
+
+  await db.collection("activity_logs").add(logEntry);
+  console.log("Activity log created:", logEntry);
+}
 export const onJobCreated = onDocumentCreated({
   document: "job_requests/{jobId}",
+   region: "europe-west1"
 }, async (event) => {
-
   if (!event.data) return;
 
   const data = event.data?.data();
 
   if (!data) return;
 
-  addActivityLog(data, 'create-job', "job_requests");
+  await addActivityLog(event.data, "create-job", "job_requests");
 });
 
-export const onJobUpdated = onDocumentUpdated("job_requests/{jobId}", async (event) => {
+type shit = unknown;
+
+export const onJobUpdated = onDocumentUpdated({
+  document: "job_requests/{jobId}", 
+   region: "europe-west1"
+
+}, async (event) => {
+  if (!event.data) return;
   const after = event.data?.after.data();
 
   if (!after) return;
 
-  let logEntry: any;
+  let logEntry: shit;
 
-  if (after.status == "in-progress")
-    addActivityLog(after, 'assigned-job', "job_requests");
+  if (after.status == "in-progress") {
+    await addActivityLog(event.data.after, "assigned-job", "job_requests");
+  }
 
-  if (after.status == "marked as complete")
-    addActivityLog(after, 'mark-complete-job', "job_requests");
+  if (after.status == "marked as complete") {
+    await addActivityLog(event.data.after, "mark-complete-job", "job_requests");
+  }
 
 
   await db.collection("activityLogs").add(logEntry);
   console.log("Activity log created:", logEntry);
-
 });
 
 export const onJobAssignmentCreated = onDocumentCreated({
@@ -54,9 +87,9 @@ export const onJobAssignmentCreated = onDocumentCreated({
     action_type: "assigned-job",
     data: {
       collection: "job_assignments",
-      id: event.data.id
+      id: event.data.id,
     },
-    date_created: admin.firestore.FieldValue.serverTimestamp()
+    date_created: admin.firestore.FieldValue.serverTimestamp(),
   };
 
   await db.collection("activity_logs").add(logEntry);
@@ -79,9 +112,8 @@ export const onJobAssignmentUpdated = onDocumentUpdated("job_assignments/{jobId}
       date_created: admin.firestore.FieldValue.serverTimestamp(),
       data: {
         collection: "job_assignments",
-        id: event.data.after.id
-      }
+        id: event.data.after.id,
+      },
     });
   }
-
 });

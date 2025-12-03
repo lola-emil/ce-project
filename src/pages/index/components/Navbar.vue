@@ -17,7 +17,9 @@ const authStore = useAuthStore();
     <div class="w-full h-[72px]">
         <div class="container mx-auto flex items-center h-full justify-between px-5 md:px-0">
             <div class="flex items-center gap-5">
-                <div class="font-bold">Prodigify</div>
+                <div class="mb-1">
+                    <img src="/logo.png" alt="Logo" class="h-6">
+                </div>
                 <div class="hidden md:block">
                     <NavigationMenu>
                         <NavigationMenuList>
@@ -69,9 +71,9 @@ const authStore = useAuthStore();
                         </NavigationMenuItem>
 
                         <NavigationMenuItem @click="authStore.logout()">
-                                <NavigationMenuLink :class="navigationMenuTriggerStyle()">
-                                    Logout
-                                </NavigationMenuLink>
+                            <NavigationMenuLink :class="navigationMenuTriggerStyle()">
+                                Logout
+                            </NavigationMenuLink>
                         </NavigationMenuItem>
                     </NavigationMenuList>
 
@@ -92,7 +94,7 @@ const authStore = useAuthStore();
                             </RouterLink>
                         </NavigationMenuItem>
                     </NavigationMenuList>
-                    
+
                 </NavigationMenu>
             </div>
         </div>

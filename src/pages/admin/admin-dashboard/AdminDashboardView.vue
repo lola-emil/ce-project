@@ -1,125 +1,33 @@
 <script setup lang="ts">
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import { Briefcase, CheckCircle, DollarSign, UserCheck } from 'lucide-vue-next';
 
-
-import StatSection from './components/StatSection.vue';
 import ChartSection from './components/ChartSection.vue';
 import DataTable from './components/DataTable.vue';
+import { collection, query, where } from "firebase/firestore";
+import { db } from "@/firebase";
+import { useCollection } from "vuefire";
+import { watch } from "vue";
+import type { ActivityLog } from "@/types/schema";
 
 
-interface TableData {
-  id: number
-  header: string
-  type: string
-  status: string
-  target: string
-  limit: string
-  reviewer: string
-}
+const { data: jobs } = useCollection(query(
+  collection(db, "job_requests"),
+  where("status", "in", ["pending", "assigned", "in-progress"])))
 
-const tableData: TableData[] = [
-  {
-    id: 1,
-    header: "Revenue Report",
-    type: "Financial",
-    status: "Completed",
-    target: "Q1",
-    limit: "$50,000",
-    reviewer: "Alice Johnson"
-  },
-  {
-    id: 2,
-    header: "User Growth",
-    type: "Analytics",
-    status: "In Progress",
-    target: "10k Users",
-    limit: "N/A",
-    reviewer: "Bob Smith"
-  },
-  {
-    id: 3,
-    header: "Server Load",
-    type: "Monitoring",
-    status: "Warning",
-    target: "75%",
-    limit: "80%",
-    reviewer: "Charlie Davis"
-  },
-  {
-    id: 4,
-    header: "Bug Triage",
-    type: "QA",
-    status: "Pending",
-    target: "20 Bugs",
-    limit: "25 Bugs",
-    reviewer: "Dana Miller"
-  },
-  {
-    id: 5,
-    header: "Marketing Spend",
-    type: "Financial",
-    status: "Completed",
-    target: "$10,000",
-    limit: "$12,000",
-    reviewer: "Evan Lee"
-  },
-  {
-    id: 6,
-    header: "Page Performance",
-    type: "Analytics",
-    status: "In Progress",
-    target: "2s Load Time",
-    limit: "3s",
-    reviewer: "Fiona Clark"
-  },
-  {
-    id: 7,
-    header: "Security Audit",
-    type: "Security",
-    status: "Completed",
-    target: "All Checks",
-    limit: "N/A",
-    reviewer: "George Turner"
-  },
-  {
-    id: 8,
-    header: "Customer Feedback",
-    type: "Support",
-    status: "Pending",
-    target: "200 Responses",
-    limit: "250 Responses",
-    reviewer: "Hannah Brooks"
-  },
-  {
-    id: 9,
-    header: "Feature Rollout",
-    type: "Development",
-    status: "In Progress",
-    target: "Phase 2",
-    limit: "Phase 3",
-    reviewer: "Ian Carter"
-  },
-  {
-    id: 10,
-    header: "Inventory Check",
-    type: "Operations",
-    status: "Completed",
-    target: "100 Units",
-    limit: "120 Units",
-    reviewer: "Julia Adams"
-  },
-  { id: 11, header: "Client List", type: "Client", status: "Active", target: "20", limit: "50", reviewer: "Admin" },
-  { id: 12, header: "Worker Profiles", type: "Worker", status: "Active", target: "40", limit: "100", reviewer: "Supervisor" },
-  { id: 13, header: "Job Queue", type: "Job", status: "Open", target: "10", limit: "30", reviewer: "Manager" },
-  { id: 14, header: "Pending Clients", type: "Client", status: "Pending", target: "5", limit: "20", reviewer: "Admin" },
-  { id: 15, header: "Inactive Workers", type: "Worker", status: "Inactive", target: "3", limit: "10", reviewer: "Supervisor" },
-  { id: 16, header: "Completed Jobs", type: "Job", status: "Closed", target: "25", limit: "50", reviewer: "Manager" },
-  { id: 17, header: "Client Audits", type: "Client", status: "Review", target: "7", limit: "15", reviewer: "Compliance" },
-  { id: 18, header: "Worker Compliance", type: "Worker", status: "Review", target: "12", limit: "25", reviewer: "Compliance" },
-  { id: 19, header: "Job Scheduling", type: "Job", status: "Active", target: "18", limit: "40", reviewer: "Scheduler" },
-  { id: 20, header: "High Priority Jobs", type: "Job", status: "Urgent", target: "4", limit: "10", reviewer: "Manager" }
-];
+const { data: users } = useCollection(query(collection(db, "users"), where("role", "!=", "admin")));
 
+const {data: logs} = useCollection<ActivityLog>(collection(db, "activity_logs"));
 
+watch(logs, () => {
+  console.log(logs.value);
+})
 </script>
 
 <template>
@@ -128,14 +36,80 @@ const tableData: TableData[] = [
   <main class="mt-5">
     <div class="container mx-auto px-5 md:px-0">
       <section>
-        <StatSection />
+        <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5">
+          <Card>
+            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle class="text-sm font-medium">
+                Jobs Today
+              </CardTitle>
+              <CheckCircle />
+            </CardHeader>
+            <CardContent>
+              <div class="text-2xl font-bold">
+                {{ jobs.length }}
+              </div>
+              <p class="text-xs text-muted-foreground">
+                +20.1% from last month
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle class="text-sm font-medium">
+                Active Users
+              </CardTitle>
+              <UserCheck />
+            </CardHeader>
+            <CardContent>
+              <div class="text-2xl font-bold">
+                {{ users.length }}
+              </div>
+
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle class="text-sm font-medium">
+                Pending Jobs
+              </CardTitle>
+              <Briefcase />
+            </CardHeader>
+            <CardContent>
+              <div class="text-2xl font-bold">
+                11
+              </div>
+              <p class="text-xs text-muted-foreground">
+                +20.1% from last month
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle class="text-sm font-medium">
+                Total Revenue
+              </CardTitle>
+              <DollarSign />
+            </CardHeader>
+            <CardContent>
+              <div class="text-2xl font-bold">
+                ₱45,231.89
+              </div>
+              <p class="text-xs text-muted-foreground">
+                +20.1% from last month
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </section>
       <section class="mt-5">
         <ChartSection />
       </section>
 
       <section class="mt-5">
-        <DataTable :data="tableData" />
+        <DataTable :data="logs" />
       </section>
     </div>
   </main>

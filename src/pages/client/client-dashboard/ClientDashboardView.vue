@@ -11,7 +11,12 @@ import {
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuthStore } from '@/stores/authStore'
-
+import { collection, limit, orderBy, query, where } from 'firebase/firestore'
+import { db } from '@/firebase'
+import { useCollection } from 'vuefire'
+import { watch } from 'vue'
+import type { JobRequest } from '@/types/schema'
+import { CheckCircle, ClipboardMinus, DollarSign, UserCheck } from 'lucide-vue-next';
 const authStore = useAuthStore();
 
 const recentActivities = [
@@ -30,6 +35,27 @@ const recentActivities = [
         description: "Completed"
     },
 ]
+
+const {
+    data: jobRequests
+} = useCollection<JobRequest>(query(collection(db, "job_requests"), where("clientId", "==", authStore.user?.uid), orderBy("createdAt", "asc"), limit(2)))
+
+const {
+    data: assignments
+} = useCollection(query(collection(db, "job_requests"), where("clientId", "==", authStore.user?.uid),
+    orderBy("createdAt", "asc")))
+
+const {
+    data: activities
+} = useCollection(query(collection(db, "activity_logs"), orderBy("timestamp", 'asc'), where("for_user", "==", authStore.user?.uid)))
+
+watch(jobRequests, () => {
+    console.log(jobRequests.value);
+})
+
+watch(activities, () => {
+    console.log(activities.value);
+})
 </script>
 
 <template>
@@ -40,24 +66,77 @@ const recentActivities = [
         </div>
 
         <div class="mt-10">
-            <StatSection />
+            <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-5">
+                <Card>
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle class="text-sm font-medium">
+                            Jobs Today
+                        </CardTitle>
+                        <ClipboardMinus />
+                    </CardHeader>
+                    <CardContent>
+                        <div class="text-2xl font-bold">
+                            {{ assignments.length }}
+                        </div>
+                        <p class="text-xs text-muted-foreground">
+                            +20.1% from last month
+                        </p>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle class="text-sm font-medium">
+                            Completed Jobs
+                        </CardTitle>
+                        <CheckCircle />
+                    </CardHeader>
+                    <CardContent>
+                        <div class="text-2xl font-bold">
+                            5
+                        </div>
+                        <p class="text-xs text-muted-foreground">
+                            +20.1% from last month
+                        </p>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle class="text-sm font-medium">
+                            Total Spent
+                        </CardTitle>
+                        <DollarSign />
+                    </CardHeader>
+                    <CardContent>
+                        <div class="text-2xl font-bold">
+                            $45,231.89
+                        </div>
+                        <p class="text-xs text-muted-foreground">
+                            +20.1% from last month
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
 
         <div class="mt-10">
             <p class="mb-5">Recent Job Requests</p>
             <div class="flex flex-col gap-3">
-                <Card class="gap-2">
+                <Card class="gap-2" v-for="value in jobRequests">
                     <CardHeader>
-                        <CardTitle class="text-sm">Bathroom Tile Repair</CardTitle>
+                        <CardTitle class="text-sm">{{ value.title }}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div>
-                            <div class="text-muted-foreground text-sm">Status: 
-                                    <Badge variant="outline">Awaiting Order
+                            <div class="text-muted-foreground text-sm">Status:
+                                <Badge variant="outline">{{ value.status }}
                                 </Badge>
                             </div>
-                            <p class="text-muted-foreground text-sm">Date: <span>Jan 12, 2026</span></p>
-                            <p class="text-muted-foreground text-sm">Budget: <span class="text-primary">₱3,000</span>
+                            <p class="text-muted-foreground text-sm">Date: <span>{{
+                                value.createdAt.toDate().toLocaleString() }}</span></p>
+                            <p class="text-muted-foreground text-sm">Budget: <span class="text-primary">₱{{ value.budget
+                                    }}</span>
                             </p>
                         </div>
                     </CardContent>
@@ -68,7 +147,7 @@ const recentActivities = [
         <div class="mt-10">
             <p class="mb-5">Recent Activities</p>
             <div class="flex flex-col gap-3">
-                <Item v-for="value in recentActivities" variant="outline" as-child>
+                <Item v-for="value in activities" variant="outline" as-child>
                     <RouterLink to="#">
                         <ItemContent>
                             <ItemTitle>{{ value.title }}</ItemTitle>

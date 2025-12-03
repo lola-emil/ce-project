@@ -2,8 +2,8 @@
     <header>
         <div class="border-b">
             <div class="flex w-9/12 mx-auto h-16 items-center justify-between">
-                <div>
-                    <p class="font-bold">Prodigify</p>
+                <div class="font-bold">
+                    <img src="/logo.png" alt="Logo" class="h-5">
                 </div>
                 <nav :class="cn('flex items-center space-x-4 lg:space-x-6', $attrs.class ?? '')">
                     <NavigationMenu>

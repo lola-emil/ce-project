@@ -5,6 +5,6 @@ import Navbar from './components/Navbar.vue';
 <template>
     <Navbar/>
     <div class="container mx-auto">
-        <h1>FAQ page, to be developed pa ni</h1>
+        <h1>FAQ page, to be developed </h1>
     </div>
 </template>
