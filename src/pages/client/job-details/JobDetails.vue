@@ -135,7 +135,6 @@ async function approveCompletion() {
 }
 
 async function deleteRequest() {
-    alert("shit");
     await deleteDoc(jobRef);
     toast("Deleted");
 
@@ -147,10 +146,8 @@ async function deleteRequest() {
 <template>
     <div class="container mx-auto">
         <div class="mt-10">
-            <Button variant="link" as-child>
-                <RouterLink to="/client/my-jobs">
+            <Button variant="link" @click="router.go(-1)">
                     <ArrowLeft /> Go back
-                </RouterLink>
             </Button>
         </div>
         <div class="grid grid-cols-2 gap-5 mt-36">

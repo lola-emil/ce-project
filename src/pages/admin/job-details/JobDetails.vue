@@ -201,7 +201,7 @@ watch(job, async () => {
                                             </PopoverTrigger>
                                             <PopoverContent class="w-sm p-0">
                                                 <Command>
-                                                    <CommandInput class="h-9" placeholder="Search framework..." />
+                                                    <CommandInput class="h-9" placeholder="Search worker..." />
                                                     <CommandList>
                                                         <CommandEmpty>No worker found.</CommandEmpty>
                                                         <CommandGroup>

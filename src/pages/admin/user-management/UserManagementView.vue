@@ -14,6 +14,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
+    DropdownMenuCheckboxItem
 } from '@/components/ui/dropdown-menu';
 import {
     Select,
@@ -30,7 +31,7 @@ import {
 } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Button } from "@/components/ui/button";
-import { IconLayoutColumns, IconChevronDown, IconPlus } from "@tabler/icons-vue";
+import { IconChevronDown, IconPlus } from "@tabler/icons-vue";
 import type { User as UserData, UserRole } from "@/types/schema";
 import { Checkbox } from "@/components/ui/checkbox";
 import { IconChevronLeft, IconChevronsLeft, IconChevronRight, IconChevronsRight } from "@tabler/icons-vue";
@@ -39,6 +40,7 @@ import { db } from "@/firebase";
 import { useCollection } from "vuefire";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { RouterLink } from "vue-router";
+import { ListFilter } from "lucide-vue-next";
 
 interface UserTableData {
     id: string; // UID sa user
@@ -165,56 +167,24 @@ watch(users, newVal => {
                 <Label for="view-selector" class="sr-only">
                     View
                 </Label>
-                <Select default-value="outline">
-                    <SelectTrigger id="view-selector" class="flex w-fit @4xl/main:hidden" size="sm">
-                        <SelectValue placeholder="Select a view" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="outline">
-                            Outline
-                        </SelectItem>
-                        <SelectItem value="past-performance">
-                            Past Performance
-                        </SelectItem>
-                        <SelectItem value="key-personnel">
-                            Key Personnel
-                        </SelectItem>
-                        <SelectItem value="focus-documents">
-                            Focus Documents
-                        </SelectItem>
-                    </SelectContent>
-                </Select>
-                <TabsList
-                    class="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-                    <TabsTrigger value="outline">
-                        Outline
-                    </TabsTrigger>
-                    <TabsTrigger value="past-performance">
-                        Past Performance <Badge variant="secondary">
-                            3
-                        </Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="key-personnel">
-                        Key Personnel <Badge variant="secondary">
-                            2
-                        </Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="focus-documents">
-                        Focus Documents
-                    </TabsTrigger>
-                </TabsList>
-
                 <div class="flex items-center gap-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger as-child>
                             <Button variant="outline" size="sm">
-                                <IconLayoutColumns />
-                                <span class="hidden lg:inline">Customize Columns</span>
+                                <ListFilter />
+                                <span class="hidden lg:inline">Filter</span>
                                 <span class="lg:hidden">Columns</span>
                                 <IconChevronDown />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
+                            <DropdownMenuCheckboxItem class="capitalize">
+                                Worker
+                            </DropdownMenuCheckboxItem>
+
+                            <DropdownMenuCheckboxItem class="capitalize">
+                                Client
+                            </DropdownMenuCheckboxItem>
                             <!-- <template
                             v-for="column in table.getAllColumns().filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())"
                             :key="column.id">

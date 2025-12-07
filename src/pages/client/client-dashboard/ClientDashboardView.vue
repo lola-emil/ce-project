@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import StatSection from './components/StatSection.vue'
 import {
     Item,
     ItemActions,
@@ -16,25 +15,10 @@ import { db } from '@/firebase'
 import { useCollection } from 'vuefire'
 import { watch } from 'vue'
 import type { JobRequest } from '@/types/schema'
-import { CheckCircle, ClipboardMinus, DollarSign, UserCheck } from 'lucide-vue-next';
+import { CheckCircle, ClipboardMinus, DollarSign, CircleOff } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button'
+
 const authStore = useAuthStore();
-
-const recentActivities = [
-    {
-        title: "Masonry Repair Job",
-        description: "Worker Assigned"
-    },
-
-    {
-        title: "Roof Leak Fix",
-        description: "Worker Assigned"
-    },
-
-    {
-        title: "Gate Welding",
-        description: "Completed"
-    },
-]
 
 const {
     data: jobRequests
@@ -70,7 +54,7 @@ watch(activities, () => {
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle class="text-sm font-medium">
-                            Jobs Today
+                            Pending/In Progress Jobs
                         </CardTitle>
                         <ClipboardMinus />
                     </CardHeader>
@@ -78,9 +62,6 @@ watch(activities, () => {
                         <div class="text-2xl font-bold">
                             {{ assignments.length }}
                         </div>
-                        <p class="text-xs text-muted-foreground">
-                            +20.1% from last month
-                        </p>
                     </CardContent>
                 </Card>
 
@@ -95,9 +76,6 @@ watch(activities, () => {
                         <div class="text-2xl font-bold">
                             5
                         </div>
-                        <p class="text-xs text-muted-foreground">
-                            +20.1% from last month
-                        </p>
                     </CardContent>
                 </Card>
 
@@ -112,57 +90,80 @@ watch(activities, () => {
                         <div class="text-2xl font-bold">
                             $45,231.89
                         </div>
-                        <p class="text-xs text-muted-foreground">
+                        <!-- <p class="text-xs text-muted-foreground">
                             +20.1% from last month
-                        </p>
+                        </p> -->
                     </CardContent>
                 </Card>
             </div>
         </div>
 
-        <div class="mt-10">
-            <p class="mb-5">Recent Job Requests</p>
-            <div class="flex flex-col gap-3">
-                <Card class="gap-2" v-for="value in jobRequests">
-                    <CardHeader>
-                        <CardTitle class="text-sm">{{ value.title }}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div>
-                            <div class="text-muted-foreground text-sm">Status:
-                                <Badge variant="outline">{{ value.status }}
-                                </Badge>
-                            </div>
-                            <p class="text-muted-foreground text-sm">Date: <span>{{
-                                value.createdAt.toDate().toLocaleString() }}</span></p>
-                            <p class="text-muted-foreground text-sm">Budget: <span class="text-primary">₱{{ value.budget
-                                    }}</span>
-                            </p>
+        <div class="grid grid-cols-2 gap-5 mt-5 h-[50vh]">
+            <Card class="h-full">
+                <CardHeader>
+                    <div class="">
+                        <CardTitle>Job Requests</CardTitle>
+                    </div>
+                </CardHeader>
+                <CardContent class="h-full">
+                    <div v-if="jobRequests.length > 0" class="flex flex-col gap-2">
+                        <Item v-for="value in jobRequests" tem variant="outline">
+                            <ItemContent>
+                                <ItemTitle>Outline Variant</ItemTitle>
+                                <ItemDescription>
+                                    Outlined style with clear borders and transparent background.
+                                </ItemDescription>
+                            </ItemContent>
+                            <ItemActions>
+                                <Button variant="outline" size="sm">
+                                    <RouterLink :to="'/client/job-details/' + value.id">
+                                        View Details
+                                    </RouterLink>
+                                </Button>
+                            </ItemActions>
+                        </Item>
+                    </div>
+
+                    <div v-else class="flex flex-col items-center justify-center h-full">
+                        <div class="text-muted-foreground p-5 rounded-full bg-secondary">
+                            <CircleOff :size="16 * 3" />
                         </div>
-                    </CardContent>
-                </Card>
-            </div>
-        </div>
+                        <p class="text-muted-foreground mt-5">No requests yet.</p>
+                    </div>
 
-        <div class="mt-10">
-            <p class="mb-5">Recent Activities</p>
-            <div class="flex flex-col gap-3">
-                <Item v-for="value in activities" variant="outline" as-child>
-                    <RouterLink to="#">
-                        <ItemContent>
-                            <ItemTitle>{{ value.title }}</ItemTitle>
-                            <ItemDescription>
-                                {{ value.description }}
-                            </ItemDescription>
-                        </ItemContent>
-                        <ItemActions>
-                            <!-- <Button variant="outline" size="sm">
-                                Action
-                            </Button> -->
-                        </ItemActions>
-                    </RouterLink>
-                </Item>
-            </div>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Recent Activities</CardTitle>
+                </CardHeader>
+                <CardContent class="h-full">
+                    <div v-if="activities.length > 0" class="flex flex-col gap-2">
+                        <Item v-for="value in activities" variant="outline">
+                            <ItemContent>
+                                <ItemTitle>Outline Variant</ItemTitle>
+                                <ItemDescription>
+                                    Outlined style with clear borders and transparent background.
+                                </ItemDescription>
+                            </ItemContent>
+                            <ItemActions>
+                                <Button variant="outline" size="sm">
+                                    View Details
+                                </Button>
+                            </ItemActions>
+                        </Item>
+                    </div>
+
+
+                    <div v-else class="flex flex-col items-center justify-center h-full">
+                        <div class="text-muted-foreground p-5 rounded-full bg-secondary">
+                            <CircleOff :size="16 * 3" />
+                        </div>
+                        <p class="text-muted-foreground mt-5">No activities yet.</p>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     </div>
 

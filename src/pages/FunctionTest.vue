@@ -2,25 +2,22 @@
 import { functions } from '@/firebase';
 import { httpsCallable } from "firebase/functions";
 import { onMounted } from 'vue';
+import { Button } from '@/components/ui/button';
 
 
-const callFunction = async () => {
-    const addMessage = httpsCallable(functions, "addMessage");
 
-    const result = await addMessage({
-    name: "John",
-    text: "Hello from Vue!"
-  });
+const call = async () => {
+    const onSendMail = httpsCallable(functions, "onSendMail");
 
-    console.log(result);
+    const result = await onSendMail();
+    console.log(result.data);
 }
 
-onMounted(() => {
-    callFunction();
-})
 
 </script>
 
 <template>
     <h1>Cloud function testing</h1>
+
+    <Button @click="call()">SayHello</Button>
 </template>

@@ -6,16 +6,37 @@ import { Field, FieldError, FieldGroup, FieldLabel, FieldDescription } from '@/c
 import { Input } from "@/components/ui/input";
 import { motion } from "motion-v";
 import { RouterLink } from 'vue-router';
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { AlertCircleIcon } from "lucide-vue-next"
 import { useLogin } from './composables/auth';
 import { Spinner } from '@/components/ui/spinner';
+import { toast } from 'vue-sonner';
 
 const auth = useLogin();
 
 const error = ref<boolean>(false);
 
+
+watch(auth.anotherError, (newVal) => {
+    console.log("New Val", newVal);
+
+    if (newVal) {
+        console.log("Showing toast with error:", newVal);
+
+        toast.error(newVal, {
+            duration: 5000, // Toast will disappear after 5 seconds
+            onDismiss: () => {
+                console.log("Toast dismissed");
+                auth.anotherError.value = undefined; // Reset the error state
+            }
+        });
+    } else {
+        console.log("No error to show, anotherError is empty or undefined");
+    }
+
+    auth.anotherError.value = undefined;
+})
 </script>
 
 <template>
@@ -45,28 +66,31 @@ const error = ref<boolean>(false);
                         <Field>
                             <FieldLabel htmlFor="email">Email</FieldLabel>
                             <Input id="email" v-model="auth.loginForm.email" type="email" placeholder="m@example.com"
-                                required :disabled="auth.isLoading.value"/>
+                                required :disabled="auth.isLoading.value" />
 
                             <FieldError>{{ auth.formError.email }}</FieldError>
                         </Field>
                         <Field class="flex-col-reverse">
                             <div>
-                                <Input id="password" v-model="auth.loginForm.password" type="password" required 
-                                :disabled="auth.isLoading.value"/>
+                                <Input id="password" v-model="auth.loginForm.password" type="password" required
+                                    :disabled="auth.isLoading.value" />
                                 <FieldError class="mt-2">{{ auth.formError.password }}</FieldError>
                             </div>
                             <div class="flex items-center">
                                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                                <RouterLink to="/forgot-password" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                                <RouterLink to="/forgot-password"
+                                    class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
                                     Forgot your password?
                                 </RouterLink>
                             </div>
                         </Field>
                         <Field>
                             <Button type="submit" :disabled="auth.isLoading.value">
-                                <Spinner v-if="auth.isLoading.value"/>
-                                Login</Button>
-                            <Button variant="outline" type="button" @click="auth.loginWithGoogle()" :disabled="auth.isLoading.value">
+                                <Spinner v-if="auth.isLoading.value" />
+                                Login
+                            </Button>
+                            <Button variant="outline" type="button" @click="auth.loginWithGoogle()"
+                                :disabled="auth.isLoading.value">
                                 Login with Google
                             </Button>
                             <FieldDescription class="text-center">

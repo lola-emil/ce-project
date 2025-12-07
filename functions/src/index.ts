@@ -4,12 +4,14 @@ import { onDocumentCreated, onDocumentUpdated, QueryDocumentSnapshot } from "fir
 import { initializeApp } from "firebase-admin/app";
 import admin from "firebase-admin";
 import { getFirestore } from "firebase-admin/firestore";
-
+import { onCall } from "firebase-functions/https";
+import nodemailer from "nodemailer";
 
 setGlobalOptions({ maxInstances: 10 });
 
 initializeApp();
 const db = getFirestore();
+
 type Actions =
   | "create-job"
   | "cancel-job"
@@ -37,7 +39,7 @@ async function addActivityLog(data: QueryDocumentSnapshot, actionType: Actions, 
 }
 export const onJobCreated = onDocumentCreated({
   document: "job_requests/{jobId}",
-   region: "europe-west1"
+  region: "europe-west1"
 }, async (event) => {
   if (!event.data) return;
 
@@ -51,8 +53,8 @@ export const onJobCreated = onDocumentCreated({
 type shit = unknown;
 
 export const onJobUpdated = onDocumentUpdated({
-  document: "job_requests/{jobId}", 
-   region: "europe-west1"
+  document: "job_requests/{jobId}",
+  region: "europe-west1"
 
 }, async (event) => {
   if (!event.data) return;
@@ -117,3 +119,33 @@ export const onJobAssignmentUpdated = onDocumentUpdated("job_assignments/{jobId}
     });
   }
 });
+
+
+export const onSendMail = onCall(() => {
+  const pasword = "ioak gevy jysq kelr";
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "staleexam19@gmail.com",
+      pass: pasword,
+    },
+  });
+
+  let mailOptions = {
+    from: 'staleexam19@gmail.com', // sender address
+    to: 'renssaladaga96@gmail.com',  // list of recipients
+    subject: 'Hello shit from Nodemailer', // Subject line
+    text: 'Hello, shit, This is a test email sent from Nodemailer in Node.js!', // plain text body
+    html: '<b>This is a test email sent from Nodemailer in Node.js!</b>' // HTML body
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        console.log('Error occurred:', error);
+    } else {
+        console.log('Email sent: ' + info.response);
+    }
+})
+  
+  return "Hello, shit";
+})

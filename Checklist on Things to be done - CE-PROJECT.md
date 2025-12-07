@@ -42,11 +42,11 @@
 ### WORKER POV
 - [ ] Dynamic data sa client dashboard
 	- [ ] Earnings overview (Pila iyang earning this month)
-	- [ ] Active jobs pila ka job iyang gi handle
-	- [ ] Completed jobs pila iyang overall completed jobs
+	- [x] Active jobs pila ka job iyang gi handle
+	- [x] Completed jobs pila iyang overall completed jobs
 	- [ ] Rating
-	- [ ] Pending assigned jobs
-	- [ ] Recent Activities
+	- [x] Pending assigned jobs
+	- [x] Recent Activities
 - [x] List sa iyang mga assigned jobs
 - [x] Job details nga page
 - [x] Sa job details didto siya mag butang sa iyang progress

@@ -20,11 +20,13 @@ export function useLogin() {
         email: "",
         password: ""
     });
-    
+
     const formError = reactive({
         email: "",
         password: ""
-    })
+    });
+
+    const anotherError = ref<string>();
 
     const isLoading = ref<boolean>(false);
 
@@ -49,15 +51,23 @@ export function useLogin() {
             await authStore.loginWithEmailPassword(loginForm.email, loginForm.password);
             router.push("/setup-account");
         } catch (error) {
-            const firebaseError = error as FirebaseError;
-            console.log(firebaseError.code);
 
-            if (firebaseError.code == "auth/user-not-found") {
-                formError.email = "User not found";
-            }
+            if (error instanceof FirebaseError) {
+                const firebaseError = error as FirebaseError;
+                console.log(firebaseError.code);
 
-            if (firebaseError.code == "auth/wrong-password") {
-                formError.password = "Incorrect password"
+                if (firebaseError.code == "auth/user-not-found") {
+                    formError.email = "User not found";
+                }
+
+                if (firebaseError.code == "auth/wrong-password") {
+                    formError.password = "Incorrect password"
+                }
+
+                if (firebaseError.code == "auth/network-request-failed") {
+                    anotherError.value = "Login failed: network error";
+                }
+
             }
         } finally {
             isLoading.value = false;
@@ -77,7 +87,8 @@ export function useLogin() {
 
         loginForm,
         isLoading,
-        formError
+        formError,
+        anotherError
     };
 }
 
