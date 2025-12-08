@@ -25,6 +25,12 @@ const {
 } = useCollection<JobRequest>(query(collection(db, "job_requests"), where("clientId", "==", authStore.user?.uid), orderBy("createdAt", "desc"), limit(6)))
 
 const {
+    data: complete
+} = useCollection<JobRequest>(query(collection(db, "job_requests"),
+    where("clientId", "==", authStore.user?.uid),
+    where("status", "==", "completed"), orderBy("createdAt", "desc")))
+
+const {
     data: assignments
 } = useCollection(query(collection(db, "job_requests"), where("clientId", "==", authStore.user?.uid),
     orderBy("createdAt", "asc")))
@@ -38,14 +44,14 @@ const {
 } = useCollection(query(collection(db, "job_requests"), where("status", "==", "completed")));
 
 const totalBudget = computed(() =>
-  (data.value ?? []).reduce((sum, doc) => sum + (doc.budget ?? 0), 0)
+    (data.value ?? []).reduce((sum, doc) => sum + (doc.budget ?? 0), 0)
 );
 
 function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency,
-  }).format(price);
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency,
+    }).format(price);
 }
 </script>
 
@@ -81,7 +87,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                     </CardHeader>
                     <CardContent>
                         <div class="text-2xl font-bold">
-                            5
+                            {{ complete.length }}
                         </div>
                     </CardContent>
                 </Card>
@@ -115,7 +121,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                             <ItemContent>
                                 <ItemTitle>{{ value.title }}</ItemTitle>
                                 <ItemDescription>
-                                      {{ value.createdAt.toDate().toLocaleDateString() }}
+                                    {{ value.createdAt.toDate().toLocaleDateString() }}
                                 </ItemDescription>
                             </ItemContent>
                             <ItemActions>

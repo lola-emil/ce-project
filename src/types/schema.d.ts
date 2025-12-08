@@ -18,12 +18,12 @@ type Address = {
     suburb?: string;              // Suburb or neighborhood (optional)
     province: string;       // State, province, or region
     zipCode: string;          // Postal or ZIP code
-    country: string;              // Full country name
-    country_code: string;         // 2-letter ISO country code
+    country?: string;              // Full country name
+    country_code?: string;         // 2-letter ISO country code
     latitude?: number;            // Geographic latitude (optional)
     longitude?: number;           // Geographic longitude (optional)
-    formatted_address: string;    // Full address as a human-readable string
-    addressType: "permanent" | "current",
+    formatted_address?: string;    // Full address as a human-readable string
+    addressType?: "permanent" | "current",
 }
 
 
