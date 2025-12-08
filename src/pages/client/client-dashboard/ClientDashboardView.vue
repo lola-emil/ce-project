@@ -144,7 +144,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                 </CardContent>
             </Card>
 
-            <Card>
+            <!-- <Card>
                 <CardHeader>
                     <CardTitle>Recent Activities</CardTitle>
                 </CardHeader>
@@ -173,7 +173,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                         <p class="text-muted-foreground mt-5">No activities yet.</p>
                     </div>
                 </CardContent>
-            </Card>
+            </Card> -->
         </div>
     </div>
 

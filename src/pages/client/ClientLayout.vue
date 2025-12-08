@@ -10,7 +10,7 @@ const routes = [
 
     {
         path: "/client/my-jobs",
-        title: "My Jobs"
+        title: "Jobs Requests"
     },
 ]
 
