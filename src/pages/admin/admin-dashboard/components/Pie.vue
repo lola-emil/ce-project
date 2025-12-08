@@ -20,78 +20,104 @@ import {
   ChartTooltipContent,
   componentToString,
 } from "@/components/ui/chart"
+import { db } from "@/firebase"
+import type { JobRequest, JobStatus } from "@/types/schema"
+import { collection } from "firebase/firestore"
+import { useCollection } from "vuefire"
+import { computed } from "vue"
 
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
-]
-type Data = typeof chartData[number]
+const { data: jobs } = useCollection<JobRequest>(
+  collection(db, "job_requests")
+);
+
+const statuses: JobStatus[] = [
+  "pending",
+  "assigned",
+  "in-progress",
+  "completed",
+  "marked as complete",
+  "cancelled",
+];
 
 const chartConfig = {
   visitors: {
-    label: "Status",
+    label: "Job Requests",
     color: undefined,
   },
-  chrome: {
-    label: "Pending Review",
+
+  pending: {
+    label: "Pending",
     color: "var(--chart-1)",
   },
-  safari: {
-    label: "Open for Workers",
+
+  assigned: {
+    label: "Assigned",
     color: "var(--chart-2)",
   },
-  firefox: {
-    label: "Worker Assigned",
+
+  "in-progress": {
+    label: "In Progress",
     color: "var(--chart-3)",
   },
-  edge: {
-    label: "In Progress",
+
+  completed: {
+    label: "Completed",
     color: "var(--chart-4)",
   },
-  other: {
-    label: "Completed",
+
+  "marked as complete": {
+    label: "Marked as Complete",
     color: "var(--chart-5)",
   },
+
+  cancelled: {
+    label: "Cancelled",
+    color: "var(--chart-6)",
+  },
 } satisfies ChartConfig
+type Data = {
+  status: JobStatus
+  visitors: number
+  fill: string
+}
+
+const chartData = computed(() =>
+  statuses.map((status) => ({
+    status,
+    visitors: jobs.value?.filter((j) => j.status === status).length ?? 0,
+    fill: chartConfig[status].color,
+  }))
+);
+
+
 </script>
 
 <template>
   <Card class="flex flex-col">
     <CardHeader class="items-center pb-0">
       <CardTitle>Jobs by Status</CardTitle>
-      <CardDescription>January - June 2024</CardDescription>
+      <CardDescription>All time</CardDescription>
     </CardHeader>
     <CardContent class="flex-1 pb-0">
-      <ChartContainer
-        :config="chartConfig"
-        class="mx-auto aspect-square max-h-[250px]"
-      >
-        <VisSingleContainer
-          :data="chartData"
-          :margin="{ top: 30, bottom: 30 }"
-        >
-          <VisDonut
-            :value="(d: Data) => d.visitors"
-            :color="(d: Data) => chartConfig[d.browser as keyof typeof chartConfig].color"
-            :arc-width="30"
-          />
-          <ChartTooltip
-            :triggers="{
-              [Donut.selectors.segment]: componentToString(chartConfig, ChartTooltipContent, { hideLabel: true })!,
-            }"
-          />
+      <ChartContainer :config="chartConfig" class="mx-auto aspect-square max-h-[250px]">
+        <VisSingleContainer :data="chartData" :margin="{ top: 30, bottom: 30 }">
+          <VisDonut :value="(d: Data) => d.visitors"
+            :color="(d: Data) => chartConfig[d.status as keyof typeof chartConfig].color" :arc-width="30" />
+
+          <ChartTooltip :triggers="{
+            [Donut.selectors.segment]:
+              componentToString(chartConfig, ChartTooltipContent, { hideLabel: false })!,
+          }" />
         </VisSingleContainer>
       </ChartContainer>
     </CardContent>
     <CardFooter class="flex-col gap-2 text-sm">
-      <div class="flex items-center gap-2 font-medium leading-none">
-        Trending up by 5.2% this month <TrendingUp class="h-4 w-4" />
-      </div>
+      <!-- <div class="flex items-center gap-2 font-medium leading-none">
+        Trending up by 5.2% this month
+        <TrendingUp class="h-4 w-4" />
+      </div> -->
       <div class="leading-none text-muted-foreground">
-        Showing total job by status for the last 6 months
+        Showing total job by status.
       </div>
     </CardFooter>
   </Card>

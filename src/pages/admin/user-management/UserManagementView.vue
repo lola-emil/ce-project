@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FlexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useVueTable, type ColumnDef, type ColumnFiltersState, type SortingState, type VisibilityState } from "@tanstack/vue-table";
-import { computed, h, onMounted, ref, watch } from "vue";
+import { computed, h, ref } from "vue";
 import { Badge } from "@/components/ui/badge";
 import {
     Table,
@@ -25,9 +25,7 @@ import {
 } from '@/components/ui/select';
 import {
     Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
+    TabsContent
 } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Button } from "@/components/ui/button";
@@ -56,12 +54,15 @@ const columnVisibility = ref<VisibilityState>({})
 const rowSelection = ref({})
 
 
+const userDocQuery = query(collection(db, "users"), where("role", "in", ["client", "worker"]))
+const users = useCollection<UserData>(userDocQuery);
+
+
+const filteredUser = computed(() => {
+    return users.value.filter(user => selectedStatus.value.includes(user.role))
+});
+
 const columns: ColumnDef<UserTableData>[] = [
-    {
-        id: "select",
-        header: ({ table }) => h(Checkbox, { 'modelValue': table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'), 'onUpdate:modelValue': value => table.toggleAllPageRowsSelected(!!value), 'aria-label': 'Select all', }),
-        cell: ({ row }) => h(Checkbox, { 'modelValue': row.getIsSelected(), 'onUpdate:modelValue': value => row.toggleSelected(!!value), 'aria-label': 'Select row', }), enableSorting: false, enableHiding: false,
-    },
     {
         id: "name",
         accessorKey: "name",
@@ -97,9 +98,18 @@ const columns: ColumnDef<UserTableData>[] = [
     }
 ];
 
-const tableData = ref<UserTableData[]>([]);
+const selectedStatus = ref<string[]>([])       // Tracks selected items
+const statusOptions =
+    ["worker", "client",];
 
-
+const tableData = computed(() =>
+    (selectedStatus.value.length > 0 ? filteredUser.value : users.value)?.map(user => ({
+        id: user.id,
+        email: user.email,
+        name: `${user.name?.firstname || ""} ${user.name?.lastname || ""}`,
+        role: user.role
+    })) || []
+);
 const table = useVueTable({
     data: computed(() => tableData.value),
     columns,
@@ -136,23 +146,6 @@ const table = useVueTable({
 });
 
 
-const userDocQuery = query(collection(db, "users"), where("role", "in", ["client", "worker"]))
-const users = useCollection<UserData>(userDocQuery);
-
-
-watch(users, newVal => {
-    console.log(users.value);
-
-    tableData.value = users.value.map(val => {
-        return {
-            id: val.id,
-            email: val.email,
-            name: `${val.name?.firstname} ${val.name?.lastname}`,
-            role: val.role
-        }
-    })
-})
-
 </script>
 
 <template>
@@ -168,36 +161,17 @@ watch(users, newVal => {
                     View
                 </Label>
                 <div class="flex items-center gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger as-child>
-                            <Button variant="outline" size="sm">
-                                <ListFilter />
-                                <span class="hidden lg:inline">Filter</span>
-                                <span class="lg:hidden">Columns</span>
-                                <IconChevronDown />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" class="w-56">
-                            <DropdownMenuCheckboxItem class="capitalize">
-                                Worker
-                            </DropdownMenuCheckboxItem>
+                    <Select v-model="selectedStatus" multiple placeholder="Filter Jobs">
+                        <SelectTrigger>
+                            <span>{{ selectedStatus.length ? selectedStatus.join(', ') : 'Filter User' }}</span>
+                        </SelectTrigger>
 
-                            <DropdownMenuCheckboxItem class="capitalize">
-                                Client
-                            </DropdownMenuCheckboxItem>
-                            <!-- <template
-                            v-for="column in table.getAllColumns().filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())"
-                            :key="column.id">
-                            <DropdownMenuCheckboxItem class="capitalize" :model-value="column.getIsVisible()"
-                                @update:model-value="(value) => {
-
-                                    column.toggleVisibility(!!value)
-                                }">
-                                {{ column.id }}
-                            </DropdownMenuCheckboxItem>
-                        </template> -->
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        <SelectContent>
+                            <SelectItem v-for="status in statusOptions" :key="status" :value="status">
+                                {{ status }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
                     <Button variant="outline" size="sm" as-child>
                         <RouterLink to="/admin/create-new-worker">
                             <IconPlus />

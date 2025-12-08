@@ -1,158 +1,134 @@
 <script setup lang="ts">
-import type {
-  ChartConfig,
-} from "@/components/ui/chart"
-// import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { VisArea, VisAxis, VisLine, VisXYContainer } from "@unovis/vue"
+import { ref, computed } from "vue";
+import { collection, query, where, Timestamp } from "firebase/firestore";
+import { useCollection } from "vuefire";
 
+import { db } from "@/firebase";
+import type { JobRequest, JobStatus } from "@/types/schema";
+
+import { VisXYContainer, VisGroupedBar, VisAxis } from "@unovis/vue";
 import {
   Card,
   CardContent,
-  CardDescription, CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   ChartContainer,
-  ChartCrosshair,
   ChartTooltip,
+  ChartCrosshair,
   ChartTooltipContent,
   componentToString,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
-
-const data = [
-  {
-    day: 1,
-    dayLabel: "Mon",
-    jobsPosted: 34,
-    jobsCompleted: 20,
-    workerApplications: 78
-  },
-  {
-    day: 2,
-    dayLabel: "Tue",
-    jobsPosted: 28,
-    jobsCompleted: 18,
-    workerApplications: 65
-  },
-  {
-    day: 3,
-    dayLabel: "Wed",
-    jobsPosted: 40,
-    jobsCompleted: 25,
-    workerApplications: 90
-  },
-  {
-    day: 4,
-    dayLabel: "Thu",
-    jobsPosted: 35,
-    jobsCompleted: 28,
-    workerApplications: 82
-  },
-  {
-    day: 5,
-    dayLabel: "Fri",
-    jobsPosted: 50,
-    jobsCompleted: 32,
-    workerApplications: 110
-  },
-  {
-    day: 6,
-    dayLabel: "Sat",
-    jobsPosted: 60,
-    jobsCompleted: 40,
-    workerApplications: 140
-  },
-  {
-    day: 7,
-    dayLabel: "Sun",
-    jobsPosted: 25,
-    jobsCompleted: 17,
-    workerApplications: 55
+// --- Helper Functions ---
+function getPast7Days(): Date[] {
+  const days: Date[] = [];
+  const today = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(today.getDate() - i);
+    days.push(d);
   }
-]
+  return days;
+}
 
+const chartStatuses: JobStatus[] = ["pending", "assigned", "completed"];
+const statusColors: Record<JobStatus, string> = {
+  pending: "var(--chart-1)",
+  assigned: "var(--chart-2)",
+  "in-progress": "var(--chart-3)",
+  completed: "var(--chart-4)",
+  "marked as complete": "var(--chart-5)",
+  cancelled: "var(--chart-6)",
+};
 
-type Data = typeof data[number]
+// --- Firestore Query ---
+const sevenDaysAgo = new Date();
+sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6); // include today
 
+const q = query(
+  collection(db, "job_requests"),
+  where("createdAt", ">=", Timestamp.fromDate(sevenDaysAgo))
+);
+
+const { data: jobs } = useCollection<JobRequest>(q);
+
+// --- Process Data ---
+type DayData = { date: number; pending: number; assigned: number; completed: number };
+
+const barChartData = computed<DayData[]>(() => {
+  const days = getPast7Days();
+  return days.map((day) => {
+    const jobsForDay = jobs.value?.filter((job) => {
+      const jobDate = job.createdAt.toDate();
+      return (
+        jobDate.getFullYear() === day.getFullYear() &&
+        jobDate.getMonth() === day.getMonth() &&
+        jobDate.getDate() === day.getDate()
+      );
+    }) ?? [];
+
+    return {
+      date: day.getTime(), // convert to timestamp for Unovis
+      pending: jobsForDay.filter(j => j.status === "pending").length,
+      assigned: jobsForDay.filter(j => j.status === "assigned").length,
+      completed: jobsForDay.filter(j => j.status === "completed").length,
+    };
+  });
+});
+
+// Chart config for legend and colors
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig
+  pending: { label: "Pending", color: statusColors.pending },
+  assigned: { label: "Assigned", color: statusColors.assigned },
+  completed: { label: "Completed", color: statusColors.completed },
+} as Record<JobStatus, { label: string; color: string }>;
 
-const svgDefs = `
-  <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-    <stop
-      offset="5%"
-      stop-color="var(--color-desktop)"
-      stop-opacity="0.8"
-    />
-    <stop
-      offset="95%"
-      stop-color="var(--color-desktop)"
-      stop-opacity="0.1"
-    />
-  </linearGradient>
-  <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-    <stop
-      offset="5%"
-      stop-color="var(--color-mobile)"
-      stop-opacity="0.8"
-    />
-    <stop
-      offset="95%"
-      stop-color="var(--color-mobile)"
-      stop-opacity="0.1"
-    />
-  </linearGradient>
-`
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>Weekly Trends</CardTitle>
+      <CardTitle>Weekly Job Requests</CardTitle>
       <CardDescription>
-        Overview of job creation, assignments, and completions over the past 7 days
+        Number of jobs created, assigned, and completed in the last 7 days
       </CardDescription>
     </CardHeader>
+
     <CardContent>
-      <ChartContainer :config="chartConfig" class="max-h-[250px]">
-        <VisXYContainer :data="data" :svg-defs="svgDefs">
-          <VisArea :x="(d: Data) => d.day" :y="[(d: Data) => d.jobsCompleted, (d: Data) => d.jobsPosted]"
-            :color="(d: Data, i: number) => ['url(#fillMobile)', 'url(#fillDesktop)'][i]" :opacity="0.4" />
-          <VisLine :x="(d: Data) => d.day" :y="[(d: Data) => d.jobsCompleted, (d: Data) => d.jobsCompleted + d.jobsPosted]"
-            :color="(d: Data, i: number) => [chartConfig.mobile.color, chartConfig.desktop.color][i]" :line-width="1" />
-          <VisAxis type="x" :x="(d: Data) => d.day" :tick-line="false" :domain-line="false" :grid-line="false"
-            :num-ticks="6" :tick-format="(d: number, index: number) => {
-              return data[index]!.dayLabel.slice(0, 3)
+      <ChartContainer :config="chartConfig">
+        <VisXYContainer :data="barChartData" :margin="{ left: -24 }" :y-domain="[0, undefined]">
+
+          <!-- Grouped Bar Chart -->
+          <VisGroupedBar :x="(d: DayData) => d.date" :y="[
+            (d: DayData) => d.pending,
+            (d: DayData) => d.assigned,
+            (d: DayData) => d.completed
+          ]" :color="(d: any, i: any) => [statusColors.pending, statusColors.assigned, statusColors.completed][i]"
+            :rounded-corners="4" />
+
+          <!-- X Axis -->
+          <VisAxis type="x" :x="(d: DayData) => d.date" :tick-line="false" :domain-line="false" :grid-line="false"
+            :num-ticks="7" :tick-format="(d: number | Date) => {
+              const date = new Date(d);
+              return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             }" />
-          <VisAxis type="y" :num-ticks="3" :tick-line="false" :domain-line="false"
-            :tick-format="(d: number, index: number) => ''" />
-          <ChartTooltip />
-          <ChartCrosshair :template="componentToString(chartConfig, ChartTooltipContent, { labelKey: 'monthLabel' })"
-            :color="(d: Data, i: number) => [chartConfig.mobile.color, chartConfig.desktop.color][i % 2]" />
+
+          <!-- Y Axis -->
+          <VisAxis type="y" :num-ticks="3" :tick-line="false" :domain-line="false" />
+
+          <!-- Tooltip -->
+          <ChartTooltip :template="componentToString(chartConfig, ChartTooltipContent, { hideLabel: true })" />
+
+
+          <!-- Crosshair -->
+          <ChartCrosshair :template="componentToString(chartConfig, ChartTooltipContent, { hideLabel: true })"
+            :color="(d: any, i: any) => [statusColors.pending, statusColors.assigned, statusColors.completed][i % 3]" />
+
         </VisXYContainer>
       </ChartContainer>
     </CardContent>
-    <!-- <CardFooter>
-      <div class="flex w-full items-start gap-2 text-sm">
-        <div class="grid gap-2">
-          <div class="flex items-center gap-2 leading-none font-medium">
-            Trending up by 5.2% this month
-            <TrendingUp class="h-4 w-4" />
-          </div>
-          <div class="text-muted-foreground flex items-center gap-2 leading-none">
-            January - June 2024
-          </div>
-        </div>
-      </div>
-    </CardFooter> -->
   </Card>
 </template>

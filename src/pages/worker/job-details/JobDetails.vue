@@ -82,7 +82,6 @@ async function markAsComplete() {
         status: "marked as complete"
     });
 
-
     location.reload();
 }
 

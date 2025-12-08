@@ -6,7 +6,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '@/firebase';
-import { useDocument } from 'vuefire';
+import { useCurrentUser, useDocument } from 'vuefire';
 import {
     Carousel,
     CarouselContent,
@@ -38,9 +38,13 @@ import {
 import type { JobAssignment, JobRequest, User } from '@/types/schema';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'vue-sonner';
+import StarRating from './components/StarRating.vue';
+import { useAuthStore } from '@/stores/authStore';
 
 const route = useRoute();
 const router = useRouter();
+const currentUser = useCurrentUser();
+const authStore = useAuthStore();
 
 const jobId = String(route.params.id);
 
@@ -51,7 +55,7 @@ const {
 
 const jobAssignment = ref<JobAssignment>();
 const assignedWorker = ref<User>();
-
+const rating = ref(3);
 watch(job, async () => {
     const jobAssignmentRef = query(collection(db, "job_assignments"), where("jobId", "==", jobRef.id));
     const jobAssignmentSnap = await getDocs(jobAssignmentRef);
@@ -141,13 +145,37 @@ async function deleteRequest() {
     router.replace("/client/my-jobs")
 }
 
+async function onRate() {
+    const userRef = doc(db, "users", assignedWorker.value!.uid);
+    const user = (await getDoc(doc(db, "users", assignedWorker.value!.uid))).data() as User;
+
+    const currentRating = user.ratings ?? [];
+
+    currentRating.push({
+        name: `${authStore.userData?.name?.firstname} ${authStore.userData?.name?.lastname}`,
+        rate: rating.value
+    });
+
+
+    await updateDoc(userRef, {
+        ratings: [...currentRating,]
+    });
+
+    await updateDoc(jobRef, {
+        rated: true
+    });
+
+    toast.success("Added rate to user");
+    location.reload();
+}
+
 </script>
 
 <template>
     <div class="container mx-auto">
         <div class="mt-10">
             <Button variant="link" @click="router.go(-1)">
-                    <ArrowLeft /> Go back
+                <ArrowLeft /> Go back
             </Button>
         </div>
         <div class="grid grid-cols-2 gap-5 mt-36">
@@ -179,7 +207,7 @@ async function deleteRequest() {
 
                     <AlertDialog>
                         <AlertDialogTrigger as-child>
-                            <Button v-if="job?.status == 'in-progress' || job?.status == 'pending'" size="sm">Cancel
+                            <Button v-if="job?.status == 'pending'" size="sm">Cancel
                                 request</Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
@@ -206,6 +234,37 @@ async function deleteRequest() {
                             {{ `${assignedWorker.name?.firstname} ${assignedWorker.name?.lastname}` }}
                         </span>
                     </RouterLink>
+                </div>
+
+                <div v-if="!job?.rated" class="mt-5">
+                    <Dialog>
+                        <DialogTrigger as-child>
+                            <Button>Rate worker</Button>
+                        </DialogTrigger>
+                        <DialogContent class="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Rating</DialogTitle>
+                                <DialogDescription>
+                                    <br>
+                                    <div class="flex items-center">
+                                        <StarRating v-model="rating" />
+                                    </div>
+                                </DialogDescription>
+                            </DialogHeader>
+
+                            <DialogFooter>
+                                <DialogClose as-child>
+                                    <Button variant="outline">
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+
+                                <Button @click="onRate">Submit</Button>
+
+
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
 
                 <Dialog>
@@ -382,4 +441,9 @@ async function deleteRequest() {
     <br>
     <br>
     <br>
+
+
+    <br>
+    <br>
+
 </template>

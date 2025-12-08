@@ -32,6 +32,11 @@ type ContactInfo = {
     phoneNumber: string;
 };
 
+export type Rating = {
+    name: string;
+    rate: number;
+};
+
 
 export type UserRole = "admin" | "worker" | "client";
 // MGA USERS
@@ -47,7 +52,9 @@ export interface User {
     address: Address[];
     contactInfo?: ContactInfo;           // Only for worker/client
 
-    legalDocs: LegalDocs[];
+    workerDocuments?: string[];
+
+    ratings?: Rating[]
 }
 
 
@@ -60,7 +67,6 @@ export interface PartialCreatedUser {
     address: Address[];
     contactInfo?: ContactInfo;        // Only for worker/client
 
-    workerDocuments: string[];
 }
 
 export type LegalDocs = {
@@ -102,7 +108,9 @@ interface JobRequest {
     budget: number;
     status: JobStatus;
 
-    images?: string[]
+    images?: string[],
+
+    rated?: boolean,
 
 
     createdAt: Timestamp;
@@ -204,3 +212,10 @@ export interface ActivityLog {
     date_created: string;
     data: any
 }
+
+
+export interface Earnings {
+    id: string;
+    amount: number;
+    addedDate: Date;
+};

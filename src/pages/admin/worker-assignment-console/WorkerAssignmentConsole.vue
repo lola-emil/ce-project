@@ -1,22 +1,25 @@
 <script setup lang="ts">
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem } from '@/components/ui/dropdown-menu';
-import { IconLayoutColumns, IconChevronDown } from '@tabler/icons-vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Plus } from 'lucide-vue-next';
-import { ref } from 'vue';
-import { collection, query, where } from 'firebase/firestore';
+import { computed, ref } from 'vue';
+import { collection, query } from 'firebase/firestore';
 import { useCollection } from 'vuefire';
 import { db } from '@/firebase';
 import type { JobRequest } from '@/types/schema';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '@/components/ui/select';
 
 const jobRequestsRef = collection(db, "job_requests");
 const jobRequestQuery = query(jobRequestsRef)
-const jobRequests = useCollection<JobRequest[]>(jobRequestQuery);
+const jobRequests = useCollection<JobRequest>(jobRequestQuery);
 
+const statusOptions =
+    ["pending", "assigned", "in-progress", "completed", "marked as complete", "cancelled"];
 
+const selectedStatus = ref<string[]>([])       // Tracks selected items
+
+const filteredJobs = computed(() => {
+  return jobRequests.value.filter(job => selectedStatus.value.includes(job.status))
+})
 </script>
 
 <template>
@@ -29,41 +32,25 @@ const jobRequests = useCollection<JobRequest[]>(jobRequestQuery);
             <div class="mb-5 border-b py-3">
                 <div class="flex justify-between">
                     <div class="flex items-center gap-5">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger as-child>
-                                <Button variant="outline">
-                                    <IconLayoutColumns />
-                                    <span class="hidden lg:inline">Filter Jobs</span>
-                                    <span class="lg:hidden">Columns</span>
-                                    <IconChevronDown />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" class="w-56">
-                                <DropdownMenuCheckboxItem class="capitalize">
-                                    Kuan
-                                </DropdownMenuCheckboxItem>
+                        <Select v-model="selectedStatus" multiple placeholder="Filter Jobs">
+                            <SelectTrigger>
+                                <span>{{ selectedStatus.length ? selectedStatus.join(', ') : 'Select Status' }}</span>
+                            </SelectTrigger>
 
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-
-                        <Input placeholder="Search" class="min-w-xs hidden md:block" />
-
+                            <SelectContent>
+                                <SelectItem v-for="status in statusOptions" :key="status" :value="status">
+                                    {{ status }}
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
-                    <Button as-child>
-                        <RouterLink to="create-job-request">
-                            <Plus />
-                            Create job request
-                        </RouterLink>
-                    </Button>
+
                 </div>
 
-                <div class="mt-3 md:hidden">
-                    <Input placeholder="Search" class="min-w-xs" />
-                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                <RouterLink v-for="value in jobRequests as any" :to="'job-details/' + value.id">
+                <RouterLink v-for="value in (selectedStatus.length > 0 ? filteredJobs : jobRequests) as any" :to="'job-details/' + value.id">
                     <Card class="gap-2">
                         <CardHeader>
                             <CardTitle class="text-sm">{{ value.title }}</CardTitle>

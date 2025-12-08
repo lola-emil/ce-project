@@ -4,7 +4,6 @@ import { onDocumentCreated, onDocumentUpdated, QueryDocumentSnapshot } from "fir
 import { initializeApp } from "firebase-admin/app";
 import admin from "firebase-admin";
 import { getFirestore } from "firebase-admin/firestore";
-import { onCall } from "firebase-functions/https";
 import nodemailer from "nodemailer";
 
 setGlobalOptions({ maxInstances: 10 });
@@ -51,8 +50,6 @@ export const onJobCreated = onDocumentCreated({
   await addActivityLog(event.data, "create-job", "job_requests");
 });
 
-type shit = unknown;
-
 export const onJobUpdated = onDocumentUpdated({
   document: "job_requests/{jobId}",
   region: "europe-west1"
@@ -63,8 +60,6 @@ export const onJobUpdated = onDocumentUpdated({
 
   if (!after) return;
 
-  let logEntry: shit;
-
   if (after.status == "in-progress") {
     await addActivityLog(event.data.after, "assigned-job", "job_requests");
   }
@@ -73,9 +68,33 @@ export const onJobUpdated = onDocumentUpdated({
     await addActivityLog(event.data.after, "mark-complete-job", "job_requests");
   }
 
+  if (after.status == "completed") {
+    const logEntry = {
+      for_user: after.clientId,
+      action_type: "assigned-job",
+      data: {
+        collection: "job_assignments",
+        id: event.data.after.id,
+      },
+      date_created: admin.firestore.FieldValue.serverTimestamp(),
+    };
 
-  await db.collection("activityLogs").add(logEntry);
-  console.log("Activity log created:", logEntry);
+    await db.collection("activity_logs").add(logEntry);
+
+    console.log("Activity log created:", logEntry);
+
+
+    const result = await db.collection("earnings").add({
+      amount: after.budget,
+      addedDate: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    console.log("Added earnings", result.id);
+  }
+
+
+  // await db.collection("activityLogs").add(logEntry);
+  // console.log("Activity log created:", logEntry);
 });
 
 export const onJobAssignmentCreated = onDocumentCreated({
@@ -122,36 +141,6 @@ export const onJobAssignmentUpdated = onDocumentUpdated("job_assignments/{jobId}
 });
 
 
-export const onSendMail = onCall(() => {
-  const pasword = "ioak gevy jysq kelr";
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "staleexam19@gmail.com",
-      pass: pasword,
-    },
-  });
-
-  let mailOptions = {
-    from: 'staleexam19@gmail.com', // sender address
-    to: 'renssaladaga96@gmail.com',  // list of recipients
-    subject: 'Hello shit from Nodemailer', // Subject line
-    text: 'Hello, shit, This is a test email sent from Nodemailer in Node.js!', // plain text body
-    html: '<b>This is a test email sent from Nodemailer in Node.js!</b>' // HTML body
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('Error occurred:', error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  })
-
-  return "Hello, shit";
-})
-
-
 export const onUserCreated = onDocumentCreated({
   document: "users/{userId}",
 }, (event) => {
@@ -172,99 +161,120 @@ export const onUserCreated = onDocumentCreated({
       },
     });
 
+    const plainText = `
+      Subject: Your Temporary Account Credentials
+
+      Hello,
+
+      We’ve created a temporary account for you. Use the credentials below to log in, and make sure to change your password after your first login.
+
+      Email: ${data.email}
+      Password: ${data.tempPassword}
+
+      You can log in here:
+      https://ce-project-15307.web.app/login
+
+      If you did not request this account, please ignore this email.
+
+      Thank you,
+      The Team
+
+      © 2025 Prodigify. All rights reserved.
+    `;
+
     let mailOptions = {
       from: 'staleexam19@gmail.com', // sender address
       to: data.email,  // list of recipients
-      subject: 'Hello shit from Nodemailer', // Subject line
-      text: 'Hello, shit, This is a test email sent from Nodemailer in Node.js!', // plain text body
+      subject: 'Prodigify Temporary Account Credentials', // Subject line
+      text: plainText,
       html: `
       <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Temporary Credentials</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-    .email-container {
-      max-width: 600px;
-      margin: 20px auto;
-      background-color: #ffffff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .header {
-      background-color: #007bff;
-      color: #ffffff;
-      text-align: center;
-      padding: 20px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .content {
-      padding: 20px;
-      font-size: 16px;
-      color: #333333;
-      line-height: 1.5;
-    }
-    .credentials {
-      background-color: #f0f0f0;
-      padding: 15px;
-      border-radius: 5px;
-      margin: 15px 0;
-      font-family: monospace;
-      font-size: 18px;
-      text-align: center;
-      word-break: break-all;
-    }
-    .button {
-      display: inline-block;
-      background-color: #007bff;
-      color: #ffffff !important;
-      text-decoration: none;
-      padding: 12px 20px;
-      border-radius: 5px;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    .footer {
-      font-size: 12px;
-      color: #777777;
-      text-align: center;
-      padding: 15px;
-    }
-  </style>
-</head>
-<body>
-  <div class="email-container">
-    <div class="header">Your Temporary Account Credentials</div>
-    <div class="content">
-      <p>Hello,</p>
-      <p>We’ve created a temporary account for you. Use the credentials below to log in, and make sure to change your password after your first login.</p>
-      
-      <div class="credentials">
-        Email: <strong>${data.email}</strong><br>
-        Password: <strong>${data.tempPassword}</strong>
-      </div>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Temporary Credentials</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+          }
+          .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          }
+          .header {
+            background-color: #f59e0b;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+          }
+          .content {
+            padding: 20px;
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.5;
+          }
+          .credentials {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 18px;
+            text-align: center;
+            word-break: break-all;
+          }
+          .button {
+            display: inline-block;
+            background-color: #f59e0b;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: bold;
+          }
+          .footer {
+            font-size: 12px;
+            color: #777777;
+            text-align: center;
+            padding: 15px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="header">Your Temporary Account Credentials</div>
+          <div class="content">
+            <p>Hello,</p>
+            <p>We’ve created a temporary account for you. Use the credentials below to log in, and make sure to change your password after your first login.</p>
+            
+            <div class="credentials">
+              Email: <strong>${data.email}</strong><br>
+              Password: <strong>${data.tempPassword}</strong>
+            </div>
 
-      <p>You can log in here:</p>
-      <a class="button" href="https://ce-project-15307.web.app/login">Login to Your Account</a>
+            <p>You can log in here:</p>
+            <a class="button" href="https://ce-project-15307.web.app/login">Login to Your Account</a>
 
-      <p>If you did not request this account, please ignore this email.</p>
-      <p>Thank you,<br>The Team</p>
-    </div>
-    <div class="footer">
-      &copy; 2025 Your Company. All rights reserved.
-    </div>
-  </div>
-</body>
-</html>
+            <p>If you did not request this account, please ignore this email.</p>
+            <p>Thank you,<br>The Team</p>
+          </div>
+          <div class="footer">
+            &copy; 2025 Prodigify. All rights reserved.
+          </div>
+        </div>
+      </body>
+      </html>
       ` // HTML body
     };
 

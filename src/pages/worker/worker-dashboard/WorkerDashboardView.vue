@@ -1,42 +1,24 @@
 <script setup lang="ts">
-import StatSection from './components/StatSection.vue';
-import {
-    Item,
-    ItemActions,
-    ItemContent,
-    ItemDescription,
-    ItemTitle,
-} from '@/components/ui/item';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { useAuthStore } from '@/stores/authStore';
 import { db } from '@/firebase';
-import { query, collection, orderBy, where, limit, doc, getDoc } from 'firebase/firestore';
-import { useCollection } from 'vuefire';
-import { ref, watch } from 'vue';
-import type { JobAssignment, JobRequest } from '@/types/schema';
+import { query, collection, where, limit, doc, getDoc } from 'firebase/firestore';
+import { useCollection, useCurrentUser } from 'vuefire';
+import { computed, onMounted, ref, watch } from 'vue';
+import type { JobAssignment, JobRequest, Rating, User } from '@/types/schema';
 
-const recentActivities = [
-    {
-        title: "Masonry Repair Job",
-        description: "Assigned to you"
-    },
-
-    {
-        title: "Gate Welding",
-        description: "Completed - yesterday"
-    },
-]
 const authStore = useAuthStore();
+const user = useCurrentUser();
 
 const assignments = useCollection<JobAssignment>(query(collection(db, "job_assignments"), where("workerId", "==", authStore.user?.uid), limit(2)));
 const jobs = ref<JobRequest[]>([]);
 
 const { data: activeJobs } = useCollection<JobAssignment>(query(collection(db, "job_assignments"), where("workerId", "==", authStore.user?.uid),
-where("status", "not-in", ["completed", "failed", "declined"])));
+    where("status", "not-in", ["completed", "failed", "declined"])));
 
 
 const { data: completed } = useCollection<JobAssignment>(query(collection(db, "job_assignments"), where("workerId", "==", authStore.user?.uid),
-where("status", "in", ["completed"])));
+    where("status", "in", ["completed"])));
 
 watch(assignments, async () => {
 
@@ -47,6 +29,24 @@ watch(assignments, async () => {
             jobs.value.push({ id: jobRequestRef.id, ...jobRequestRef.data() } as JobRequest);
         }
     });
+});
+
+const ratings = ref<Rating[]>([]);
+const averageRating = computed(() => {
+    if (!ratings.value.length) return 0;
+
+    const sum = ratings.value.reduce((total, r) => total + r.rate, 0);
+    return sum / ratings.value.length;
+});
+
+onMounted(async () => {
+    console.log("Current user", authStore.userData?.ratings);
+
+    const userRef = await getDoc(doc(db, "users", user.value!.uid));
+
+    const result = userRef.data() as User;
+
+    ratings.value = result.ratings ?? [];
 })
 
 </script>
@@ -60,22 +60,7 @@ watch(assignments, async () => {
         </div>
         <div class="mt-10">
 
-            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5">
-                <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">
-                            Today's Earnings
-                        </CardTitle>
-                        <DollarSign />
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold">
-                            ₱850
-                        </div>
-                        <p class="text-xs text-muted-foreground">
-                        </p>
-                    </CardContent>
-                </Card>
+            <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5">
 
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -114,17 +99,14 @@ watch(assignments, async () => {
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle class="text-sm font-medium">
-                            Rating
+                            Rating ({{ ratings.length }})
                         </CardTitle>
                         <Star />
                     </CardHeader>
                     <CardContent>
                         <div class="text-2xl font-bold">
-                            4.8 <span class="text-sm">/ 5.0</span>
+                            {{ averageRating.toFixed(1) }} <span class="text-sm">/ 5.0</span>
                         </div>
-                        <p class="text-xs text-muted-foreground">
-                            +20.1% from last month
-                        </p>
                     </CardContent>
                 </Card>
             </div>

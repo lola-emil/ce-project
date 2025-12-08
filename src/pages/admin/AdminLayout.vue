@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { RouterView, RouterLink } from 'vue-router';
-import { cn } from '@/utils/util';
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink } from "@/components/ui/navigation-menu";
+import { RouterView } from 'vue-router';
 import LayoutNav from '@/components/LayoutNav.vue';
 
 const routes = [
@@ -19,16 +17,6 @@ const routes = [
     {
         path: "/admin/worker-assignment-console",
         title: "Worker Assignment"
-    },
-
-    // {
-    //     path: "payment-commission-management",
-    //     title: "Payments"
-    // },
-
-    {
-        path: "/admin/settings",
-        title: "Settings"
     },
 ];
 

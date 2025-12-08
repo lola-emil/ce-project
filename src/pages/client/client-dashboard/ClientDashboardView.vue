@@ -13,7 +13,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { collection, limit, orderBy, query, where } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { useCollection } from 'vuefire'
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import type { JobRequest } from '@/types/schema'
 import { CheckCircle, ClipboardMinus, DollarSign, CircleOff } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button'
@@ -22,7 +22,7 @@ const authStore = useAuthStore();
 
 const {
     data: jobRequests
-} = useCollection<JobRequest>(query(collection(db, "job_requests"), where("clientId", "==", authStore.user?.uid), orderBy("createdAt", "asc"), limit(2)))
+} = useCollection<JobRequest>(query(collection(db, "job_requests"), where("clientId", "==", authStore.user?.uid), orderBy("createdAt", "desc"), limit(6)))
 
 const {
     data: assignments
@@ -33,13 +33,20 @@ const {
     data: activities
 } = useCollection(query(collection(db, "activity_logs"), orderBy("timestamp", 'asc'), where("for_user", "==", authStore.user?.uid)))
 
-watch(jobRequests, () => {
-    console.log(jobRequests.value);
-})
+const {
+    data
+} = useCollection(query(collection(db, "job_requests"), where("status", "==", "completed")));
 
-watch(activities, () => {
-    console.log(activities.value);
-})
+const totalBudget = computed(() =>
+  (data.value ?? []).reduce((sum, doc) => sum + (doc.budget ?? 0), 0)
+);
+
+function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(price);
+}
 </script>
 
 <template>
@@ -88,11 +95,8 @@ watch(activities, () => {
                     </CardHeader>
                     <CardContent>
                         <div class="text-2xl font-bold">
-                            $45,231.89
+                            {{ formatPrice(totalBudget, 'en-US', 'PHP') }}
                         </div>
-                        <!-- <p class="text-xs text-muted-foreground">
-                            +20.1% from last month
-                        </p> -->
                     </CardContent>
                 </Card>
             </div>
@@ -107,16 +111,16 @@ watch(activities, () => {
                 </CardHeader>
                 <CardContent class="h-full">
                     <div v-if="jobRequests.length > 0" class="flex flex-col gap-2">
-                        <Item v-for="value in jobRequests" tem variant="outline">
+                        <Item v-for="value in jobRequests" tem variant="muted">
                             <ItemContent>
-                                <ItemTitle>Outline Variant</ItemTitle>
+                                <ItemTitle>{{ value.title }}</ItemTitle>
                                 <ItemDescription>
-                                    Outlined style with clear borders and transparent background.
+                                      {{ value.createdAt.toDate().toLocaleDateString() }}
                                 </ItemDescription>
                             </ItemContent>
                             <ItemActions>
                                 <Button variant="outline" size="sm">
-                                    <RouterLink :to="'/client/job-details/' + value.id">
+                                    <RouterLink :to="'/clie nt/job-details/' + value.id">
                                         View Details
                                     </RouterLink>
                                 </Button>

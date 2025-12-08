@@ -83,8 +83,9 @@ watch(jobAssignments, () => {
                         </CardHeader>
                         <CardContent>
                             <div>
-                                <p class="text-muted-foreground text-sm">Status: <Badge variant="outline">Awaiting Order
-                                    </Badge>
+                                <p class="text-muted-foreground text-sm">
+                                    Status: 
+                                    <Badge variant="outline">{{ value.status }}</Badge>
                                 </p>
                                 <p class="text-muted-foreground text-sm">Date: <span>{{
                                     new Intl.DateTimeFormat('en-US', {

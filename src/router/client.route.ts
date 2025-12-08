@@ -21,8 +21,4 @@ export const clientRoutes: RouteRecordRaw[] = [
         path: "payments",
         component: () => import("@/pages/client/payments/Payments.vue")
     },
-    {
-        path: "profile-settings",
-        component: () => import("@/pages/client/profile-settings/ProfileSettings.vue")
-    }
 ];

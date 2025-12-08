@@ -26,12 +26,13 @@ const authStore = useAuthStore();
             class="w-full min-h-[60vh] flex justify-center items-center py-72">
             <div class="flex flex-col justify-center items-center w-full lg:w-1/2 gap-5">
 
-                <h3 class=" text-5xl text-center font-bold leading-snug">Where Smart Clients Meet Skilled Workers—Not Surprises.
+                <h3 class=" text-5xl text-center font-bold leading-snug">Where Smart Clients Meet Skilled Workers—Not
+                    Surprises.
                 </h3>
 
-                    <p class="text-center text-lg text-muted-foreground">
-                        Quality service made simple, not random.
-                    </p>
+                <p class="text-center text-lg text-muted-foreground">
+                    Quality service made simple, not random.
+                </p>
 
 
                 <div>
@@ -75,48 +76,14 @@ const authStore = useAuthStore();
 
         <Separator class="my-20" />
 
-        <!-- <div class="grid grid-cols-3 mb-20">
-            <div class="flex flex-col justify-center items-center w-3/4">
-                <h3 class="text-2xl font-bold">We Believe Hiring Should Be Simple—and It Starts Here.</h3>
-            </div>
-            <div class="flex flex-col justify-center items-center w-3/4 col-span-2">
-                <div class="leading-loose">
-                    <p>
-                        Prodigify was founded on a straightforward idea: people deserve an easier, safer way to hire
-                        skilled
-                        workers. No confusing processes, no guessing, no chasing unreliable contacts.
-                    </p>
-                    <br>
-                    <p>
-                        By combining verified
-                        worker profiles, fair pricing, and real-time project tracking, we built a platform where
-                        transparency and speed aren’t extras—they’re the standard. With Prodigify, getting quality work
-                        done
-                        becomes clear, predictable, and stress-free.
-                    </p>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- <div class="grid grid-cols-3 gap-10">
-            <div class="flex flex-col items-center justify-center gap-5">
-                <div class="text-5xl">
-                    <Eye :size="50"/>
-                </div>
-                <div>
-                    <p class="text-center">Transparent From Start to Finish</p>
-                </div>
-            </div>
-        </div> -->
-
-        <div class="my-20 flex flex-col items-center py-10">
+        <div class="my-20 flex flex-col items-center py-32">
             <Badge variant="outline">
-                <Zap/>
-                Features</Badge>
+                <Zap />
+                Features
+            </Badge>
             <div class="text-center my-10">
-                <h3 class="text-4xl">Powerful Customization Tools</h3>
-                <p class="text-muted-foreground">All the tools you need to customize your shadcn/ui components and make
-                    them unique.</p>
+                <h3 class="text-4xl">Everything You Need to Get the Job Done Right</h3>
+                <p class="text-muted-foreground">Prodigify brings clarity, speed, and trust to the hiring process with features designed for both clients and workers.</p>
             </div>
             <div class="grid grid-cols-3 gap-5 w-full">
                 <Card>
@@ -158,27 +125,6 @@ const authStore = useAuthStore();
                 </Card>
             </div>
         </div>
-
-        <!-- 
-        <motion.div :initial="{ opacity: 0, y: 20 }" :animate="{ opacity: 1, y: 0 }"
-            :transition="{ duration: 0.6, ease: 'easeOut', delay: .5 }"
-            class="h-[50vh] w-full hidden md:flex kanang-kuan rounded-lg flex-col justify-center items-center p-10">
-
-            <Badge variant="outline" class="py-1 px-3">Features</Badge>
-            <h3 class=" text-5xl md:text-4xl text-center">
-                Your Go-To Source for Skilled Construction Support
-            </h3>
-
-            <div class="mx-16 w-1/2 mt-3">
-                <p class="text-center text-lg">
-                    Easily connect with vetted workers for repairs, renovations, and everything in between.
-                </p>
-            </div>
-
-            <Button size="lg" variant="outline" class="font-bold" as-child>
-                <RouterLink to="/about">Learn More</RouterLink>
-            </Button>
-        </motion.div> -->
 
     </main>
 

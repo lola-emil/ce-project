@@ -1,8 +1,5 @@
 <script lang="ts">
-import { toast } from 'vue-sonner'
 import { z } from 'zod'
-import { Input } from '@/components/ui/input'
-import DragHandle from './DragHandle.vue'
 import { ref, h, onMounted } from 'vue'
 import type { ActivityLog } from '@/types/schema'
 import type { Timestamp } from 'firebase/firestore'
@@ -27,16 +24,10 @@ import type {
 } from '@tanstack/vue-table'
 import { RestrictToVerticalAxis } from '@dnd-kit/abstract/modifiers'
 import {
-  IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
-  IconChevronsRight,
-  IconCircleCheckFilled,
-  IconDotsVertical,
-  IconLayoutColumns,
-  IconLoader,
-  IconPlus,
+  IconChevronsRight, IconDotsVertical
 } from '@tabler/icons-vue'
 import {
   FlexRender,
@@ -50,14 +41,11 @@ import { DragDropProvider } from 'dnd-kit-vue'
 import { Badge } from '@/components/ui/badge'
 
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
+  DropdownMenu, DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
 import { Label } from '@/components/ui/label'
@@ -79,9 +67,7 @@ import {
 
 import {
   Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
+  TabsContent
 } from '@/components/ui/tabs'
 
 const props = defineProps<{
@@ -99,7 +85,7 @@ const columns: ColumnDef<ActivityLog>[] = [
   {
     accessorKey: 'for_user',
     header: 'User ID',
-    cell: ({ row }) => h('div', String(row.getValue('for_user'))), 
+    cell: ({ row }) => h('div', String(row.getValue('for_user'))),
     enableHiding: false,
   },
   {
@@ -108,7 +94,7 @@ const columns: ColumnDef<ActivityLog>[] = [
     cell: ({ row }) => h(Badge, {
       variant: 'outline',
       class: 'text-muted-foreground px-1.5',
-    }, () => String(row.getValue('action_type'))), 
+    }, () => String(row.getValue('action_type'))),
   },
   {
     accessorKey: 'date_created',
@@ -198,72 +184,6 @@ onMounted(() => {
       <Label for="view-selector" class="sr-only">
         View
       </Label>
-      <Select default-value="outline">
-        <SelectTrigger id="view-selector" class="flex w-fit @4xl/main:hidden" size="sm">
-          <SelectValue placeholder="Select a view" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="outline">
-            Outline
-          </SelectItem>
-          <SelectItem value="past-performance">
-            Past Performance
-          </SelectItem>
-          <SelectItem value="key-personnel">
-            Key Personnel
-          </SelectItem>
-          <SelectItem value="focus-documents">
-            Focus Documents
-          </SelectItem>
-        </SelectContent>
-      </Select>
-      <TabsList
-        class="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-        <TabsTrigger value="outline">
-          Outline
-        </TabsTrigger>
-        <TabsTrigger value="past-performance">
-          Past Performance <Badge variant="secondary">
-            3
-          </Badge>
-        </TabsTrigger>
-        <TabsTrigger value="key-personnel">
-          Key Personnel <Badge variant="secondary">
-            2
-          </Badge>
-        </TabsTrigger>
-        <TabsTrigger value="focus-documents">
-          Focus Documents
-        </TabsTrigger>
-      </TabsList>
-      <div class="flex items-center gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button variant="outline" size="sm">
-              <IconLayoutColumns />
-              <span class="hidden lg:inline">Customize Columns</span>
-              <span class="lg:hidden">Columns</span>
-              <IconChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" class="w-56">
-            <template
-              v-for="column in table.getAllColumns().filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())"
-              :key="column.id">
-              <DropdownMenuCheckboxItem class="capitalize" :model-value="column.getIsVisible()" @update:model-value="(value) => {
-
-                column.toggleVisibility(!!value)
-              }">
-                {{ column.id }}
-              </DropdownMenuCheckboxItem>
-            </template>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <Button variant="outline" size="sm">
-          <IconPlus />
-          <span class="hidden lg:inline">Add Section</span>
-        </Button>
-      </div>
     </div>
     <TabsContent value="outline" class="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
       <div class="overflow-hidden rounded-lg border">

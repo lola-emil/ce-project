@@ -12,11 +12,6 @@ const routes = [
         path: "/client/my-jobs",
         title: "My Jobs"
     },
-
-    {
-        path: "/client/payments",
-        title: "Payments"
-    },
 ]
 
 </script>

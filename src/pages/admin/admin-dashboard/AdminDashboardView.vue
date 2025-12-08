@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
+  CardContent, CardHeader,
   CardTitle
 } from "@/components/ui/card";
 import { Briefcase, CheckCircle, DollarSign, UserCheck } from 'lucide-vue-next';
@@ -13,25 +11,41 @@ import DataTable from './components/DataTable.vue';
 import { collection, query, where } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useCollection } from "vuefire";
-import { watch } from "vue";
-import type { ActivityLog } from "@/types/schema";
+import { computed, watch } from "vue";
+import type { ActivityLog, Earnings } from "@/types/schema";
 
 
 const { data: jobs } = useCollection(query(
+  collection(db, "job_requests")))
+
+
+const { data: pendingJobs } = useCollection(query(
   collection(db, "job_requests"),
-  where("status", "in", ["pending", "assigned", "in-progress"])))
+  where("status", "in", ["pending"])))
 
 const { data: users } = useCollection(query(collection(db, "users"), where("role", "!=", "admin")));
 
-const {data: logs} = useCollection<ActivityLog>(collection(db, "activity_logs"));
+const { data: logs } = useCollection<ActivityLog>(collection(db, "activity_logs"));
+
+const { data: earnings } = useCollection<Earnings>(collection(db, "earnings"));
+
+const clientPayment = computed(() =>
+  (earnings.value ?? []).reduce((sum, doc) => sum + (doc.amount ?? 0), 0)
+);
 
 watch(logs, () => {
   console.log(logs.value);
-})
+});
+
+function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(price);
+}
 </script>
 
 <template>
-
 
   <main class="mt-5">
     <div class="container mx-auto px-5 md:px-0">
@@ -40,7 +54,7 @@ watch(logs, () => {
           <Card>
             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle class="text-sm font-medium">
-                Jobs Today
+                Job Requests
               </CardTitle>
               <CheckCircle />
             </CardHeader>
@@ -48,9 +62,7 @@ watch(logs, () => {
               <div class="text-2xl font-bold">
                 {{ jobs.length }}
               </div>
-              <p class="text-xs text-muted-foreground">
-                +20.1% from last month
-              </p>
+
             </CardContent>
           </Card>
 
@@ -78,28 +90,24 @@ watch(logs, () => {
             </CardHeader>
             <CardContent>
               <div class="text-2xl font-bold">
-                11
+                {{ pendingJobs.length }}
               </div>
-              <p class="text-xs text-muted-foreground">
-                +20.1% from last month
-              </p>
+
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle class="text-sm font-medium">
-                Total Revenue
+                Client Payments
               </CardTitle>
               <DollarSign />
             </CardHeader>
             <CardContent>
               <div class="text-2xl font-bold">
-                ₱45,231.89
+                {{ formatPrice(clientPayment, 'en-US', 'PHP') }}
               </div>
-              <p class="text-xs text-muted-foreground">
-                +20.1% from last month
-              </p>
+
             </CardContent>
           </Card>
         </div>
