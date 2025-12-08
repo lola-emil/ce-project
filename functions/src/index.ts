@@ -5,11 +5,15 @@ import { initializeApp } from "firebase-admin/app";
 import admin from "firebase-admin";
 import { getFirestore } from "firebase-admin/firestore";
 import nodemailer from "nodemailer";
+import { HttpsError, onCall } from "firebase-functions/https";
 
 setGlobalOptions({ maxInstances: 10 });
 
 initializeApp();
+
+
 const db = getFirestore();
+const pasword = "ioak gevy jysq kelr";
 
 type Actions =
   | "create-job"
@@ -152,7 +156,6 @@ export const onUserCreated = onDocumentCreated({
   if (!data) return;
 
   if (data.role == "worker") {
-    const pasword = "ioak gevy jysq kelr";
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -288,3 +291,94 @@ export const onUserCreated = onDocumentCreated({
     })
   }
 })
+
+const generateOtp = (length = 6): string => {
+    let otp = "";
+    const digits = "0123456789";
+
+    for (let i = 0; i < length; i++) {
+        otp += digits[Math.floor(Math.random() * digits.length)];
+    }
+
+    return otp;
+};
+
+const OTP_COLLECTION = "userOtps";
+const transporter = nodemailer.createTransport({
+  service: "Gmail", // or any SMTP service
+  auth: {
+    user: "staleexam19@gmail.com",
+    pass: pasword,
+  },
+});
+
+export const sendOtp = onCall(async (data, context) => {
+  const { email } = data.data;
+
+  if (!email) {
+    throw new HttpsError("invalid-argument", "Email is required.");
+  }
+
+  // Generate OTP
+  const otp = generateOtp();
+  const expiresAt = admin.firestore.Timestamp.fromDate(new Date(Date.now() + 5 * 60 * 1000)); // 5 min expiry
+
+  // Store OTP in Firestore (hashed for security is better, but plaintext works for demo)
+  await admin.firestore().collection(OTP_COLLECTION).doc(email).set({
+    otp,
+    expiresAt,
+    used: false,
+  });
+
+  // Send email
+  const mailOptions = {
+    from: `"Prodigify" <staleexam19@gmail.com>`,
+    to: email,
+    subject: "Your OTP Code",
+    text: `Your OTP code is: ${otp}. It expires in 5 minutes.`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    return { success: true, message: "OTP sent" };
+  } catch (error: any) {
+    console.error("Error sending OTP:", error);
+    throw new HttpsError("internal", "Failed to send OTP");
+  }
+});
+
+
+export const verifyOtp = onCall(async (data, context) => {
+    const { email, otp } = data.data;
+
+    if (!email || !otp) {
+        throw new HttpsError("invalid-argument", "Email and OTP are required.");
+    }
+
+    const otpDocRef = admin.firestore().collection(OTP_COLLECTION).doc(email);
+    const otpDoc = await otpDocRef.get();
+
+    if (!otpDoc.exists) {
+        throw new HttpsError("not-found", "No OTP found for this email.");
+    }
+
+    const otpData = otpDoc.data();
+
+    if (otpData.used) {
+        throw new HttpsError("failed-precondition", "OTP has already been used.");
+    }
+
+    const now = admin.firestore.Timestamp.now();
+    if (otpData.expiresAt.toMillis() < now.toMillis()) {
+        throw new HttpsError("deadline-exceeded", "OTP has expired.");
+    }
+
+    if (otpData.otp !== otp) {
+        throw new HttpsError("invalid-argument", "Incorrect OTP.");
+    }
+
+    // Mark OTP as used
+    await otpDocRef.update({ used: true });
+
+    return { success: true, message: "OTP verified successfully." };
+});

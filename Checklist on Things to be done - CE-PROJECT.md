@@ -12,7 +12,6 @@
 - [x] Dynamic data sa admin dashboard
 - [x] Filter user feature sa user management
 - [x] Empty state sa user management page
-- [ ] Edit detail sa mga users (sa profile page dapit)
 - [x] Empty state sa worker management
 - [x] Progress info sa job details
 - [x] Filter feature sa job management
@@ -37,7 +36,7 @@
 - [ ] Dynamic data sa client dashboard
 	- [x] Active jobs pila ka job iyang gi handle
 	- [x] Completed jobs pila iyang overall completed jobs
-	- [ ] Rating
+	- [x] Rating
 	- [x] Pending assigned jobs
 	- [x] Recent Activities
 - [x] List sa iyang mga assigned jobs

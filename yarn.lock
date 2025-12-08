@@ -2339,7 +2339,7 @@
     "@vueuse/shared" "10.11.1"
     vue-demi ">=0.14.8"
 
-"@vueuse/core@^12.5.0":
+"@vueuse/core@^12.5.0", "@vueuse/core@^12.8.2":
   version "12.8.2"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-12.8.2.tgz#007c6dd29a7d1f6933e916e7a2f8ef3c3f968eaa"
   integrity sha512-HbvCmZdzAu3VGi/pWYm5Ut+Kd9mn1ZHnn4L5G8kOQTPs/IwIAmJoBrmYk2ckLArgMXZj0AW3n5CAejLUO+PhdQ==
@@ -6316,6 +6316,14 @@ vue-eslint-parser@^10.1.0:
     espree "^10.3.0"
     esquery "^1.6.0"
     semver "^7.6.3"
+
+vue-input-otp@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/vue-input-otp/-/vue-input-otp-0.3.2.tgz#7ff0adc80e573d21ab8b80f8a1c7f63f042606ad"
+  integrity sha512-QMl1842WB6uNAsK4+mZXIskb00TOfahH3AQt8rpRecbtQnOp+oHSUbL/Z3wekfy6pAl+hyN3e1rCUSkCMzbDLQ==
+  dependencies:
+    "@vueuse/core" "^12.8.2"
+    reka-ui "^2.6.1"
 
 vue-metamorph@^3.3.3:
   version "3.3.3"
