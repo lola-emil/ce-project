@@ -27,7 +27,7 @@ export const adminRoutes: RouteRecordRaw[] = [
     },
     {
         path: "create-new-worker",
-        component: () => import("@/pages/admin/user-management/CreateNewWorker.vue")
+        component: () => import("@/pages/admin/user-management/CreateNewWorker2.vue")
     },
     {
         path: "job-details/:id",

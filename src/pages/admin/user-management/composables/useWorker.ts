@@ -7,6 +7,17 @@ import z, { ZodError } from "zod";
 import type { FirebaseError } from "firebase/app";
 
 
+function generateTempPassword(length = 12) {
+    const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    return password;
+}
+
+
 export type WorkerForm = {
     name: {
         firstname: string,
@@ -58,6 +69,7 @@ const userSchema = z.object({
         lastname: z.string().min(1, "Last name is required"),
     }),
     email: z.email("Invalid email address"),
+    phoneNumber: z.string().optional(),
     password: z.string().min(6, "Password must be at least 6 characters"),
     role: z.enum(["worker"]), // fixed role
 
@@ -68,6 +80,10 @@ const userSchema = z.object({
         province: z.string().min(1, "Province is required"),
         zipCode: z.string().min(1, "Zipcode is required"),
     }),
+
+    workerDocuments: z
+        .array(z.string().min(0))   
+        .optional()
 });
 
 export function useWorker() {
@@ -86,6 +102,8 @@ export function useWorker() {
         password: "",
         role: "worker",
 
+        phoneNumber: "",
+
         // For the address
         address: {
             addressLine1: "",
@@ -93,12 +111,15 @@ export function useWorker() {
             city: "",
             province: "",
             zipCode: "",
-        }
+        },
+        workerDocuments: <string[]>[]
     });
 
 
     const create = async (): Promise<[DocumentReference<DocumentData, DocumentData> | null, ZodError | FirebaseError | null]> => {
         try {
+
+            form.password = generateTempPassword(10);
             const validated = z.parse(userSchema, form);
 
             // Create ang account
@@ -115,7 +136,14 @@ export function useWorker() {
                     }
                 ],
                 email: form.email,
-                createdAt: serverTimestamp()
+                contactInfo: {
+                    email: form.email,
+                    phoneNumber: form.phoneNumber
+                },
+                workerDocuments: form.workerDocuments,
+                createdAt: serverTimestamp(),
+                tempPassword: form.password,
+                passwordIsTemp: true
             };
             // Add ang personal info
             const userDocRef = doc(db, "users", user.user.uid);

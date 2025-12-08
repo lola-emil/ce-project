@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Quote } from 'lucide-vue-next';
 import { Separator } from '@/components/ui/separator';
-import { Zap, ShieldCheck, Eye } from "lucide-vue-next";
+import { Zap } from "lucide-vue-next";
 
 
 const authStore = useAuthStore();
@@ -23,10 +23,10 @@ const authStore = useAuthStore();
         <!-- HERO SECTION -->
         <motion.div :initial="{ opacity: 0, y: 20 }" :animate="{ opacity: 1, y: 0 }"
             :transition="{ duration: 0.6, ease: 'easeOut' }"
-            class="w-full min-h-[60vh] flex justify-center items-center py-52">
+            class="w-full min-h-[60vh] flex justify-center items-center py-72">
             <div class="flex flex-col justify-center items-center w-full lg:w-1/2 gap-5">
 
-                <h3 class=" text-5xl text-center">Where Smart Clients Meet Skilled Workers—Not Surprises.
+                <h3 class=" text-5xl text-center font-bold leading-snug">Where Smart Clients Meet Skilled Workers—Not Surprises.
                 </h3>
 
                     <p class="text-center text-lg text-muted-foreground">

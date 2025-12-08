@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import StatSection from "../../client/client-dashboard/components/StatSection.vue"
 import {
     Item,
     ItemActions,

@@ -81,13 +81,24 @@ const router = createRouter({
 
         const userDetailDocRef = doc(db, "users", user.uid);
         const userDetailSnap = await getDoc(userDetailDocRef);
+
         if (userDetailSnap.exists()) {
-          next("/dashboard");
-          return;
+          if (userDetailSnap.data().passwordIsTemp) {
+            next("/change-password");
+            return;
+          } else {
+            next("/dashboard");
+            return;
+          }
         }
 
         next();
       }
+    },
+
+    {
+      path: "/change-password",
+      component: () => import("@/pages/auth/ChangePasswordView.vue")
     },
 
     {

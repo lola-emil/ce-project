@@ -149,7 +149,6 @@ async function onSubmit() {
                         <FieldError>{{ nameError?.properties?.lastname?.errors[0] }}</FieldError>
                     </Field>
 
-
                     <Field name="fullName">
                         <FieldLabel>Suffix <span class="text-muted-foreground">(Optional)</span></FieldLabel>
                         <Input type="text" placeholder="e.g. Jr., Sr." />

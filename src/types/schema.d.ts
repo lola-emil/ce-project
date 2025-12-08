@@ -29,8 +29,7 @@ type Address = {
 
 type ContactInfo = {
     email?: string;
-    phone_number: string;
-    phone_number_is_verified: boolean;
+    phoneNumber: string;
 };
 
 
@@ -49,6 +48,19 @@ export interface User {
     contactInfo?: ContactInfo;           // Only for worker/client
 
     legalDocs: LegalDocs[];
+}
+
+
+export interface PartialCreatedUser {
+    role: UserRole; // Set via custom claims
+
+    name?: PersonName;                    // Admin might not need this
+    // gender?: Gender;
+
+    address: Address[];
+    contactInfo?: ContactInfo;        // Only for worker/client
+
+    workerDocuments: string[];
 }
 
 export type LegalDocs = {

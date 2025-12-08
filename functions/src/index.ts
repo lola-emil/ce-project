@@ -37,6 +37,7 @@ async function addActivityLog(data: QueryDocumentSnapshot, actionType: Actions, 
   await db.collection("activity_logs").add(logEntry);
   console.log("Activity log created:", logEntry);
 }
+
 export const onJobCreated = onDocumentCreated({
   document: "job_requests/{jobId}",
   region: "europe-west1"
@@ -141,11 +142,139 @@ export const onSendMail = onCall(() => {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-        console.log('Error occurred:', error);
+      console.log('Error occurred:', error);
     } else {
-        console.log('Email sent: ' + info.response);
+      console.log('Email sent: ' + info.response);
     }
-})
-  
+  })
+
   return "Hello, shit";
+})
+
+
+export const onUserCreated = onDocumentCreated({
+  document: "users/{userId}",
+}, (event) => {
+
+  if (!event.data) return;
+
+  const data = event.data.data();
+
+  if (!data) return;
+
+  if (data.role == "worker") {
+    const pasword = "ioak gevy jysq kelr";
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "staleexam19@gmail.com",
+        pass: pasword,
+      },
+    });
+
+    let mailOptions = {
+      from: 'staleexam19@gmail.com', // sender address
+      to: data.email,  // list of recipients
+      subject: 'Hello shit from Nodemailer', // Subject line
+      text: 'Hello, shit, This is a test email sent from Nodemailer in Node.js!', // plain text body
+      html: `
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temporary Credentials</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .header {
+      background-color: #007bff;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .content {
+      padding: 20px;
+      font-size: 16px;
+      color: #333333;
+      line-height: 1.5;
+    }
+    .credentials {
+      background-color: #f0f0f0;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+      font-family: monospace;
+      font-size: 18px;
+      text-align: center;
+      word-break: break-all;
+    }
+    .button {
+      display: inline-block;
+      background-color: #007bff;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .footer {
+      font-size: 12px;
+      color: #777777;
+      text-align: center;
+      padding: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">Your Temporary Account Credentials</div>
+    <div class="content">
+      <p>Hello,</p>
+      <p>We’ve created a temporary account for you. Use the credentials below to log in, and make sure to change your password after your first login.</p>
+      
+      <div class="credentials">
+        Email: <strong>${data.email}</strong><br>
+        Password: <strong>${data.tempPassword}</strong>
+      </div>
+
+      <p>You can log in here:</p>
+      <a class="button" href="https://ce-project-15307.web.app/login">Login to Your Account</a>
+
+      <p>If you did not request this account, please ignore this email.</p>
+      <p>Thank you,<br>The Team</p>
+    </div>
+    <div class="footer">
+      &copy; 2025 Your Company. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
+      ` // HTML body
+    };
+
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Error occurred:', error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    })
+  }
 })
