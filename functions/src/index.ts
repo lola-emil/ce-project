@@ -97,8 +97,272 @@ export const onJobUpdated = onDocumentUpdated({
   }
 
 
-  // await db.collection("activityLogs").add(logEntry);
-  // console.log("Activity log created:", logEntry);
+  const clientRef = await admin.firestore().doc("users/" + after.clientId).get();
+
+
+  if (after.status == "assigned") {
+    const assignment = await admin.firestore().doc("job_assignments/" + event.data.after.id).get();
+    const worker = await admin.firestore().doc("user/" + assignment.id).get();
+
+    const workerMailTemplate = `
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Assignment Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #007BFF;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .content {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .button {
+      background-color: #28a745;
+      color: #ffffff;
+      padding: 12px 20px;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 4px;
+      display: inline-block;
+      text-align: center;
+    }
+    .footer {
+      font-size: 14px;
+      color: #888;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .footer a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    .footer p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      Job Assigned: Action Required
+    </div>
+    
+    <p class="content">Hello ${worker.data().firstname},</p>
+    
+    <p class="content">
+      A new job has been assigned to you! Below are the details of the request.
+    </p>
+
+    <div class="section-title">
+      Job Request Details:
+    </div>
+    <p class="content">
+      <strong>Job ID:</strong> ${event.data.after.id}<br>
+      <strong>Client Name:</strong> ${clientRef.data().firstname + " " + clientRef.data().lastname}<br>
+      <strong>Location:</strong> ${after.location.description} <br>
+    </p>
+
+    <div class="section-title">
+      Contact Information:
+    </div>
+    <p class="content">
+      <strong>Client Email:</strong> ${clientRef.data().email}<br>
+    </p>
+
+    <p class="content">
+      Please confirm your availability and take the necessary steps to complete this job.
+    </p>
+
+    <p class="content">
+      <a href="https://ce-project-15307.web.app/worker/job-details/${event.data.after.id}" class="button">View Job Details & Start</a>
+    </p>
+
+    <div class="footer">
+      <p>Thank you for using Prodigify!</p>
+      <p>If you have any questions, feel free to <a href="mailto:support@prodigify.com">contact us</a>.</p>
+    </div>
+  </div>
+</body>
+</html>
+
+  `;
+
+  
+  let workerMailOptions = {
+    from: 'staleexam19@gmail.com', // sender address
+    to: worker.data().email,  // list of recipients
+    subject: 'Prodigify: Status Update',
+    // text: plainText,
+    html: workerMailTemplate
+  }
+
+
+  transporter.sendMail(workerMailOptions, (error, info) => {
+    if (error) {
+      console.log('Error occurred:', error);
+    } else {
+      console.log('Email sent to worker: ' + info.response);
+    }
+  })
+  }
+
+
+
+  const clientMailTemplate = `
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Request Update Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #007BFF;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .content {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .button {
+      background-color: #007BFF;
+      color: #ffffff;
+      padding: 12px 20px;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 4px;
+      display: inline-block;
+      text-align: center;
+    }
+    .footer {
+      font-size: 14px;
+      color: #888;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .footer a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    .footer p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      Job Request Update
+    </div>
+    
+    <p class="content">Dear ${clientRef.data().firstname},</p>
+    
+    <p class="content">
+      We wanted to let you know that there has been an update to your job/service request.
+    </p>
+
+    <div class="section-title">
+      Job Request Details:
+    </div>
+    <p class="content">
+      <strong>Job ID:</strong> ${event.data.after.id}<br>
+      <strong>Status:</strong> ${after.status}
+    </p>
+
+    <div class="section-title">
+      Assigned Worker:
+    </div>
+    <p class="content">
+      <strong>Worker Name:</strong> {{worker_name}}<br>
+      <strong>Worker Contact:</strong> {{worker_contact}}
+    </p>
+
+    <p class="content">
+      Please visit your dashboard for more details on this request and to track its progress.
+    </p>
+
+    <p class="content">
+      <a href="https://ce-project-15307.web.app/client/job-details/${event.data.after.id}" class="button">View Job Details</a>
+    </p>
+
+    <div class="footer">
+      <p>Thank you for using Prodigify!</p>
+      <p>For any questions, feel free to <a href="mailto:support@prodigify.com">contact us</a>.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  let clientMailOptions = {
+    from: 'staleexam19@gmail.com', // sender address
+    to: clientRef.data().email,  // list of recipients
+    subject: 'Prodigify: Status Update', // Subject line
+    // text: plainText,
+    html: clientMailTemplate
+  }
+
+
+  transporter.sendMail(clientMailOptions, (error, info) => {
+    if (error) {
+      console.log('Error occurred:', error);
+    } else {
+      console.log('Email sent to client: ' + info.response);
+    }
+  })
+
 });
 
 export const onJobAssignmentCreated = onDocumentCreated({
@@ -293,14 +557,14 @@ export const onUserCreated = onDocumentCreated({
 })
 
 const generateOtp = (length = 6): string => {
-    let otp = "";
-    const digits = "0123456789";
+  let otp = "";
+  const digits = "0123456789";
 
-    for (let i = 0; i < length; i++) {
-        otp += digits[Math.floor(Math.random() * digits.length)];
-    }
+  for (let i = 0; i < length; i++) {
+    otp += digits[Math.floor(Math.random() * digits.length)];
+  }
 
-    return otp;
+  return otp;
 };
 
 const OTP_COLLECTION = "userOtps";
@@ -349,36 +613,36 @@ export const sendOtp = onCall(async (data, context) => {
 
 
 export const verifyOtp = onCall(async (data, context) => {
-    const { email, otp } = data.data;
+  const { email, otp } = data.data;
 
-    if (!email || !otp) {
-        throw new HttpsError("invalid-argument", "Email and OTP are required.");
-    }
+  if (!email || !otp) {
+    throw new HttpsError("invalid-argument", "Email and OTP are required.");
+  }
 
-    const otpDocRef = admin.firestore().collection(OTP_COLLECTION).doc(email);
-    const otpDoc = await otpDocRef.get();
+  const otpDocRef = admin.firestore().collection(OTP_COLLECTION).doc(email);
+  const otpDoc = await otpDocRef.get();
 
-    if (!otpDoc.exists) {
-        throw new HttpsError("not-found", "No OTP found for this email.");
-    }
+  if (!otpDoc.exists) {
+    throw new HttpsError("not-found", "No OTP found for this email.");
+  }
 
-    const otpData = otpDoc.data();
+  const otpData = otpDoc.data();
 
-    if (otpData.used) {
-        throw new HttpsError("failed-precondition", "OTP has already been used.");
-    }
+  if (otpData.used) {
+    throw new HttpsError("failed-precondition", "OTP has already been used.");
+  }
 
-    const now = admin.firestore.Timestamp.now();
-    if (otpData.expiresAt.toMillis() < now.toMillis()) {
-        throw new HttpsError("deadline-exceeded", "OTP has expired.");
-    }
+  const now = admin.firestore.Timestamp.now();
+  if (otpData.expiresAt.toMillis() < now.toMillis()) {
+    throw new HttpsError("deadline-exceeded", "OTP has expired.");
+  }
 
-    if (otpData.otp !== otp) {
-        throw new HttpsError("invalid-argument", "Incorrect OTP.");
-    }
+  if (otpData.otp !== otp) {
+    throw new HttpsError("invalid-argument", "Incorrect OTP.");
+  }
 
-    // Mark OTP as used
-    await otpDocRef.update({ used: true });
+  // Mark OTP as used
+  await otpDocRef.update({ used: true });
 
-    return { success: true, message: "OTP verified successfully." };
+  return { success: true, message: "OTP verified successfully." };
 });
