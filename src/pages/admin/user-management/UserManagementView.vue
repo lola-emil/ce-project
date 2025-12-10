@@ -85,17 +85,6 @@ const columns: ColumnDef<UserTableData>[] = [
         enableHiding: false,
     },
 
-    {
-        id: "action",
-        meta: {
-            align: "right"
-        },
-        cell: ({ row }) => h(ButtonGroup, {}, [
-            h(Button, { variant: "link", class: "align-right", asChild: true }, [
-                h(RouterLink, { to: "edit-user/" + row.original.id }, "Edit")
-            ])
-        ])
-    }
 ];
 
 const selectedStatus = ref<string[]>([])       // Tracks selected items

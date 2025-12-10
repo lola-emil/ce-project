@@ -59,7 +59,8 @@ export type WorkerFormError = {
         city: string[],
         province: string[],
         zipCode: string[],
-    }
+    },
+    phoneNumber: string[]
 }
 
 const userSchema = z.object({
@@ -69,7 +70,7 @@ const userSchema = z.object({
         lastname: z.string().min(1, "Last name is required"),
     }),
     email: z.email("Invalid email address"),
-    phoneNumber: z.string().optional(),
+    phoneNumber: z.string(),
     password: z.string().min(6, "Password must be at least 6 characters"),
     role: z.enum(["worker"]), // fixed role
 

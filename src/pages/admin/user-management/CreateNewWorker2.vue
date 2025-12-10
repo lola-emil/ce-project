@@ -85,11 +85,16 @@ const uploadImages = async () => {
 
 }
 
+const emailError = ref("");
+
 const triggerFileInput = () => {
     input.value!.click();
 };
 
 async function onSubmit() {
+    emailError.value = "";
+    formError.value = undefined;
+    
     await uploadImages();
 
     console.log("Uploaded images: ", worker.form.workerDocuments);
@@ -105,6 +110,13 @@ async function onSubmit() {
         }
 
         if (error instanceof FirebaseError) {
+            console.log("Firebase error", error);
+
+            if (error.code == "auth/email-already-in-use") {
+                emailError.value = "Email already in use";
+
+                return;
+            }
             alert("Unidentified error");
             return;
         }
@@ -165,13 +177,13 @@ async function onSubmit() {
                 <Field :data-invalid="formError?.properties?.name?.properties?.middlename">
                     <FieldLabel htmlFor="middlename">Email</FieldLabel>
                     <Input id="middlename" v-model="worker.form.email" type="text" />
-                    <FieldError :errors="formError?.properties?.email?.errors" />
+                    <FieldError :errors="formError?.properties?.email?.errors ?? [emailError]" />
                 </Field>
 
-                <Field :data-invalid="formError?.properties?.name?.properties?.lastname">
+                <Field :data-invalid="formError?.properties?.phoneNumber">
                     <FieldLabel htmlFor="lastname">Phone Number</FieldLabel>
-                    <Input id="lastname" v-model="worker.form.phoneNumber" type="text" />
-                    <FieldError :errors="formError?.properties?.name?.properties?.lastname?.errors" />
+                    <Input id="lastname" v-model="worker.form.phoneNumber" type="tel" />
+                    <FieldError :errors="formError?.properties?.phoneNumber?.errors" />
                 </Field>
             </div>
             <br>
