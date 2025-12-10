@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Navbar from './components/Navbar.vue';
 import { Button } from '@/components/ui/button';
-import { motion } from "motion-v";
+import { motion, type VariantLabels, type VariantType } from "motion-v";
 import { Badge } from '@/components/ui/badge';
 import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,6 +11,17 @@ import { Zap } from "lucide-vue-next";
 
 
 const authStore = useAuthStore();
+
+
+const initScrollTransition: boolean | VariantType | VariantLabels = {
+    opacity: 0,
+    y: 100,
+};
+
+const whileInView: VariantType | VariantLabels = {
+    opacity: 1,
+    y: 0
+};
 
 </script>
 
@@ -59,7 +70,8 @@ const authStore = useAuthStore();
 
 
 
-        <div class="grid grid-cols-2">
+        <motion.div :initial="initScrollTransition" :while-in-view="whileInView"
+            :transition="{ duration: .5, ease: 'easeOut' }" class="grid grid-cols-2">
             <div>
                 <img src="/carpenter.jpg" alt="Carpenter" class="rounded-2xl w-full">
             </div>
@@ -72,20 +84,22 @@ const authStore = useAuthStore();
                     </h3>
                 </div>
             </div>
-        </div>
+        </motion.div>
 
         <Separator class="my-20" />
 
-        <div class="my-20 flex flex-col items-center py-32">
+        <motion.div :initial="initScrollTransition" :while-in-view="whileInView"
+            :transition="{ duration: .5, ease: 'easeOut', delay: .3 }" class="my-20 flex flex-col items-center py-32">
             <Badge variant="outline">
                 <Zap />
                 Features
             </Badge>
             <div class="text-center my-10">
-                <h3 class="text-4xl">Everything You Need to Get the Job Done Right</h3>
-                <p class="text-muted-foreground">Prodigify brings clarity, speed, and trust to the hiring process with features designed for both clients and workers.</p>
+                <motion.h3 class="text-4xl">Everything You Need to Get the Job Done Right</motion.h3>
+                <p class="text-muted-foreground">Prodigify brings clarity, speed, and trust to the hiring process with
+                    features designed for both clients and workers.</p>
             </div>
-            <div class="grid grid-cols-3 gap-5 w-full">
+            <div class="grid lg:grid-cols-3 gap-5 w-full">
                 <Card>
                     <CardContent>
                         <h3 class="text-xl">
@@ -124,7 +138,7 @@ const authStore = useAuthStore();
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </motion.div>
 
     </main>
 
@@ -141,7 +155,7 @@ const authStore = useAuthStore();
 
         </div>
 
-        <div class="flex gap-5">
+        <div class="gap-5 grid grid-cols-2">
             <Button size="lg" variant="outline" class="font-bold" as-child>
                 <RouterLink to="/register">Create an Account</RouterLink>
             </Button>
