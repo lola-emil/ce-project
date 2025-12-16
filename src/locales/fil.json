@@ -1,0 +1,134 @@
+{
+    "client": {
+        "dashboard": {
+            "greeting": "Magandang araw, {name}",
+            "overview": "Narito ang mabilis na buod ng iyong mga pinakabagong aktibidad.",
+            "cards": {
+                "pending": "Mga Trabahong Pending/In Progress",
+                "completed": "Mga Natapos na Trabaho",
+                "spent": "Kabuuang Gastos"
+            },
+            "requests": {
+                "title": "Mga Job Request",
+                "empty": "Wala pang request.",
+                "viewDetails": "Tingnan ang Detalye"
+            }
+        },
+        "jobRequest": {
+            "back": "Bumalik",
+            "titlePage": "Job Request",
+            "fields": {
+                "photos": "Mga Larawan",
+                "addPhoto": "Magdagdag ng larawan",
+                "addOrDropPhotos": "Magdagdag o Mag-drop ng mga larawan",
+                "location": "Lokasyon",
+                "title": "Pamagat",
+                "description": "Paglalarawan",
+                "budget": "Badyet"
+            },
+            "submit": "Isumite",
+            "status": {
+                "saving": "Sine-save ang Data",
+                "uploading": "Ina-upload ang mga larawan"
+            }
+        },
+        "jobsList": {
+            "title": "Listahan ng Mga Trabaho",
+            "subtitle": "Lahat ng iyong mga job creation sa isang lugar.",
+            "filters": {
+                "placeholder": "I-filter ang Mga Trabaho",
+                "selectStatus": "Pumili ng Status"
+            },
+            "actions": {
+                "create": "Gumawa ng job request"
+            },
+            "card": {
+                "status": "Status",
+                "date": "Petsa",
+                "budget": "Badyet"
+            }
+        }
+    },
+    "worker": {
+        "workerDashboard": {
+            "greeting": "Magandang araw, {name}",
+            "overview": "Narito ang mabilis na buod ng iyong mga pinakabagong aktibidad.",
+            "cards": {
+                "active": "Aktibong Trabaho",
+                "completed": "Mga Natapos na Trabaho",
+                "rating": "Rating ({count})",
+                "ratingOutOf": "/ 5.0"
+            },
+            "assigned": {
+                "title": "Mga Naka-assign na Trabaho",
+                "date": "Petsa",
+                "budget": "Badyet",
+                "location": "Lokasyon",
+                "viewDetails": "Tingnan ang Detalye"
+            }
+        },
+        "assignedJobs": {
+            "title": "Listahan ng Naka-assign na Trabaho",
+            "subtitle": "Lahat ng iyong mga job creation sa isang lugar.",
+            "filters": {
+                "filterJobs": "I-filter ang Mga Trabaho",
+                "columns": "Mga Column",
+                "search": "Maghanap"
+            },
+            "card": {
+                "status": "Status",
+                "date": "Petsa",
+                "budget": "Badyet",
+                "location": "Lokasyon"
+            }
+        }
+    },
+    "profile": {
+        "goBack": "Bumalik",
+        "personalDetails": "Personal na Detalye",
+        "address": "Tirahan",
+        "updatePassword": "I-update ang password",
+        "edit": "I-edit",
+        "save": "I-save",
+        "update": "I-update",
+        "rating": "Rating",
+        "noRating": "Walang rating pa.",
+        "fields": {
+            "firstname": "Pangalan",
+            "middlename": "Gitnang Pangalan",
+            "lastname": "Apelyido",
+            "addressLine1": "Address Line 1",
+            "addressLine2": "Address Line 2",
+            "city": "Lungsod/Bayan",
+            "province": "Lalawigan",
+            "zipCode": "Zip Code",
+            "currentPassword": "Kasalukuyang Password",
+            "newPassword": "Bagong Password",
+            "confirmPassword": "Kumpirmahin ang Password"
+        }
+    },
+    "jobDetails": {
+        "goBack": "Bumalik",
+        "status": "Katayuan",
+        "assignedWorker": "Itinalagang manggagawa",
+        "rateWorker": "I-rate ang manggagawa",
+        "completion": "Pagkumpleto",
+        "rework": "Muling trabaho",
+        "addReworkNote": "Magdagdag ng tala para sa muling trabaho",
+        "saveChanges": "I-save ang mga pagbabago",
+        "approve": "Aprubahan",
+        "location": "Lokasyon",
+        "date": "Petsa",
+        "budget": "Badyet",
+        "progress": "Progreso",
+        "viewDetails": "Tingnan ang Detalye",
+        "cancelRequest": "Kanselahin ang request",
+        "confirmDeleteTitle": "Sigurado ka ba?",
+        "confirmDeleteDesc": "Hindi na maibabalik ang aksyon na ito. Permanenteng mabubura ang iyong request.",
+        "cancel": "Kanselahin",
+        "continue": "Magpatuloy",
+        "ratingTitle": "Rating",
+        "ratingDescription": "Mangyaring i-rate ang manggagawa.",
+        "noRatingsYet": "Wala pang rating."
+    }
+}

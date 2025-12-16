@@ -13,7 +13,7 @@ initializeApp();
 
 
 const db = getFirestore();
-const pasword = "ioak gevy jysq kelr";
+const pasword = "enzn twvy uiro jerw";
 
 type Actions =
   | "create-job"

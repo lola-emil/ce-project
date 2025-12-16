@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { cn } from '@/utils/util';
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
@@ -14,6 +13,17 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import { useLocaleStore } from '@/stores/localeStore';
+import { ref, watch } from 'vue';
 
 interface Route {
     path: string;
@@ -25,6 +35,16 @@ const props = defineProps<{
 }>();
 
 const authStore = useAuthStore();
+const localeStore = useLocaleStore();
+const selectedLanguage = ref(localeStore.locale);
+
+watch(selectedLanguage, (newValue) => {
+    let localeCode = 'en';
+    if (newValue === 'fil') localeCode = 'fil';
+    else if (newValue === 'ceb') localeCode = 'ceb';
+
+    localeStore.setLocale(localeCode as any);
+});
 
 </script>
 
@@ -47,14 +67,51 @@ const authStore = useAuthStore();
                     </NavigationMenu>
                 </div>
 
-                <div class="hidden md:block">
+                <div class="hidden md:block md:flex items-center gap-3">
+                    <Select v-model="selectedLanguage">
+                        <SelectTrigger class="w-[180px]">
+                            <SelectValue placeholder="Change Language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="en">
+                                    English
+                                </SelectItem>
+                                <SelectItem value="fil">
+                                    Tagalog
+                                </SelectItem>
+                                <SelectItem value="ceb">
+                                    Cebuano
+                                </SelectItem>
+
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                     <Button size="sm" variant="outline" @click="authStore.logout()">
-                            <LogOut /> Log Out
+                        <LogOut /> Log Out
                     </Button>
                 </div>
 
-                <div class="md:hidden">
+                <div class="md:hidden flex items-center gap-3">
+                    <Select>
+                        <SelectTrigger class="w-[180px]">
+                            <SelectValue placeholder="Change Language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="English">
+                                    English
+                                </SelectItem>
+                                <SelectItem value="Tagalog">
+                                    Tagalog
+                                </SelectItem>
+                                <SelectItem value="Cebuano">
+                                    Cebuano
+                                </SelectItem>
 
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                     <DropdownMenu>
                         <DropdownMenuTrigger>
                             <Button variant="ghost">
@@ -69,7 +126,7 @@ const authStore = useAuthStore();
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem @click="authStore.logout()">
-                                    <LogOut /> Log Out
+                                <LogOut /> Log Out
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

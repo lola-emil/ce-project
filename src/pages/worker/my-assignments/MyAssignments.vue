@@ -11,7 +11,9 @@ import { useCollection } from 'vuefire';
 import { useAuthStore } from '@/stores/authStore';
 import { onMounted, ref, watch } from 'vue';
 import type { JobAssignment, JobRequest } from '@/types/schema';
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n()
 
 const authStore = useAuthStore();
 
@@ -39,19 +41,19 @@ watch(jobAssignments, () => {
 <template>
     <div class="container mx-auto px-5 md:px-0">
         <div class="mt-10">
-            <h3 class="text-3xl">Assigned Jobs Lists</h3>
-            <p class="text-lg text-muted-foreground">Your job creations in one place.</p>
+            <h3 class="text-3xl">{{ t('worker.assignedJobs.title') }}</h3>
+            <p class="text-lg text-muted-foreground">{{ t('worker.assignedJobs.subtitle') }}</p>
         </div>
 
         <div class="mt-10">
             <div class="mb-5 border-b py-3">
                 <div class="flex justify-between">
                     <div class="flex items-center gap-5">
-                        <DropdownMenu>
+                        <!-- <DropdownMenu>
                             <DropdownMenuTrigger as-child>
                                 <Button variant="outline">
                                     <IconLayoutColumns />
-                                    <span class="hidden lg:inline">Filter Jobs</span>
+                                    <span class="hidden lg:inline">{{ t('worker.assignedJobs.filters.filterJobs') }}</span>
                                     <span class="lg:hidden">Columns</span>
                                     <IconChevronDown />
                                 </Button>
@@ -62,7 +64,7 @@ watch(jobAssignments, () => {
                                 </DropdownMenuCheckboxItem>
 
                             </DropdownMenuContent>
-                        </DropdownMenu>
+                        </DropdownMenu> -->
 
                         <Input placeholder="Search" class="min-w-xs hidden md:block" />
 
@@ -87,7 +89,7 @@ watch(jobAssignments, () => {
                                     Status: 
                                     <Badge variant="outline">{{ value.status }}</Badge>
                                 </p>
-                                <p class="text-muted-foreground text-sm">Date: <span>{{
+                                <p class="text-muted-foreground text-sm">{{ t('worker.assignedJobs.card.date') }}: <span>{{
                                     new Intl.DateTimeFormat('en-US', {
                                         month: "short",
                                         day: "numeric",
@@ -96,7 +98,7 @@ watch(jobAssignments, () => {
                                 <p class="text-muted-foreground text-sm">Budget: <span class="text-primary">₱{{
                                         value.budget }}</span>
                                 </p>
-                                <p class="text-muted-foreground text-sm">Location: {{ value.location?.description }}
+                                <p class="text-muted-foreground text-sm">{{ t('worker.assignedJobs.card.location') }}: {{ value.location?.description }}
                                     <!-- <span class="text-primary">(1.2km)</span> -->
                                 </p>
                             </div>

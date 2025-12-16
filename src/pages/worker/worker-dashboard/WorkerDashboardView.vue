@@ -6,7 +6,9 @@ import { query, collection, where, limit, doc, getDoc } from 'firebase/firestore
 import { useCollection, useCurrentUser } from 'vuefire';
 import { computed, onMounted, ref, watch } from 'vue';
 import type { JobAssignment, JobRequest, Rating, User } from '@/types/schema';
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n()
 const authStore = useAuthStore();
 const user = useCurrentUser();
 
@@ -55,8 +57,8 @@ onMounted(async () => {
 <template>
     <div class="container mx-auto px-5 md:px-0">
         <div class="mt-10">
-            <h3 class="text-3xl">Good day, {{ authStore.userData?.name?.firstname }}</h3>
-            <p class="text-lg text-muted-foreground">Here’s a quick overview of your latest activity.</p>
+            <h3 class="text-3xl">{{ t('worker.workerDashboard.greeting', {name: authStore.userData?.name?.firstname}) }}</h3>
+            <p class="text-lg text-muted-foreground">{{ t('worker.workerDashboard.overview') }}</p>
         </div>
         <div class="mt-10">
 
@@ -65,7 +67,7 @@ onMounted(async () => {
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle class="text-sm font-medium">
-                            Active Jobs
+                            {{ t('worker.workerDashboard.cards.active') }}
                         </CardTitle>
                         <UserCheck />
                     </CardHeader>
@@ -82,7 +84,7 @@ onMounted(async () => {
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle class="text-sm font-medium">
-                            Completed Jobs
+                            {{ t('worker.workerDashboard.cards.completed') }}
                         </CardTitle>
                         <CheckCircle />
                     </CardHeader>
@@ -99,7 +101,7 @@ onMounted(async () => {
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle class="text-sm font-medium">
-                            Rating ({{ ratings.length }})
+                            {{ t('worker.workerDashboard.cards.rating', {count: ratings.length}) }}
                         </CardTitle>
                         <Star />
                     </CardHeader>
@@ -113,7 +115,7 @@ onMounted(async () => {
         </div>
 
         <div class="mt-10">
-            <p class="mb-5">Assigned Jobs</p>
+            <p class="mb-5">{{ t('worker.workerDashboard.assigned.title')}}</p>
             <div class="flex flex-col gap-3">
                 <Card class="gap-2" v-for="value in jobs">
                     <CardHeader>
@@ -121,44 +123,26 @@ onMounted(async () => {
                     </CardHeader>
                     <CardContent>
                         <div class="flex flex-col gap-1">
-                            <p class="text-muted-foreground text-sm">Date: <span>{{
+                            <p class="text-muted-foreground text-sm">{{ t('worker.workerDashboard.assigned.date')}}: <span>{{
                                 value.createdAt.toDate().toLocaleString() }}</span></p>
                             <p class="text-muted-foreground text-sm">Budget: <span class="text-primary">₱{{ value.budget
                             }}</span>
                             </p>
-                            <p class="text-muted-foreground text-sm">Location: {{ value.location.description }}
+                            <p class="text-muted-foreground text-sm">{{ t('worker.workerDashboard.assigned.location')}}: {{ value.location.description }}
                             </p>
 
                         </div>
                         <br>
                         <RouterLink :to="'/worker/job-details/' + value.id"
-                            class="ml-auto inline-block text-sm underline-offset-4 hover:underline text-primary">View
-                            Details</RouterLink>
+                            class="ml-auto inline-block text-sm underline-offset-4 hover:underline text-primary">
+                            {{ t('worker.workerDashboard.assigned.viewDetails')}}
+                        </RouterLink>
                         <div>
                         </div>
                     </CardContent>
                 </Card>
             </div>
         </div>
-        <!-- 
-        <div class="mt-10">
-            <p class="mb-5">Recent Activities</p>
-            <div class="flex flex-col gap-3">
-                <Item v-for="value in activities" variant="outline" as-child>
-                    <RouterLink to="#">
-                        <ItemContent>
-                            <ItemTitle>{{ value.title }}</ItemTitle>
-                            <ItemDescription>
-                                {{ value.description }}
-                            </ItemDescription>
-                        </ItemContent>
-                        <ItemActions>
-
-                        </ItemActions>
-                    </RouterLink>
-                </Item>
-            </div>
-        </div>-->
     </div>
 
 

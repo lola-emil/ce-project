@@ -8,37 +8,58 @@ import {
     ItemTitle,
 } from '@/components/ui/item'
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { useAuthStore } from '@/stores/authStore'
 import { collection, limit, orderBy, query, where } from 'firebase/firestore'
 import { db } from '@/firebase'
-import { useCollection } from 'vuefire'
-import { computed, watch } from 'vue'
+import { useCollection, useCurrentUser } from 'vuefire'
+import { computed } from 'vue'
 import type { JobRequest } from '@/types/schema'
-import { CheckCircle, ClipboardMinus, DollarSign, CircleOff } from 'lucide-vue-next';
+import { CheckCircle, ClipboardMinus, DollarSign, CircleOff } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n()
 const authStore = useAuthStore();
+const user = useCurrentUser();
 
-const {
-    data: jobRequests
-} = useCollection<JobRequest>(query(collection(db, "job_requests"), where("clientId", "==", authStore.user?.uid), orderBy("createdAt", "desc"), limit(6)))
+// Reactive queries
+// Reactive queries
+const jobRequestsQuery = computed(() =>
+    user.value
+        ? query(
+            collection(db, "job_requests"),
+            where("clientId", "==", user.value.uid),
+            orderBy("createdAt", "desc"),
+            limit(6)
+        )
+        : null
+);
 
-const {
-    data: complete
-} = useCollection<JobRequest>(query(collection(db, "job_requests"),
-    where("clientId", "==", authStore.user?.uid),
-    where("status", "==", "completed"), orderBy("createdAt", "desc")))
+const completeQuery = computed(() =>
+    user.value
+        ? query(
+            collection(db, "job_requests"),
+            where("clientId", "==", user.value.uid),
+            where("status", "==", "completed"),
+            orderBy("createdAt", "desc")
+        )
+        : null
+);
 
-const {
-    data: assignments
-} = useCollection(query(collection(db, "job_requests"), where("clientId", "==", authStore.user?.uid),
-    orderBy("createdAt", "asc")))
+const assignmentsQuery = computed(() =>
+    user.value
+        ? query(
+            collection(db, "job_requests"),
+            where("clientId", "==", user.value.uid),
+            orderBy("createdAt", "asc")
+        )
+        : null
+);
 
-const {
-    data: activities
-} = useCollection(query(collection(db, "activity_logs"), orderBy("timestamp", 'asc'), where("for_user", "==", authStore.user?.uid)))
-
+// Use collections
+const { data: jobRequests } = useCollection<JobRequest>(jobRequestsQuery);
+const { data: complete } = useCollection<JobRequest>(completeQuery);
+const { data: assignments } = useCollection<JobRequest>(assignmentsQuery);
 const {
     data
 } = useCollection(query(collection(db, "job_requests"), where("status", "==", "completed")));
@@ -58,8 +79,9 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
 <template>
     <div class="container mx-auto px-5 md:px-0">
         <div class="mt-10">
-            <h3 class="text-3xl">Good day, {{ authStore.userData?.name?.firstname }}</h3>
-            <p class="text-lg text-muted-foreground">Here’s a quick overview of your latest activity.</p>
+            <h3 class="text-3xl">{{ t('client.dashboard.greeting', { name: authStore.userData?.name?.firstname }) }}
+            </h3>
+            <p class="text-lg text-muted-foreground"> {{ t('client.dashboard.overview') }}</p>
         </div>
 
         <div class="mt-10">
@@ -67,7 +89,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle class="text-sm font-medium">
-                            Pending/In Progress Jobs
+                            {{ t('client.dashboard.cards.pending') }}
                         </CardTitle>
                         <ClipboardMinus />
                     </CardHeader>
@@ -81,7 +103,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle class="text-sm font-medium">
-                            Completed Jobs
+                            {{ t('client.dashboard.cards.completed') }}
                         </CardTitle>
                         <CheckCircle />
                     </CardHeader>
@@ -95,7 +117,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle class="text-sm font-medium">
-                            Total Spent
+                            {{ t('client.dashboard.cards.spent') }}
                         </CardTitle>
                         <DollarSign />
                     </CardHeader>
@@ -112,7 +134,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
             <Card class="h-full">
                 <CardHeader>
                     <div class="">
-                        <CardTitle>Job Requests</CardTitle>
+                        <CardTitle>{{ t('client.dashboard.requests.title') }}</CardTitle>
                     </div>
                 </CardHeader>
                 <CardContent class="h-full">
@@ -127,7 +149,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                             <ItemActions>
                                 <Button variant="outline" size="sm">
                                     <RouterLink :to="'/clie nt/job-details/' + value.id">
-                                        View Details
+                                        {{ t('client.dashboard.requests.viewDetails') }}
                                     </RouterLink>
                                 </Button>
                             </ItemActions>
@@ -138,7 +160,7 @@ function formatPrice(price: number, locale = 'en-US', currency = 'USD') {
                         <div class="text-muted-foreground p-5 rounded-full bg-secondary">
                             <CircleOff :size="16 * 3" />
                         </div>
-                        <p class="text-muted-foreground mt-5">No requests yet.</p>
+                        <p class="text-muted-foreground mt-5">{{ t('client.dashboard.requests.empty') }}</p>
                     </div>
 
                 </CardContent>

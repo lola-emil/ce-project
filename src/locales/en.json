@@ -1,0 +1,135 @@
+{
+  "client": {
+    "dashboard": {
+      "greeting": "Good day, {name}",
+      "overview": "Here’s a quick overview of your latest activity.",
+      "cards": {
+        "pending": "Pending/In Progress Jobs",
+        "completed": "Completed Jobs",
+        "spent": "Total Spent"
+      },
+      "requests": {
+        "title": "Job Requests",
+        "empty": "No requests yet.",
+        "viewDetails": "View Details"
+      }
+    },
+    "jobRequest": {
+      "back": "Back",
+      "titlePage": "Job Request",
+      "fields": {
+        "photos": "Photos",
+        "addPhoto": "Add photo",
+        "addOrDropPhotos": "Add or Drop photos",
+        "location": "Location",
+        "title": "Title",
+        "description": "Description",
+        "budget": "Budget"
+      },
+      "submit": "Submit",
+      "status": {
+        "saving": "Saving Data",
+        "uploading": "Uploading images"
+      }
+    },
+    "jobsList": {
+      "title": "Jobs Lists",
+      "subtitle": "Your job creations in one place.",
+      "filters": {
+        "placeholder": "Filter Jobs",
+        "selectStatus": "Select Status"
+      },
+      "actions": {
+        "create": "Create job request"
+      },
+      "card": {
+        "status": "Status",
+        "date": "Date",
+        "budget": "Budget"
+      }
+    }
+  },
+  "worker": {
+    "workerDashboard": {
+      "greeting": "Good day, {name}",
+      "overview": "Here’s a quick overview of your latest activity.",
+      "cards": {
+        "active": "Active Jobs",
+        "completed": "Completed Jobs",
+        "rating": "Rating ({count})",
+        "ratingOutOf": "/ 5.0"
+      },
+      "assigned": {
+        "title": "Assigned Jobs",
+        "date": "Date",
+        "budget": "Budget",
+        "location": "Location",
+        "viewDetails": "View Details"
+      }
+    },
+    "assignedJobs": {
+      "title": "Assigned Jobs Lists",
+      "subtitle": "Your job creations in one place.",
+      "filters": {
+        "filterJobs": "Filter Jobs",
+        "columns": "Columns",
+        "search": "Search"
+      },
+      "card": {
+        "status": "Status",
+        "date": "Date",
+        "budget": "Budget",
+        "location": "Location"
+      }
+    }
+  },
+  "profile": {
+    "goBack": "Bumalik",
+    "personalDetails": "Personal na Detalye",
+    "address": "Tirahan",
+    "updatePassword": "I-update ang password",
+    "edit": "I-edit",
+    "save": "I-save",
+    "update": "I-update",
+    "rating": "Rating",
+    "noRating": "Walang rating pa.",
+    "fields": {
+      "firstname": "Pangalan",
+      "middlename": "Gitnang Pangalan",
+      "lastname": "Apelyido",
+      "addressLine1": "Address Line 1",
+      "addressLine2": "Address Line 2",
+      "city": "Lungsod/Bayan",
+      "province": "Lalawigan",
+      "zipCode": "Zip Code",
+      "currentPassword": "Kasalukuyang Password",
+      "newPassword": "Bagong Password",
+      "confirmPassword": "Kumpirmahin ang Password"
+    }
+  },
+
+  "jobDetails": {
+    "goBack": "Go back",
+    "status": "Status",
+    "assignedWorker": "Assigned worker",
+    "rateWorker": "Rate worker",
+    "completion": "Completion",
+    "rework": "Rework",
+    "addReworkNote": "Add rework note",
+    "saveChanges": "Save changes",
+    "approve": "Approve",
+    "location": "Location",
+    "date": "Date",
+    "budget": "Budget",
+    "progress": "Progress",
+    "viewDetails": "View Details",
+    "cancelRequest": "Cancel request",
+    "confirmDeleteTitle": "Are you absolutely sure?",
+    "confirmDeleteDesc": "This action cannot be undone. This will permanently delete your request.",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "ratingTitle": "Rating",
+    "ratingDescription": "Please rate the worker.",
+    "noRatingsYet": "No ratings yet."
+  }
+}

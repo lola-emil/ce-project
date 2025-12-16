@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Images, X } from 'lucide-vue-next';
 import { RouterLink, useRouter } from 'vue-router';
@@ -15,6 +15,7 @@ import { useCurrentUser } from 'vuefire';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'vue-sonner'
 import { treeifyError, z, ZodError } from "zod";
+import { useI18n } from 'vue-i18n';
 
 interface ImageItem {
     file: File;
@@ -23,9 +24,9 @@ interface ImageItem {
 
 const user = useCurrentUser();
 const router = useRouter();
+const {t, locale} = useI18n();
 
-
-// Loading states
+// Loading states 
 const isSavingData = ref(false);
 const isUploadingImages = ref(false);
 
@@ -137,6 +138,12 @@ async function submit() {
     // type ProjectInput = z.infer<typeof projectSchema>;
 
     try {
+        if (!user.value) {
+            // User is not loaded yet
+            console.error("User is not logged in or not loaded yet.");
+            return;
+        }
+
         const body: any = {
             title: title.value,
             description: description.value,
@@ -144,7 +151,7 @@ async function submit() {
             location: address.value,
             images: [],
             status: "pending",
-            clientId: user.value?.uid,
+            clientId: user.value.uid,
             createdAt: serverTimestamp()
         };
 
@@ -188,9 +195,9 @@ async function submit() {
 <template>
     <div class="container mx-auto px-5 lg:px-0">
         <div class="mt-5">
-            <Button variant="link">
+            <Button variant="link" as-child>
                 <RouterLink to="/client/my-jobs">
-                    <ArrowLeft />
+                    <ArrowLeft /> {{ t('client.jobRequest.back') }}
                 </RouterLink>
             </Button>
 
@@ -198,12 +205,12 @@ async function submit() {
                 <!-- <Card class="">
                     <CardContent> -->
 
-                <h3 class="text-xl">Job Request</h3>
+                <h3 class="text-xl">{{ t('client.jobRequest.titlePage') }}</h3>
 
                 <div class="mt-5">
                     <form @submit.prevent="submit()" class="flex flex-col gap-5">
                         <Field>
-                            <FieldLabel>Photos</FieldLabel>
+                            <FieldLabel>{{ t('client.jobRequest.fields.photos') }}</FieldLabel>
                             <div v-if="images.length > 0" class="grid grid-cols-4 gap-1">
                                 <div v-for="(image, index) in images"
                                     class="aspect-square bg-secondary rounded-lg relative">
@@ -218,7 +225,7 @@ async function submit() {
                                     <div
                                         class="aspect-square rounded-lg bg-secondary gap-1 flex flex-col justify-center items-center text-muted-foreground">
                                         <Images :size="20" />
-                                        <small>Add photo</small>
+                                        <small>{{ t('client.jobRequest.fields.addPhoto') }}</small>
                                     </div>
                                 </label>
                             </div>
@@ -228,7 +235,7 @@ async function submit() {
                                     <div
                                         class="w-full h-28 bg-secondary rounded-lg flex flex-col justify-center items-center gap-3 text-muted-foreground">
                                         <Images />
-                                        <small>Add or Drop photos</small>
+                                        <small>{{ t('client.jobRequest.fields.addOrDropPhotos') }}</small>
                                     </div>
                                 </label>
                             </div>
@@ -236,12 +243,12 @@ async function submit() {
                             <input id="images" type="file" multiple accept="image/*" class="hidden"
                                 @change="onFileChange">
 
-                            <FieldError :errors="formError?.properties?.images?.errors" />
+                                <FieldError :errors="formError?.properties?.images?.errors" />
                         </Field>
 
 
                         <Field>
-                            <FieldLabel>Location</FieldLabel>
+                            <FieldLabel>{{ t('client.jobRequest.fields.location') }}</FieldLabel>
                             <!-- <Input id="name-1" name="name" default-value="Pedro Duarte" /> -->
                             <AddressSelection v-model="address" />
 
@@ -249,13 +256,13 @@ async function submit() {
                         </Field>
 
                         <Field>
-                            <FieldLabel>Title</FieldLabel>
+                            <FieldLabel>{{ t('client.jobRequest.fields.title') }}</FieldLabel>
                             <Input v-model="title" :disabled="isSavingData || isUploadingImages" />
                             <FieldError :errors="formError?.properties?.title?.errors" />
                         </Field>
 
                         <Field>
-                            <FieldLabel>Description</FieldLabel>
+                            <FieldLabel>{{ t('client.jobRequest.fields.description') }}</FieldLabel>
                             <Textarea v-model="description" :disabled="isSavingData || isUploadingImages" />
                             <FieldError :errors="formError?.properties?.description?.errors" />
                         </Field>
@@ -269,12 +276,12 @@ async function submit() {
 
 
                         <Button :disabled="isSavingData || isUploadingImages">
-                            Submit
+                            {{ t('client.jobRequest.submit') }}
                         </Button>
                         <div class="flex gap-3 items-center text-sm">
                             <Spinner v-if="isSavingData || isUploadingImages" />
-                            <span v-if="isSavingData">Saving Data</span>
-                            <span v-if="isUploadingImages">Uploading images</span>
+                            <span v-if="isSavingData">{{ t('client.jobRequest.status.saving') }}</span>
+                            <span v-if="isUploadingImages">{{ t('client.jobRequest.status.uploading') }}</span>
                         </div>
                     </form>
                 </div>

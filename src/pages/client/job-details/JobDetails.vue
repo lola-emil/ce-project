@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-vue-next';
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
-import { auth, db } from '@/firebase';
-import { useCurrentUser, useDocument } from 'vuefire';
+import { db } from '@/firebase';
+import { useDocument } from 'vuefire';
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from '@/components/ui/carousel'
+} from '@/components/ui/carousel';
 import {
     Dialog,
     DialogClose,
@@ -23,7 +23,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -34,16 +34,17 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+} from '@/components/ui/alert-dialog';
 import type { JobAssignment, JobRequest, User } from '@/types/schema';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'vue-sonner';
 import StarRating from './components/StarRating.vue';
 import { useAuthStore } from '@/stores/authStore';
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n()
 const route = useRoute();
 const router = useRouter();
-const currentUser = useCurrentUser();
 const authStore = useAuthStore();
 
 const jobId = String(route.params.id);
@@ -175,7 +176,7 @@ async function onRate() {
     <div class="container mx-auto">
         <div class="mt-10">
             <Button variant="link" @click="router.go(-1)">
-                <ArrowLeft /> Go back
+                <ArrowLeft /> {{ t('jobDetails.goBack') }}
             </Button>
         </div>
         <div class="grid grid-cols-2 gap-5 mt-36">
@@ -302,12 +303,12 @@ async function onRate() {
                             <Dialog>
                                 <DialogTrigger as-child>
                                     <Button variant="secondary">
-                                        Rework
+                                        {{ t('jobDetails.rework') }}
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent class="sm:max-w-[425px]">
                                     <DialogHeader>
-                                        <DialogTitle>Add rework note</DialogTitle>
+                                        <DialogTitle>{{ t('jobDetails.addReworkNote') }}</DialogTitle>
                                         <DialogDescription>
 
                                         </DialogDescription>
@@ -324,13 +325,13 @@ async function onRate() {
                                             </Button>
                                         </DialogClose>
                                         <Button @click="markAsRework()">
-                                            Save changes
+                                            {{ t('jobDetails.saveChanges') }}
                                         </Button>
                                     </DialogFooter>
                                 </DialogContent>
                             </Dialog>
                             <Button @click="approveCompletion">
-                                Approve
+                                {{ t('jobDetails.approve') }}
                             </Button>
                         </DialogFooter>
                     </DialogContent>
@@ -339,7 +340,7 @@ async function onRate() {
                     <Card>
                         <CardContent>
                             <p class="mb-1 text-muted-foreground">
-                                Location
+                                {{ t('jobDetails.location') }}
                             </p>
 
                             <div class="text-lg font-bold">
@@ -383,7 +384,7 @@ async function onRate() {
         </div>
         <div class="mt-5">
             <div class="flex items-center gap-3">
-                <h3 class="text-xl">Progress</h3>
+                <h3 class="text-xl">{{ t('jobDetails.progress') }}</h3>
             </div>
             <br>
             <div class="flex flex-col gap-3">

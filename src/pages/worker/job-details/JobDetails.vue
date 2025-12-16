@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db, storage } from '@/firebase';
 import { useDocument } from 'vuefire';
 import {
@@ -13,7 +13,7 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from '@/components/ui/carousel'
+} from '@/components/ui/carousel';
 import type { JobAssignment, JobRequest } from '@/types/schema';
 import { Separator } from '@/components/ui/separator';
 import { useAuthStore } from '@/stores/authStore';
@@ -27,10 +27,13 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { getDownloadURL, ref as storageRef, uploadBytesResumable, } from "firebase/storage";
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n()
 
 const auth = useAuthStore();
 
@@ -70,7 +73,7 @@ async function markAsComplete() {
         return;
     };
 
-    await addProgress("completion");    
+    await addProgress("completion");
 
     const assignmentDoc = doc(db, "job_assignments", jobAssignment.value.id);
 
@@ -207,7 +210,7 @@ onMounted(async () => {
         <div class="mt-10">
             <Button variant="link" as-child>
                 <RouterLink to="/worker/my-assignments">
-                    <ArrowLeft /> Go back
+                    <ArrowLeft /> {{ t('jobDetails.goBack') }}
                 </RouterLink>
             </Button>
         </div>
@@ -273,7 +276,7 @@ onMounted(async () => {
                                     </Button>
                                 </DialogClose>
                                 <Button @click="markAsComplete()">
-                                    Save changes
+                                    {{ t('jobDetails.saveChanges') }}
                                 </Button>
                             </DialogFooter>
                         </DialogContent>
@@ -283,7 +286,7 @@ onMounted(async () => {
                     <Card>
                         <CardContent>
                             <p class="mb-1 text-muted-foreground">
-                                Location
+                                {{ t('jobDetails.location') }}
                             </p>
 
                             <div class="text-lg font-bold">
@@ -295,7 +298,7 @@ onMounted(async () => {
                     <Card>
                         <CardContent>
                             <p class="mb-1 text-muted-foreground">
-                                Date
+                                {{ t('jobDetails.date') }}
                             </p>
 
                             <div class="text-lg font-bold">
@@ -327,15 +330,16 @@ onMounted(async () => {
         <Separator class="mt-5" />
         <div class="mt-5">
             <div class="flex items-center gap-3">
-                <h3 class="text-xl">Progress</h3>
-                <Dialog v-if="jobAssignment?.status != 'requested' && jobAssignment?.status != 'completed' && jobAssignment?.status != 'pending approval'">
+                <h3 class="text-xl">{{ t('jobDetails.progress') }}</h3>
+                <Dialog
+                    v-if="jobAssignment?.status != 'requested' && jobAssignment?.status != 'completed' && jobAssignment?.status != 'pending approval'">
                     <DialogTrigger as-child>
                         <Button>Add Progress</Button>
 
                     </DialogTrigger>
                     <DialogContent class="sm:max-w-[425px]">
                         <DialogHeader>
-                            <DialogTitle>Progress</DialogTitle>
+                            <DialogTitle>{{ t('jobDetails.progress') }}</DialogTitle>
                             <DialogDescription>
 
                             </DialogDescription>
@@ -357,7 +361,7 @@ onMounted(async () => {
                                 </Button>
                             </DialogClose>
                             <Button @click="onAddProgress()">
-                                Save changes
+                                {{ t('jobDetails.saveChanges') }}
                             </Button>
                         </DialogFooter>
                     </DialogContent>
